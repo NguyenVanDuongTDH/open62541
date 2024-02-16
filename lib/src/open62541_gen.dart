@@ -6,8 +6,7 @@ import 'dart:ffi' as ffi;
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 
-NativeLibrary cOPC =
-      NativeLibrary(DynamicLibrary.open("open62541.dll"));
+NativeLibrary cOPC = NativeLibrary(DynamicLibrary.open("open62541.dll"));
 
 class NativeLibrary {
   /// Holds the symbol lookup function.
@@ -41213,37 +41212,33 @@ class NativeLibrary {
   late final _UA_deinitialize_architecture_network =
       _UA_deinitialize_architecture_networkPtr.asFunction<void Function()>();
 
-
-  int UA_CLIENT_SETVALUE(ffi.Pointer<UA_Client> client, double value){
-    return _UA_CLIENT_SETVALUE_D(client,value);
+  int UA_CLIENT_SETVALUE(ffi.Pointer<UA_Client> client, double value) {
+    return _UA_CLIENT_SETVALUE_D(client, value);
   }
 
-  late final _UA_CLIENT_SETVALUE_C =
-      _lookup<ffi.NativeFunction<ffi.Int Function( ffi.Pointer<UA_Client>,ffi.Double)>>(
-          'UA_CLIENT_SETVALUE');
+  late final _UA_CLIENT_SETVALUE_C = _lookup<
+      ffi.NativeFunction<
+          ffi.Int Function(
+              ffi.Pointer<UA_Client>, ffi.Double)>>('UA_CLIENT_SETVALUE');
 
-  late final _UA_CLIENT_SETVALUE_D =
-      _UA_CLIENT_SETVALUE_C.asFunction<int Function(ffi.Pointer<UA_Client>,double)>();
+  late final _UA_CLIENT_SETVALUE_D = _UA_CLIENT_SETVALUE_C
+      .asFunction<int Function(ffi.Pointer<UA_Client>, double)>();
 
+  int UA_GET_TYPES(ffi.Pointer<UA_DataType> type) {
+    for (int i = 0; i < 50; i++) {
+      if (_UA_GET_TYPES(i) == type) {
+        return i;
+      }
+    }
+    return -1;
+  }
 
-
-  int UA_GET_TYPES( ffi.Pointer<UA_DataType> type) {
-
-      for(int i = 0; i < 100; i++){
-          if(_UA_GET_TYPES(i) == type){
-              return i;
-          }
-          
-        }
-        return -1;
-}
-ffi.Pointer<UA_DataType> UA_GET_TYPES_( int i) {
-
-     return _UA_GET_TYPES(i);
-}
+  ffi.Pointer<UA_DataType> UA_GET_TYPES_(int i) {
+    return _UA_GET_TYPES(i);
+  }
 
   late final _UA_GET_TYPESPtr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<UA_DataType> Function( ffi.Int)>>(
+      _lookup<ffi.NativeFunction<ffi.Pointer<UA_DataType> Function(ffi.Int)>>(
           'UA_GET_TYPES');
   late final _UA_GET_TYPES =
       _UA_GET_TYPESPtr.asFunction<ffi.Pointer<UA_DataType> Function(int)>();
