@@ -21,8 +21,6 @@ UA_EXPORT UA_DataType* UA_GET_TYPES_PTR(int typeNumber)
 }
 
 UA_EXPORT int UA_FIND_TYPE(UA_Client *client,UA_NodeId nodeId){
-
-    // Lấy thông tin kiểu dữ liệu từ server
     UA_ReadRequest request;
     UA_ReadRequest_init(&request);
     request.nodesToRead = UA_ReadValueId_new();

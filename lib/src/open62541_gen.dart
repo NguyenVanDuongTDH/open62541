@@ -12317,6 +12317,26 @@ class NativeLibrary {
   late final _UA_Variant_copy = _UA_Variant_copyPtr.asFunction<
       int Function(ffi.Pointer<UA_Variant>, ffi.Pointer<UA_Variant>)>();
 
+//
+int UA_DataValue_Copy_Variant(
+    ffi.Pointer<UA_DataValue> src,
+    ffi.Pointer<UA_Variant> dst,
+  ) {
+    return _UA_DataValue_Copy_Variant(
+      src,
+      dst,
+    );
+  }
+
+  late final _UA_DataValue_Copy_VariantPtr = _lookup<
+      ffi.NativeFunction<
+          UA_StatusCode Function(ffi.Pointer<UA_DataValue>,
+              ffi.Pointer<UA_Variant>)>>('UA_DataValue_Copy_Variant');
+  late final _UA_DataValue_Copy_Variant = _UA_DataValue_Copy_VariantPtr.asFunction<
+      int Function(ffi.Pointer<UA_DataValue>, ffi.Pointer<UA_Variant>)>();
+
+      //
+
   void UA_Variant_deleteMembers(
     ffi.Pointer<UA_Variant> p,
   ) {
@@ -19603,6 +19623,16 @@ class NativeLibrary {
           ffi.NativeFunction<ffi.Pointer<UA_VariableAttributes> Function()>>(
       'UA_VariableAttributes_new');
   late final _UA_VariableAttributes_new = _UA_VariableAttributes_newPtr
+      .asFunction<ffi.Pointer<UA_VariableAttributes> Function()>();
+
+  ffi.Pointer<UA_VariableAttributes> UA_VariableAttributes_new2() {
+    return _UA_VariableAttributes_new2();
+  }
+
+  late final _UA_VariableAttributes_newPtr2 = _lookup<
+          ffi.NativeFunction<ffi.Pointer<UA_VariableAttributes> Function()>>(
+      'UA_VariableAttributes_new_2');
+  late final _UA_VariableAttributes_new2 = _UA_VariableAttributes_newPtr2
       .asFunction<ffi.Pointer<UA_VariableAttributes> Function()>();
 
   int UA_VariableAttributes_copy(
@@ -41243,6 +41273,26 @@ class NativeLibrary {
   late final _UA_GET_TYPES =
       _UA_GET_TYPESPtr.asFunction<ffi.Pointer<UA_DataType> Function(int)>();
 
+
+//
+int UA_CLIENT_STATUS_RES(Pointer<UA_WriteResponse> response) {
+    return _UA_CLIENT_STATUS_RES_D(response);
+  }
+
+  late final _UA_CLIENT_STATUS_RES_C =
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(Pointer<UA_WriteResponse> response)>>(
+          'UA_CLIENT_STATUS_RES');
+  late final _UA_CLIENT_STATUS_RES_D =
+      _UA_CLIENT_STATUS_RES_C.asFunction<int Function(Pointer<UA_WriteResponse> response)>();
+
+
+//
+
+
+
+
+  
+
   ffi.Pointer<UA_DataType> UA_GET_TYPES_PTR(
     int typeNumber,
   ) {
@@ -43625,6 +43675,7 @@ final class UA_Variant extends ffi.Struct {
 
   external ffi.Pointer<UA_UInt32> arrayDimensions;
 }
+
 
 /// .. _extensionobject:
 ///
