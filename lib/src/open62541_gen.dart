@@ -41255,7 +41255,7 @@ int UA_DataValue_Copy_Variant(
       .asFunction<int Function(ffi.Pointer<UA_Client>, double)>();
 
   int UA_GET_TYPES(ffi.Pointer<UA_DataType> type) {
-    for (int i = 0; i < 50; i++) {
+    for (int i = 0; i < UA_TYPES_COUNT; i++) {
       if (_UA_GET_TYPES(i) == type) {
         return i;
       }
@@ -41272,6 +41272,21 @@ int UA_DataValue_Copy_Variant(
           'UA_GET_TYPES');
   late final _UA_GET_TYPES =
       _UA_GET_TYPESPtr.asFunction<ffi.Pointer<UA_DataType> Function(int)>();
+
+
+//
+
+UA_NodeId UA_GET_TYPES_ID(int i) {
+    return _UA_GET_TYPES_ID(i);
+  }
+
+  late final _UA_GET_TYPES_IDPtr =
+      _lookup<ffi.NativeFunction<UA_NodeId Function(ffi.Int)>>(
+          'UA_GET_TYPES_ID');
+  late final _UA_GET_TYPES_ID =
+      _UA_GET_TYPES_IDPtr.asFunction<UA_NodeId Function(int)>();
+
+
 
 
 //

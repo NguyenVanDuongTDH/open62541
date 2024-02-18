@@ -8,31 +8,28 @@ import 'package:open62541/src/opject/opc_c_data.dart';
 import 'package:open62541/src/opject/opc_qualifiedname.dart';
 import 'package:open62541/src/open62541_gen.dart';
 
+import 'opject/ua_variable_attributes.dart';
+
 class UAServer {
   late Pointer<UA_Server> server;
   Timer? _timer;
   UAServer() {
     server = cOPC.UA_Server_new();
     cOPC.UA_ServerConfig_setDefault(cOPC.UA_Server_getConfig(server));
+    final cc = cOPC.UA_Server_getConfig(server);
   }
-  static final en_US = "en-US".toCString();
+
   int addVariableNode(
       UANodeID nodeid, UACOpject cValue, UAQualifiedName qualifiedName,
       {String? description, String? displayName}) {
     //var
     UAVariant variant = UAVariant();
     variant.setScalar(cValue);
-    Pointer<UA_VariableAttributes> attr = cOPC.UA_VariableAttributes_new2();
-    attr.ref.value = variant.variant.ref;
-    //
-    if (description != null) {
-      attr.ref.description = cOPC.UA_LOCALIZEDTEXT(
-          en_US.cast(), CString.fromString(description).cast());
-    }
-    if (displayName != null) {
-      attr.ref.displayName = cOPC.UA_LOCALIZEDTEXT(
-          en_US.cast(), CString.fromString(displayName).cast());
-    }
+    UAVariableAttributes attr = UAVariableAttributes();
+    attr.setVariant(variant);
+    attr.setDescription(description);
+    attr.setDisplayName(displayName);
+    attr.setAsset(UAVariableAttributes.READ | UAVariableAttributes.WRITE);
 
     UA_NodeId _nodeID;
     _nodeID = nodeid.isString == true
@@ -47,7 +44,7 @@ class UAServer {
         cOPC.UA_QUALIFIEDNAME(qualifiedName.nsIndex,
             CString.fromString(qualifiedName.name).cast()),
         cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE),
-        attr.ref,
+        attr.attr.ref,
         Pointer.fromAddress(0),
         Pointer.fromAddress(0));
     return retval;
