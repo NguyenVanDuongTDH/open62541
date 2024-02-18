@@ -10,7 +10,9 @@ class UAVariableAttributes {
   UAVariableAttributes() {
     attr = cOPC.UA_VariableAttributes_new2();
   }
-
+  void delete(){
+    cOPC.UA_VariableAttributes_delete(attr);
+  }
   void setVariant(UAVariant variant) {
     attr.ref.value = variant.variant.ref;
     attr.ref.dataType =
@@ -24,19 +26,19 @@ class UAVariableAttributes {
     attr.ref.userAccessLevel |= access;
   }
 
-  static final _en_US = "en-US".toCString();
+  static final en_US = "en-US".toCString();
 
   void setDescription(String? description) {
     if (description != null) {
       attr.ref.description = cOPC.UA_LOCALIZEDTEXT(
-          _en_US.cast(), CString.fromString(description).cast());
+          en_US.cast(), CString.fromString(description).cast());
     }
   }
 
   void setDisplayName(String? displayName) {
     if (displayName != null) {
       attr.ref.displayName = cOPC.UA_LOCALIZEDTEXT(
-          _en_US.cast(), CString.fromString(displayName).cast());
+          en_US.cast(), CString.fromString(displayName).cast());
     }
   }
 }

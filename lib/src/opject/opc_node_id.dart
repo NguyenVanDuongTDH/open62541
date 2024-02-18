@@ -1,3 +1,4 @@
+// ignore_for_file: unnecessary_string_interpolations
 
 import 'package:open62541/src/opject/c.dart';
 
@@ -28,4 +29,9 @@ class UANodeID {
   String s = "";
   int i = 0;
   bool isString = false;
+  @override
+  String toString() {
+    return {"ns": "$ns", isString ? "s" : "i": isString ? "$s" : "$i"}
+        .toString();
+  }
 }

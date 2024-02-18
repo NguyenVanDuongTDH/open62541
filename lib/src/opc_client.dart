@@ -54,7 +54,7 @@ class UAClient {
     final EndpointUrl = endpointUrl.toCString();
     Pointer<UA_ClientConfig> cc = cOPC.UA_Client_getConfig(client);
     cc.ref.stateCallback;
-    int retval = cOPC.UA_Client_connectAsync(client, EndpointUrl.cast());
+    cOPC.UA_Client_connectAsync(client, EndpointUrl.cast());
   }
 
   bool disconnect() {
@@ -88,7 +88,7 @@ class UAClient {
     requestId.value = -1;
     int retval = cOPC.UA_Client_readValueAttribute_async(client, nodeId.nodeId,
         _readCallback, Pointer.fromAddress(0), requestId.cast());
-    if (requestId.value >= 0) {
+    if (retval == 0 && requestId.value >= 0) {
       final compile = Completer();
       future[requestId.value] = compile;
       calloc.free(requestId);

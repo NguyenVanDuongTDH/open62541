@@ -1,20 +1,15 @@
+// ignore_for_file: unused_field
+
 import 'dart:ffi';
-import 'dart:typed_data';
-import 'package:ffi/ffi.dart';
-import 'package:open62541/open62541.dart';
-import 'package:open62541/src/opject/opc_c_data.dart';
+import 'opc_c_data.dart';
 import '../open62541_gen.dart';
 
 class UAVariant {
-  late Pointer<UA_Variant> variant;
+  late final Pointer<UA_Variant> variant;
   int? _opcType;
-  UAVariant([Pointer<UA_Variant>? _variant]) {
-    if (_variant != null) {
-      variant = _variant;
-    } else {
-      variant = cOPC.UA_Variant_new();
-      cOPC.UA_Variant_init(variant);
-    }
+  UAVariant() {
+    variant = cOPC.UA_Variant_new();
+    cOPC.UA_Variant_init(variant);
   }
 
   void delete() {

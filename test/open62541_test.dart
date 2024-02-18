@@ -6,27 +6,32 @@ import 'package:open62541/src/opject/opc_qualifiedname.dart';
 import 'package:open62541/src/opc_server.dart';
 
 Future<void> main() async {
-  // UAClient client = UAClient();
-
-  // client.connect("opc.tcp://Admin-PC:4840/");
-  // for (var i = 0; i < 10; i++) {
-  //   dynamic data = (await client.readNodeAsync(UANodeID(1, "the.answer")));
-  //   await client.writeNodeIdAsync(UANodeID(1, "the.answer"), UATypes.INT64, data+1);
-  //   print(data);
-  // }
-  // client.disconnect();
-  // client.dispose();
-
   UAServer server = UAServer();
-  final i = UACOpject(1199, UATypes.INT64);
+  server.addObjectTypeNode(
+    nodeID: UANodeID(1, "dataType"),
+    qualifiedName: UAQualifiedName(0, "NAME TYPE"),
+    description: "variable state motor",
+    displayName: "Y1",
+  );
+  server.addObjectNode(
+    nodeID: UANodeID(1, "ONE"),
+    nodeIdTypeNodeid: UANodeID(1, "dataType"),
+    qualifiedName: UAQualifiedName(1, "ONE FORDER"),
+    description: "variable state motor",
+    displayName: "Y1",
+  );
   server.addVariableNode(
-      UANodeID(1, "the.answer"), i, UAQualifiedName(1, "DATA 2"));
-  server.addVariableNode(UANodeID(1, "the.answer2"),
-      UACOpject(true, UATypes.BOOLEAN), UAQualifiedName(1, "DATA 1"));
+    uaCOpject: UACOpject(1997, UATypes.INT64),
+    nodeid: UANodeID(1, "KEY"),
+    qualifiedName: UAQualifiedName(1, "DATA"),
+    parentNodeId: UANodeID(1, "ONE"),
+    description: "variable state motor",
+    displayName: "Y1",
+  );
+  
+  server.setAddress("192.168.1.29", 4840);
 
   server.start();
-  Timer.periodic(Duration(seconds: 1), (timer) {
-    print(i.toDart());
-  });
+  
   await Future.delayed(Duration(days: 1));
 }
