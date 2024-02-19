@@ -8,22 +8,27 @@ import 'opc_variant.dart';
 class UAVariableAttributes {
   late final Pointer<UA_VariableAttributes> attr;
   UAVariableAttributes() {
-    attr = cOPC.UA_VariableAttributes_new2();
+    attr = cOPC.UA_VariableAttributes_new();
+    cOPC.UA_VariableAttributes_init(attr);
+    final res = cOPC.UA_VariableAttributes_default;
+    attr.ref = res;
+    attr.ref.accessLevel = 255;
   }
-  void delete(){
+  void delete() {
     cOPC.UA_VariableAttributes_delete(attr);
   }
+
   void setVariant(UAVariant variant) {
     attr.ref.value = variant.variant.ref;
-    attr.ref.dataType =
-        cOPC.UA_GET_TYPES_ID(cOPC.UA_GET_TYPES(variant.variant.ref.type));
+    attr.ref.dataType = cOPC.UA_GET_TYPES_TYPEID(
+        cOPC.UA_GET_TYPES_INTDEX(variant.variant.ref.type));
   }
 
   static int get READ => UA_ACCESSLEVELMASK_READ;
   static int get WRITE => UA_ACCESSLEVELMASK_WRITE;
 
   void setAsset(int access) {
-    attr.ref.userAccessLevel |= access;
+    // attr.ref.userAccessLevel = access;
   }
 
   static final en_US = "en-US".toCString();

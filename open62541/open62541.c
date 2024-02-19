@@ -50369,7 +50369,9 @@ cleanup:
     UA_free(cc);
 }
 
-UA_CreateSubscriptionResponse
+
+
+UA_CreateSubscriptionResponse 
 UA_Client_Subscriptions_create(UA_Client *client,
                                const UA_CreateSubscriptionRequest request,
                                void *subscriptionContext,
@@ -50913,7 +50915,7 @@ UA_Client_MonitoredItems_createDataChanges_async(UA_Client *client,
         userdata, requestId);
 }
 
-UA_MonitoredItemCreateResult
+UA_EXPORT UA_MonitoredItemCreateResult
 UA_Client_MonitoredItems_createDataChange(UA_Client *client, UA_UInt32 subscriptionId,
                                           UA_TimestampsToReturn timestampsToReturn,
                                           const UA_MonitoredItemCreateRequest item,
@@ -82104,6 +82106,66 @@ UA_ClientConnectionTCP_init(UA_ConnectionConfig config, const UA_String endpoint
     /* Return connection with state UA_CONNECTIONSTATE_OPENING */
     return connection;
 }
+
+UA_EXPORT UA_DataType *
+UA_GET_TYPES_FROM_INDEX(int index) {
+    return &UA_TYPES[index];
+}
+UA_EXPORT UA_NodeId
+UA_GET_TYPES_TYPEID(int index) {
+    return UA_TYPES[index].typeId;
+}
+UA_EXPORT int 
+UA_GET_TYPES_INTDEX(UA_DataType *type) {
+    for(int i = 0; i < UA_TYPES_COUNT; i++) {
+        if(&UA_TYPES[i] == type) {
+            return i;
+        }
+    }
+    return -1;
+}
+UA_EXPORT int
+UA_CLIENT_WriteResponse_STATUS(UA_WriteResponse *res) {
+    if(res == NULL) {
+        return -1;
+    } else {
+        if(res->results == NULL) {
+            return -1;
+        } else {
+            return *(int *)res->results;
+        }
+    }
+}
+
+
+UA_EXPORT void * UA_Client_Subscriptions_create_(UA_Client *client,
+                               const UA_CreateSubscriptionRequest request,
+                               void *subscriptionContext,
+                               UA_Client_StatusChangeNotificationCallback statusChangeCallback,
+                               UA_Client_DeleteSubscriptionCallback deleteCallback){
+
+                                UA_CreateSubscriptionResponse * res = UA_CreateSubscriptionResponse_new();
+                                *res = UA_Client_Subscriptions_create(
+                                    client,
+                                request,
+                                subscriptionContext,
+                                statusChangeCallback,
+                                deleteCallback
+                                );
+                                return res;
+
+                               }
+
+UA_EXPORT int UA_Client_SubSubscriptions_Check(UA_CreateSubscriptionResponse* response){
+    if(response->responseHeader.serviceResult == 0){
+        return response->subscriptionId;
+    }
+    else return -1;
+}
+
+
+
+
 
 
 

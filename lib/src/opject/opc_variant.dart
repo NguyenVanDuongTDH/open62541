@@ -6,6 +6,7 @@ import '../open62541_gen.dart';
 
 class UAVariant {
   late final Pointer<UA_Variant> variant;
+
   int? _opcType;
   UAVariant() {
     variant = cOPC.UA_Variant_new();
@@ -21,14 +22,18 @@ class UAVariant {
     cOPC.UA_Variant_clear(variant);
   }
 
+  int coppyTo(Pointer<UA_Variant> dst) {
+    return cOPC.UA_Variant_copy(variant, dst);
+  }
+
   void setScalarCopy(UACOpject cValue) {
     cOPC.UA_Variant_setScalarCopy(
-        variant, cValue.pointer, cOPC.UA_GET_TYPES_(cValue.uaType));
+        variant, cValue.pointer, cOPC.UA_GET_TYPES_FROM_INDEX(cValue.uaType));
   }
 
   void setScalar(UACOpject cValue) {
     cOPC.UA_Variant_setScalar(
-        variant, cValue.pointer, cOPC.UA_GET_TYPES_(cValue.uaType));
+        variant, cValue.pointer, cOPC.UA_GET_TYPES_FROM_INDEX(cValue.uaType));
   }
 
   dynamic toDart() {
@@ -36,7 +41,7 @@ class UAVariant {
   }
 
   static variant2Dart(UA_Variant variant) {
-    final type = cOPC.UA_GET_TYPES(variant.type);
+    final type = cOPC.UA_GET_TYPES_INTDEX(variant.type);
     final len = variant.arrayLength;
     if (len > 0) {
       return UACOpject.pointer2DartList(variant.data, len, type);

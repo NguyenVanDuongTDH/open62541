@@ -15,10 +15,66 @@ class UAClient {
   static Map<int, Completer> future = {};
   late Pointer<UA_Client> client;
   Timer? _timer;
+  static final Map<Pointer<UA_Client>, Function(dynamic value)>
+      _callBackDataChangeClient = {};
+  static final Map<String, Function(UANodeID nodeId, dynamic value)>
+      _callBackDataChangeNodeID = {};
+
   UAClient() {
     client = cOPC.UA_Client_new();
     cOPC.UA_ClientConfig_setDefault(cOPC.UA_Client_getConfig(client));
+    _callBackDataChangeClient[client] = (value) {
+      _callBackDataChangeNodeID[value[0]]!(
+          UANodeID.parse(value[0].split("::::")[1]), value[1]);
+    };
   }
+
+  void listen(
+      UANodeID nodeId, Function(UANodeID nodeID, dynamic value) callBack) {
+    String key = "$client::::$nodeId";
+    _callBackDataChangeNodeID[key] = callBack;
+    UA_CreateSubscriptionRequest request =
+        cOPC.UA_CreateSubscriptionRequest_default();
+    Pointer<UA_CreateSubscriptionResponse> res =
+        cOPC.UA_Client_Subscriptions_create_(
+                client,
+                request,
+                Pointer.fromAddress(0),
+                Pointer.fromAddress(0),
+                Pointer.fromAddress(0))
+            .cast();
+
+    int response = cOPC.UA_Client_SubSubscriptions_Check(res.cast());
+    UA_NodeId target = nodeId.nodeIdNew;
+    final cString = key.toCString().cast();
+    UA_MonitoredItemCreateRequest monRequest =
+        cOPC.UA_MonitoredItemCreateRequest_default(target);
+    monRequest.requestedParameters.samplingInterval = 100.0;
+    cOPC.UA_Client_MonitoredItems_createDataChange(
+        client,
+        response,
+        UA_TimestampsToReturn.UA_TIMESTAMPSTORETURN_BOTH,
+        monRequest,
+        cString.cast(),
+        _dataChangeCallBack,
+        Pointer.fromAddress(0));
+  }
+
+  static void _DataChange(
+      Pointer<UA_Client> client,
+      int subId,
+      Pointer<Void> subContext,
+      int monId,
+      Pointer<Void> monContext,
+      Pointer<UA_DataValue> value) {
+    dynamic res = UAVariant.variant2Dart(value.cast<UA_VALUE>().ref.value);
+    String context = monContext.cast<Utf8>().toDartString().toString();
+    UAClient._callBackDataChangeClient[client]!([context, res]);
+  }
+
+  static final _dataChangeCallBack = Pointer.fromFunction<
+      Void Function(Pointer<UA_Client>, Uint32, Pointer<Void>, Uint32,
+          Pointer<Void>, Pointer<UA_DataValue>)>(_DataChange);
 
   bool get connected => _connected();
   static final Pointer _NULL = Pointer.fromAddress(0);
@@ -153,7 +209,7 @@ final _readCallback = Pointer.fromFunction<
 );
 void _Client_Write_Async_Callback(Pointer<UA_Client> client, Pointer<Void> v,
     int requestId, Pointer<UA_WriteResponse> response) {
-  int retval = cOPC.UA_CLIENT_STATUS_RES(response);
+  int retval = cOPC.UA_CLIENT_WriteResponse_STATUS(response);
   UAClient.future[requestId]?.complete(retval == 0);
   UAClient.future.remove(requestId);
 }

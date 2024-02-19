@@ -1,37 +1,86 @@
-// ignore_for_file: unnecessary_string_interpolations
+// ignore_for_file: unnecessary_string_interpolations, prefer_interpolation_to_compose_strings
 
+import 'dart:ffi';
+
+import 'package:ffi/ffi.dart';
 import 'package:open62541/src/opject/c.dart';
 
 import '../open62541_gen.dart';
 
 class UANodeID {
-  UANodeID(this.ns, dynamic S_OR_I) {
+  UANodeID(this._ns, dynamic S_OR_I) {
     if (S_OR_I is String) {
-      s = S_OR_I;
+      _s = S_OR_I;
       isString = true;
     } else if (S_OR_I is int) {
-      i = S_OR_I;
+      _i = S_OR_I;
       isString = false;
     } else {
       throw "";
     }
   }
   UA_NodeId get nodeId =>
-      isString ? _nodeString() : cOPC.UA_NODEID_NUMERIC(ns, i);
+      isString ? _nodeString(free: true) : cOPC.UA_NODEID_NUMERIC(_ns, _i);
+  UA_NodeId get nodeIdNew =>
+      isString ? _nodeString(free: false) : cOPC.UA_NODEID_NUMERIC(_ns, _i);
 
-  UA_NodeId _nodeString() {
-    final Chars = s.toCString();
-    final res = cOPC.UA_NODEID_STRING(ns, Chars.cast());
+  UA_NodeId _nodeString({bool free = true}) {
+    final Chars = _s.toCString();
+    final res = cOPC.UA_NODEID_STRING(_ns, Chars.cast());
+    if (free) {
+      Chars.free();
+    }
     return res;
   }
 
-  late int ns;
-  String s = "";
-  int i = 0;
+  late final int _ns;
+  late final String _s;
+  late final int _i;
   bool isString = false;
+
+  static String pointer2String(Pointer<UA_NodeId> nodeid) {
+    Pointer<UA_String> uaStr = cOPC.UA_String_new();
+    cOPC.UA_String_init(uaStr);
+    cOPC.UA_NodeId_print(nodeid, uaStr);
+    String res =
+        String.fromCharCodes(uaStr.ref.data.asTypedList(uaStr.ref.length))
+            .toString();
+    cOPC.UA_String_delete(uaStr);
+    return res;
+  }
+
+
+  factory UANodeID.parse(String nodeIdStr) {
+    String? s;
+    int? i;
+    int? ns;
+    String IS = nodeIdStr.split(";")[1];
+    ns = int.parse(nodeIdStr.split(";")[0].substring(3));
+    
+    if (IS.startsWith("s=")) {
+      s = IS.replaceFirst("s=", '');
+    } else {
+      i = int.parse(IS.replaceFirst("i=", ''));
+    }
+    print("PẢESE: $nodeIdStr");
+    if (s != null) {
+      print("ns=$ns;s=$s");
+      return UANodeID(ns!, s);
+    } else {
+      print("ns=$ns;i=$i");
+      return UANodeID(ns!, i);
+    }
+  }
+
   @override
   String toString() {
-    return {"ns": "$ns", isString ? "s" : "i": isString ? "$s" : "$i"}
-        .toString();
+    String res;
+    if(isString){
+      res = "ns=$_ns;s=$_s";
+    }
+    else{
+      res = "ns=$_ns;i=$_i";
+    }
+    return res;
   }
 }

@@ -2,12 +2,12 @@ import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
-
-import 'opc_type.dart';
 import '../open62541_gen.dart';
+import 'opc_type.dart';
 
 class UACOpject {
   late final Pointer _pointer;
+  
   Pointer<Void> get pointer => _pointer.cast();
   late final int _uaType;
   late final int length = 0;
@@ -106,12 +106,12 @@ class UACOpject {
         return Float32List.fromList(
             pValue.cast<Float>().asTypedList(len).toList());
       case UATypes.STRING:
-        List<String> _list = [];
+        List<String> list = [];
         for (int i = 0; i < len; i++) {
-          final _ua_str = pValue.cast<UA_String>().elementAt(i);
-          _list.add(_ua_str.ref.data.cast<Utf8>().toDartString().toString());
+          final uaStr = pValue.cast<UA_String>().elementAt(i);
+          list.add(uaStr.ref.data.cast<Utf8>().toDartString().toString());
         }
-        return _list;
+        return list;
     }
   }
 
@@ -123,7 +123,8 @@ class UACOpject {
         return pValue.cast<Uint8>().value;
       case UATypes.BYTESTRING:
       case UATypes.STRING:
-        return pValue.cast<Utf8>().toDartString();
+        final uaStr = pValue.cast<UA_String>();
+        return uaStr.ref.data.cast<Utf8>().toDartString().toString();
       case UATypes.INT16:
         return pValue.cast<Int16>().value;
       case UATypes.UINT16:
