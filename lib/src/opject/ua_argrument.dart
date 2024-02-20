@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import '../gen.dart';
 import '../open62541_gen.dart';
 import 'c.dart';
 import 'ua_variable_attributes.dart';
@@ -33,8 +34,11 @@ class UAArgument {
       attr.ref.name = cOPC.UA_String_fromChars(name.toCString().cast());
     }
   }
+  int get uaType => _uaType!;
+  int? _uaType;
 
   void setDataType(int uaType) {
+    _uaType = uaType;
     attr.ref.dataType = cOPC.UA_GET_TYPES_TYPEID(uaType);
   }
 

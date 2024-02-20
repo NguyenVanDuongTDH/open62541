@@ -1,6 +1,7 @@
 // ignore_for_file: unused_field
 
 import 'dart:ffi';
+import '../gen.dart';
 import 'opc_c_data.dart';
 import '../open62541_gen.dart';
 

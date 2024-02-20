@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:open62541/src/opject/c.dart';
 
+import '../gen.dart';
 import '../open62541_gen.dart';
 import 'opc_variant.dart';
 

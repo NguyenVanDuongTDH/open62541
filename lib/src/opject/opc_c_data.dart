@@ -2,12 +2,13 @@ import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
+import 'package:open62541/src/gen.dart';
 import '../open62541_gen.dart';
 import 'opc_type.dart';
 
 class UACOpject {
   late final Pointer _pointer;
-  
+
   Pointer<Void> get pointer => _pointer.cast();
   late final int _uaType;
   late final int length = 0;
@@ -39,7 +40,7 @@ class UACOpject {
         break;
       case UATypes.BYTESTRING:
       case UATypes.STRING:
-        calloc.free(pValue.cast<Utf8>());
+        cOPC.UA_String_delete(pValue.cast());
         break;
       case UATypes.INT16:
         calloc.free(pValue.cast<Int16>());
@@ -155,7 +156,11 @@ class UACOpject {
         break;
       case UATypes.BYTESTRING:
       case UATypes.STRING:
-        pValue = (value as String).toNativeUtf8();
+        final chars = (value as String).toNativeUtf8();
+        final pUaStr = cOPC.UA_String_new();
+        pUaStr.ref.data = chars.cast();
+        pUaStr.ref.length = chars.length;
+        pValue = pUaStr;
         break;
       case UATypes.INT16:
         pValue = calloc<Int16>(1)..value = value;

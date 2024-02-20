@@ -1,14 +1,13 @@
 // ignore_for_file: unnecessary_string_interpolations, prefer_interpolation_to_compose_strings
 
 import 'dart:ffi';
-
-import 'package:ffi/ffi.dart';
 import 'package:open62541/src/opject/c.dart';
 
+import '../gen.dart';
 import '../open62541_gen.dart';
 
-class UANodeID {
-  UANodeID(this._ns, dynamic S_OR_I) {
+class UANodeId {
+  UANodeId(this._ns, dynamic S_OR_I) {
     if (S_OR_I is String) {
       _s = S_OR_I;
       isString = true;
@@ -50,7 +49,7 @@ class UANodeID {
   }
 
 
-  factory UANodeID.parse(String nodeIdStr) {
+  factory UANodeId.parse(String nodeIdStr) {
     String? s;
     int? i;
     int? ns;
@@ -62,13 +61,10 @@ class UANodeID {
     } else {
       i = int.parse(IS.replaceFirst("i=", ''));
     }
-    print("PẢESE: $nodeIdStr");
     if (s != null) {
-      print("ns=$ns;s=$s");
-      return UANodeID(ns!, s);
+      return UANodeId(ns, s);
     } else {
-      print("ns=$ns;i=$i");
-      return UANodeID(ns!, i);
+      return UANodeId(ns, i);
     }
   }
 
