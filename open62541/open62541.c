@@ -82153,7 +82153,6 @@ UA_EXPORT void * UA_Client_Subscriptions_create_(UA_Client *client,
                                 deleteCallback
                                 );
                                 return res;
-
                                }
 
 UA_EXPORT int UA_Client_SubSubscriptions_Check(UA_CreateSubscriptionResponse* response){

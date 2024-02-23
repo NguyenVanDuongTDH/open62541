@@ -20,8 +20,13 @@ Future<bool> UAClientWriteNodeIdAsync(Pointer<UA_Client> client,
   variant.setScalar(cObject);
   Pointer<Uint32> reqId = calloc.allocate(0);
   reqId.value = -1;
-  int res = cOPC.UA_Client_writeValueAttribute_async(client, nodeId.nodeId,
-      variant.variant, _ClientWriteCallbackPtr, Pointer.fromAddress(0), reqId);
+  int res = cOPC.UA_Client_writeValueAttribute_async(
+      client,
+      nodeId.nodeId,
+      variant.variant.cast(),
+      _ClientWriteCallbackPtr,
+      Pointer.fromAddress(0),
+      reqId);
   if (res == 0) {
     if (reqId.value >= 0) {
       final compile = Completer<bool>();
@@ -45,8 +50,9 @@ Future<dynamic> UAClientReadNodeIdAsync(
   if (retval == 0 && requestId.value >= 0) {
     final compile = Completer();
     _future["$client::::${requestId.value}"] = compile;
+
     calloc.free(requestId);
-    return compile.future;
+    // return compile.future;
   } else {
     return null;
   }
@@ -55,6 +61,7 @@ Future<dynamic> UAClientReadNodeIdAsync(
 void _ClientReadNodeAsync(Pointer<UA_Client> client, Pointer<Void> a,
     int requestId, int c, Pointer<UA_DataValue> data) {
   dynamic res = UADataValue.toDart(data);
+  print(res);
   if (_future["$client::::$requestId"] != null) {
     _future["$client::::$requestId"]!.complete(res);
     _future.remove("$client::::$requestId");

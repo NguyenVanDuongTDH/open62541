@@ -2,9 +2,6 @@ import 'dart:async';
 import 'dart:ffi';
 
 import 'package:open62541/open62541.dart';
-import 'package:open62541/src/opject/opc_c_data.dart';
-import 'package:open62541/src/opject/opc_qualifiedname.dart';
-import 'package:open62541/src/opject/ua_argrument.dart';
 import 'package:open62541/src/server_chidren.dart/server_add_avarible_node.dart';
 import 'package:open62541/src/server_chidren.dart/server_add_listen.dart';
 import 'package:open62541/src/server_chidren.dart/server_add_method.dart';
@@ -77,7 +74,7 @@ class UAServer {
   }
 
   bool addVariableNodeId({
-    required UACOpject uaCOpject,
+    required UAVariant uaCOpject,
     required UANodeId nodeid,
     required UAQualifiedName qualifiedName,
     String? description,
@@ -87,7 +84,7 @@ class UAServer {
   }) {
     return UAServerAddVariableNodeId(
       server.cast(),
-      uaCOpject: uaCOpject,
+      variant: uaCOpject,
       nodeid: nodeid,
       qualifiedName: qualifiedName,
       dataChangeCallBack: dataChangeCallBack,

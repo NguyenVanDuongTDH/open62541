@@ -4,14 +4,11 @@ import 'package:open62541/open62541.dart';
 import 'package:open62541/src/gen.dart';
 import 'package:open62541/src/open62541_gen.dart';
 import 'package:open62541/src/opject/c.dart';
-import 'package:open62541/src/opject/opc_c_data.dart';
-import 'package:open62541/src/opject/opc_qualifiedname.dart';
-import 'package:open62541/src/opject/ua_variable_attributes.dart';
 import 'package:open62541/src/server_chidren.dart/server_add_listen.dart';
 
 bool UAServerAddVariableNodeId(
   Pointer<UA_Server> server, {
-  required UACOpject uaCOpject,
+  required UAVariant variant,
   required UANodeId nodeid,
   required UAQualifiedName qualifiedName,
   String? description,
@@ -21,8 +18,7 @@ bool UAServerAddVariableNodeId(
 }) {
   UA_NodeId parent = cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
   //var
-  UAVariant variant = UAVariant();
-  variant.setScalar(uaCOpject);
+
   UAVariableAttributes attr = UAVariableAttributes();
   attr.setVariant(variant);
   attr.setDescription(description);
@@ -48,9 +44,9 @@ bool UAServerAddVariableNodeId(
       UANodeId(0, UA_NS0ID_HASMODELLINGRULE).nodeId,
       cOPC.UA_EXPANDEDNODEID_NUMERIC(0, UA_NS0ID_MODELLINGRULE_MANDATORY),
       true);
-  // finit(nodeid);
   if (dataChangeCallBack != null) {
     UAServerValueChangeListen(server, nodeid, dataChangeCallBack);
   }
+  attr.delete();
   return retval == 0;
 }

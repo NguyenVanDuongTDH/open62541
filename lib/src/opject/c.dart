@@ -15,7 +15,6 @@ class CObject {
   void free() {
     calloc.free(reference);
   }
-
   Pointer<U> cast<U extends NativeType>() {
     return reference.cast();
   }

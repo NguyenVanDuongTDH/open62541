@@ -11,11 +11,18 @@ class UACOpject {
 
   Pointer<Void> get pointer => _pointer.cast();
   late final int _uaType;
-  late final int length = 0;
+  int get length => _length;
+  int _length = 0;
   int get uaType => _uaType;
   UACOpject(dynamic value, int uaType) {
+    if (value is List) {
+      _length = value.length;
+      _pointer = dartList2Pointer(value, uaType);
+    } else {
+      _length = 0;
+      _pointer = dart2Pointer(value, uaType);
+    }
     _uaType = uaType;
-    _pointer = dart2Pointer(value, uaType);
   }
 
   void delete() {
@@ -143,6 +150,97 @@ class UACOpject {
       case UATypes.DOUBLE:
         return pValue.cast<Double>().value;
     }
+  }
+
+  static dartList2Pointer(List<dynamic> value, int uaType) {
+    Pointer? pValue;
+    switch (uaType) {
+      case UATypes.BOOLEAN:
+        List<int> nList = value.map((e) => e ? 1 : 0).toList();
+        final Pointer<Uint8> cBytes = calloc.allocate<Uint8>(value.length);
+        cBytes
+            .asTypedList(value.length)
+            .setAll(0, Uint8List.fromList(nList.cast()));
+        pValue = cBytes;
+        break;
+      case UATypes.BYTE:
+        final Pointer<Uint8> cBytes = calloc.allocate<Uint8>(value.length);
+        cBytes
+            .asTypedList(value.length)
+            .setAll(0, Uint8List.fromList(value.cast()));
+        pValue = cBytes.cast();
+        break;
+      case UATypes.BYTESTRING:
+      case UATypes.STRING:
+        final Pointer<UA_String> arrayStrings = cOPC.UA_Array_new(
+                value.length, cOPC.UA_GET_TYPES_FROM_INDEX(UATypes.STRING))
+            .cast();
+        for (int i = 0; i < value.length; i++) {
+          final chars = (value[i] as String).toNativeUtf8();
+          arrayStrings.elementAt(i).ref.data = chars.cast();
+          arrayStrings.elementAt(i).ref.length = chars.length;
+        }
+        pValue = arrayStrings.cast();
+
+        break;
+      case UATypes.INT16:
+        final Pointer<Int16> cBytes = calloc.allocate<Int16>(value.length);
+        cBytes
+            .asTypedList(value.length)
+            .setAll(0, Int16List.fromList(value.cast()));
+        pValue = cBytes.cast();
+        break;
+      case UATypes.UINT16:
+        final Pointer<Uint16> cBytes = calloc.allocate<Uint16>(value.length);
+        cBytes
+            .asTypedList(value.length)
+            .setAll(0, Uint16List.fromList(value.cast()));
+        pValue = cBytes.cast();
+        break;
+      case UATypes.INT32:
+        final Pointer<Int32> cBytes = calloc.allocate<Int32>(value.length);
+        cBytes
+            .asTypedList(value.length)
+            .setAll(0, Int32List.fromList(value.cast()));
+        pValue = cBytes.cast();
+        break;
+      case UATypes.UINT32:
+        final Pointer<Uint32> cBytes = calloc.allocate<Uint32>(value.length);
+        cBytes
+            .asTypedList(value.length)
+            .setAll(0, Uint32List.fromList(value.cast()));
+        pValue = cBytes.cast();
+        break;
+      case UATypes.INT64:
+        final Pointer<Int64> cBytes = calloc.allocate<Int64>(value.length);
+        cBytes
+            .asTypedList(value.length)
+            .setAll(0, Int64List.fromList(value.cast()));
+        pValue = cBytes.cast();
+        break;
+      case UATypes.UINT64:
+        final Pointer<Uint64> cBytes = calloc.allocate<Uint64>(value.length);
+        cBytes
+            .asTypedList(value.length)
+            .setAll(0, Uint64List.fromList(value.cast()));
+        pValue = cBytes.cast();
+        break;
+      case UATypes.FLOAT:
+        final Pointer<Float> cBytes = calloc.allocate<Float>(value.length);
+        cBytes
+            .asTypedList(value.length)
+            .setAll(0, Float32List.fromList(value.cast()));
+        pValue = cBytes.cast();
+        break;
+      case UATypes.DOUBLE:
+        final Pointer<Double> cBytes = calloc.allocate<Double>(value.length);
+        cBytes
+            .asTypedList(value.length)
+            .setAll(0, Float64List.fromList(value.cast()));
+        pValue = cBytes.cast();
+        break;
+    }
+    return pValue!;
   }
 
   static Pointer dart2Pointer(dynamic value, int uaType) {

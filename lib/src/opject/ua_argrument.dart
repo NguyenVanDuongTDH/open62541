@@ -5,6 +5,8 @@ import '../open62541_gen.dart';
 import 'c.dart';
 import 'ua_variable_attributes.dart';
 
+
+
 class UAArgument {
   late final Pointer<UA_Argument> attr;
   UAArgument({

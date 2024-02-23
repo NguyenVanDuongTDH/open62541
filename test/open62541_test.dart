@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'package:open62541/open62541.dart';
+import 'package:open62541/src/opject/opc_variant.dart';
 
 class UADBVariable<T> {
   int? _uaType;
@@ -15,6 +16,7 @@ class UADBVariable<T> {
   }
   T get data => _getData();
   T _getData() {
+    _data ??= client.readNodeId(nodeID);
     return _data!;
   }
 
@@ -43,57 +45,40 @@ class UADB {
     __client__ = client;
   }
 
-  static final UADBVariable<int> __value__ = UADBVariable<int>(
+  static final UADBVariable<bool> __value__ = UADBVariable<bool>(
     client: __client__,
-    uaType: UATypes.INT64,
-    nodeID: UANodeId(1, "value"),
+    uaType: UATypes.BOOLEAN,
+    nodeID: UANodeId.parse('ns=3;s="Data_block_2"."OK OK"'),
   );
 
-  static int get value => __value__.data;
+  static bool get value => __value__.data;
 
-  static set value(int __input__value__) => __value__.data = __input__value__;
+  static set value(bool __input__value__) => __value__.data = __input__value__;
 }
 
-Future<void> main() async {
-  UAServer server = UAServer();
-  server.addTypeNodeId(
-      nodeID: UANodeId(1, 3000), qualifiedName: UAQualifiedName(1, "TYPEDATA"));
-  server.addObjectNodeId(
-      nodeID: UANodeId(1, 3100),
-      nodeIdTypeNodeid: UANodeId(1, 3000),
-      qualifiedName: UAQualifiedName(1, "NODEDATA"));
-  server.addVariableNodeId(
-    uaCOpject: UACOpject(1997, UATypes.INT64),
-    nodeid: UANodeId(1, 3200),
-    qualifiedName: UAQualifiedName(1, "VARDATA"),
-    parentNodeId: UANodeId(1, 3100),
-    dataChangeCallBack: (nodeId, value) {
-      print(nodeId);
-      print(value);
-    },
-  );
-  server.addVariableNodeId(
-    uaCOpject: UACOpject(1997, UATypes.INT64),
-    nodeid: UANodeId(1, 3201),
-    qualifiedName: UAQualifiedName(1, "VARDATA2"),
-    parentNodeId: UANodeId(1, 3100),
-    dataChangeCallBack: (nodeId, value) {
-      print(nodeId);
-      print(value);
-    },
-  );
 
-  server.addMethod(
-    name: UAQualifiedName(1, "NewMethod"),
-    nodeId: UANodeId(1, 3300),
-    input: UAArgument(name: "INPUT", uaType: UATypes.INT32),
-    output: UAArgument(name: "OUTPUT", uaType: UATypes.INT32),
-    callBack: (uaNodeId, value) {
-      print(value);
-      return 1997;
-    },
-  );
-  // server.setAddress();
-  server.start();
-  await Future.delayed(const Duration(days: 1));
+Future<void> main() async { 
+  String data = "data";
+  while (data.length < 10240) {
+    data = data + data;
+  }
+  int x = 0;
+
+  UAClient client = UAClient();
+  client.connect("opc.tcp://Admin-PC:4840/");
+  client.listenNodeId(UANodeId(1, "NODE FORDER"), (p0, p1) {
+    print("listen: $p0 => ${p1.length}");
+  });
+  while (true) {
+    await Future.delayed(Duration(milliseconds: 50));
+    try {
+      String res = client.readNodeId(UANodeId(1, "NODE FORDER"));
+      x = x + 1;
+      client.writeNodeId(UANodeId(1, "NODE FORDER"), (data + "$x").uaString());
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  await Future.delayed(Duration(days: 1));
 }

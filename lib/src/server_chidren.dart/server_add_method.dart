@@ -7,10 +7,6 @@ import 'package:open62541/open62541.dart';
 import 'package:open62541/src/gen.dart';
 import 'package:open62541/src/open62541_gen.dart';
 import 'package:open62541/src/opject/c.dart';
-import 'package:open62541/src/opject/opc_c_data.dart';
-import 'package:open62541/src/opject/opc_qualifiedname.dart';
-import 'package:open62541/src/opject/ua_argrument.dart';
-import 'package:open62541/src/opject/ua_variable_attributes.dart';
 
 Map<Pointer<UA_Server>,
         Map<String, dynamic Function(UANodeId nodeID, dynamic input)>>
@@ -79,21 +75,52 @@ int _UAServerMethodCallback(
     Pointer<UA_Variant> input,
     int outputSize,
     Pointer<UA_Variant> output) {
-  dynamic inputData = UAVariant.variant2Dart(input.ref);
+  dynamic inputData;
+  if (inputSize <= 1) {
+    inputData = UAVariant.variant2Dart(input.ref);
+  } else {
+    List list = [];
+    for (var i = 0; i < inputSize; i++) {
+      list.add(inputData = UAVariant.variant2Dart(input.elementAt(i).ref));
+    }
+  }
+
   try {
     dynamic result = _callBack[server]![UANodeId.pointer2String(methodId)]!(
         UANodeId.parse(UANodeId.pointer2String(methodId)), inputData);
     if (result != null) {
-      UAVariant variant = UAVariant();
-      final cValue = UACOpject(result, methodContext.cast<Int32>().value);
-      variant.setScalar(cValue);
-      variant.coppyTo(output);
-      variant.delete();
-      // cValue.delete();
+      if (result is UAVariant) {
+        result.coppyTo(output);
+        result.delete();
+      } else if (result is List<UAVariant>) {
+        for (var i = 0; i < result.length; i++) {
+          result[i].coppyTo(output.elementAt(i));
+          result[i].delete();
+        }
+      } else if (result is UACOpject) {
+        UAVariant variant = UAVariant();
+        variant.setScalar(result);
+        variant.coppyTo(output);
+        variant.delete();
+      } else if (result is List<UACOpject>) {
+        for (var i = 0; i < result.length; i++) {
+          UAVariant variant = UAVariant();
+          variant.setScalar(result[i]);
+          variant.coppyTo(output.elementAt(i));
+          variant.delete();
+        }
+      } else {
+        UAVariant variant = UAVariant();
+        final cValue = UACOpject(result, methodContext.cast<Int32>().value);
+        variant.setScalar(cValue);
+        variant.coppyTo(output);
+        variant.delete();
+      }
     }
+
     return 0;
   } catch (e) {
-    return -1;
+    return 9997;
   }
 }
 
@@ -109,4 +136,4 @@ final _UAServerMethodCallbackPtr = Pointer.fromFunction<
         Size,
         Pointer<UA_Variant>,
         Size,
-        Pointer<UA_Variant>)>(_UAServerMethodCallback, 54345);
+        Pointer<UA_Variant>)>(_UAServerMethodCallback, 9998);

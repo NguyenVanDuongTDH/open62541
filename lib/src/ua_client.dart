@@ -7,6 +7,8 @@ import 'package:open62541/src/client_childen.dart/client_read_and_write_node_asy
 import 'package:open62541/src/client_childen.dart/client_read_and_write_nodeid.dart';
 import 'package:open62541/src/opject/opc_node_id.dart';
 
+import '../open62541.dart';
+
 class UAClient {
   late final Pointer<Void> client;
   Timer? _timer;
@@ -16,8 +18,9 @@ class UAClient {
   }
   bool connect(String endpointUrl) {
     final retval = UAClientConnect(client.cast(), endpointUrl);
-    if (retval) {
-      _timer = Timer.periodic(const Duration(milliseconds: 1), (timer) {
+    print("connect");
+    if (retval && _timer == null) {
+      _timer ??= Timer.periodic(const Duration(milliseconds: 1), (timer) {
         runIterate(1);
       });
     }
@@ -44,8 +47,8 @@ class UAClient {
     return UAClientReadNodeId(client.cast(), nodeId);
   }
 
-  bool writeNodeId(UANodeId nodeId, int opcType, dynamic value) {
-    return UAClientWriteNodeId(client.cast(), nodeId, opcType, value);
+  bool writeNodeId(UANodeId nodeId, UAVariant variant) {
+    return UAClientWriteNodeId(client.cast(), nodeId, variant);
   }
 
   Future<dynamic> readNodeIdAsync(UANodeId nodeId) {

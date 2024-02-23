@@ -16,13 +16,14 @@ class UAVariableAttributes {
     attr.ref.accessLevel = 255;
   }
   void delete() {
+    cOPC.UA_VariableAttributes_deleteMembers(attr);
     cOPC.UA_VariableAttributes_delete(attr);
   }
 
   void setVariant(UAVariant variant) {
-    attr.ref.value = variant.variant.ref;
+    attr.ref.value = variant.variant.cast<UA_Variant>().ref;
     attr.ref.dataType = cOPC.UA_GET_TYPES_TYPEID(
-        cOPC.UA_GET_TYPES_INTDEX(variant.variant.ref.type));
+        cOPC.UA_GET_TYPES_INTDEX(variant.variant.cast<UA_Variant>().ref.type));
   }
 
   static int get READ => UA_ACCESSLEVELMASK_READ;
