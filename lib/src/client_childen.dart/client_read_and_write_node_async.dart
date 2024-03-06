@@ -50,9 +50,8 @@ Future<dynamic> UAClientReadNodeIdAsync(
   if (retval == 0 && requestId.value >= 0) {
     final compile = Completer();
     _future["$client::::${requestId.value}"] = compile;
-
     calloc.free(requestId);
-    // return compile.future;
+    return compile.future;
   } else {
     return null;
   }
@@ -61,7 +60,6 @@ Future<dynamic> UAClientReadNodeIdAsync(
 void _ClientReadNodeAsync(Pointer<UA_Client> client, Pointer<Void> a,
     int requestId, int c, Pointer<UA_DataValue> data) {
   dynamic res = UADataValue.toDart(data);
-  print(res);
   if (_future["$client::::$requestId"] != null) {
     _future["$client::::$requestId"]!.complete(res);
     _future.remove("$client::::$requestId");

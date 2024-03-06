@@ -56,28 +56,26 @@ class UADB {
   static set value(bool __input__value__) => __value__.data = __input__value__;
 }
 
+Future<void> main() async {
+  // UAServer server = UAServer();
+  // server.setAddress();
 
-Future<void> main() async { 
-  String data = "data";
-  while (data.length < 10240) {
-    data = data + data;
-  }
-  int x = 0;
+  // server.addVariableNodeId(
+  //     uaVariant: 123.uaUint64(),
+  //     nodeid: UANodeId(1, "var"),
+  //     qualifiedName: UAQualifiedName(1, "variable"));
+
+  // server.start();
+  // while (true) {
+  //   server.iterate();
+  // }
 
   UAClient client = UAClient();
-  client.connect("opc.tcp://Admin-PC:4840/");
-  client.listenNodeId(UANodeId(1, "NODE FORDER"), (p0, p1) {
-    print("listen: $p0 => ${p1.length}");
-  });
+  client.connect("opc.tcp://127.0.0.1:4840");
+  
   while (true) {
-    await Future.delayed(Duration(milliseconds: 50));
-    try {
-      String res = client.readNodeId(UANodeId(1, "NODE FORDER"));
-      x = x + 1;
-      client.writeNodeId(UANodeId(1, "NODE FORDER"), (data + "$x").uaString());
-    } catch (e) {
-      print(e);
-    }
+    print(await client.readNodeIdAsync(UANodeId(1, "var")));
+    // await Future.delayed(const Duration(milliseconds: 100));
   }
 
   await Future.delayed(Duration(days: 1));

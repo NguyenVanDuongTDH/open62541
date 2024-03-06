@@ -18,6 +18,10 @@ class UAServer {
     UAServerCreateListenCallBack(server.cast());
   }
 
+  void iterate(){
+    UAServerRunIterate(server.cast(), true);
+  }
+
   bool start() {
     bool retval = UAServerRunStartup(server.cast());
     if (retval) {
@@ -74,7 +78,7 @@ class UAServer {
   }
 
   bool addVariableNodeId({
-    required UAVariant uaCOpject,
+    required UAVariant uaVariant,
     required UANodeId nodeid,
     required UAQualifiedName qualifiedName,
     String? description,
@@ -84,7 +88,7 @@ class UAServer {
   }) {
     return UAServerAddVariableNodeId(
       server.cast(),
-      variant: uaCOpject,
+      variant: uaVariant,
       nodeid: nodeid,
       qualifiedName: qualifiedName,
       dataChangeCallBack: dataChangeCallBack,
