@@ -3,8 +3,9 @@
 import 'dart:ffi' as ffi;
 
 import 'package:open62541/open62541.dart';
+import 'package:open62541/src/open62541_gen.dart';
 
-import '../open62541_gen.dart';
+import '../gen.dart';
 
 final class _UA_DataValue extends ffi.Struct {
   external UA_Variant value;

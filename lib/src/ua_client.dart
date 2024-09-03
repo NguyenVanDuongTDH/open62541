@@ -5,9 +5,9 @@ import 'package:open62541/src/client_childen.dart/client_connect.dart';
 import 'package:open62541/src/client_childen.dart/client_listen_variable.dart';
 import 'package:open62541/src/client_childen.dart/client_read_and_write_node_async.dart';
 import 'package:open62541/src/client_childen.dart/client_read_and_write_nodeid.dart';
-import 'package:open62541/src/opject/opc_node_id.dart';
 
 import '../open62541.dart';
+import 'client_childen.dart/client_method_call.dart';
 
 class UAClient {
   late final Pointer<Void> client;
@@ -55,8 +55,17 @@ class UAClient {
     return UAClientReadNodeIdAsync(client.cast(), nodeId);
   }
 
-  Future<bool> writeNodeIdAsync(UANodeId nodeId, int uaType, dynamic value) {
-    return UAClientWriteNodeIdAsync(client.cast(), nodeId, uaType, value);
+  Future<bool> writeNodeIdAsync(UANodeId nodeId, UAVariant variant) {
+    return UAClientWriteNodeIdAsync(client.cast(), nodeId, variant);
+  }
+
+  Future<dynamic> methodCallAsync(
+      UANodeId methodId, int inputSize, UAVariant input) {
+    return Client_Method_call_async(client.cast(), methodId, inputSize, input);
+  }
+
+  dynamic methodCall(UANodeId methodId, UAVariant input) {
+    return Client_Method_call(client.cast(), methodId, input);
   }
 
   void listenNodeId(

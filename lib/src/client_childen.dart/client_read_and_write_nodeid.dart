@@ -13,7 +13,7 @@ dynamic UAClientReadNodeId(Pointer<UA_Client> client, UANodeId nodeId) {
   int res = cOPC.UA_Client_readValueAttribute(
       client, nodeId.nodeId, variant.variant.cast());
   if (res == 0) {
-    result = variant.toDart();
+    result = variant.data();
   } else {
     result = null;
   }

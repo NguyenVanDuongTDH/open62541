@@ -8,19 +8,20 @@ import '../../open62541.dart';
 import '../gen.dart';
 import '../open62541_gen.dart';
 
-Map<Pointer<UA_Server>, Map<String, Function(UANodeId nodeId, dynamic value)>>
+Map<Pointer<UA_Server>, Map<UANodeId, Function(UANodeId nodeId, dynamic value)>>
     _callBack = {};
 
 void UAServerCreateListenCallBack(Pointer<UA_Server> server) {
   _callBack[server] = {};
 }
+
 void UAServerRemoveListenCallBack(Pointer<UA_Server> server) {
   _callBack.remove(server);
 }
 
 void UAServerValueChangeListen(Pointer<UA_Server> server, UANodeId nodeID,
     Function(UANodeId nodeId, dynamic value) callBack) {
-  _callBack[server]![nodeID.toString()] = callBack;
+  _callBack[server]![nodeID] = callBack;
   UA_MonitoredItemCreateRequest monRequest =
       cOPC.UA_MonitoredItemCreateRequest_default(nodeID.nodeIdNew);
   monRequest.requestedParameters.samplingInterval = 100.0;
@@ -41,8 +42,9 @@ void _UAServerDataChangeCallback(
     int attributeId,
     Pointer<UA_DataValue> value) {
   dynamic res = UADataValue.toDart(value);
-  _callBack[server]![UANodeId.pointer2String(nodeid)]!(
-      UANodeId.parse(UANodeId.pointer2String(nodeid)), res);
+
+  _callBack[server]![UANodeId.fromPoint(nodeid)]!(
+      UANodeId.fromPoint(nodeid), res);
 }
 
 final _UAServerDataChangeCallbackPtr = Pointer.fromFunction<

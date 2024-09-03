@@ -19,9 +19,7 @@ export 'src/opject/opc_variant.dart'
         LIST2String,
         bool2BOOL,
         LIST2DF,
-        CObject2C,
         LIST2BOOL,
         LIST2INT,
         int2INT,
-        LISTCOBJEC2ArrayVariant,
         String2STRING;

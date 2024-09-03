@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ffi';
 import 'dart:typed_data';
 
@@ -8,7 +9,6 @@ import 'opc_type.dart';
 
 class UACOpject {
   late final Pointer _pointer;
-
   Pointer<Void> get pointer => _pointer.cast();
   late final int _uaType;
   int get length => _length;
@@ -123,6 +123,54 @@ class UACOpject {
     }
   }
 
+  static pointer2DartArray(Pointer<UA_Variant> ptr, int len, int uaType) {
+    final pValue = ptr.ref.data;
+    switch (uaType) {
+      case UATypes.BOOLEAN:
+        return pValue
+            .cast<Uint8>()
+            .asTypedList(len)
+            .map((e) => e == 1)
+            .toList();
+      case UATypes.BYTE:
+        return Uint8List.fromList(
+            pValue.cast<Uint8>().asTypedList(len).toList());
+      //
+      case UATypes.INT16:
+        return Int16List.fromList(
+            pValue.cast<Int16>().asTypedList(len).toList());
+      case UATypes.UINT16:
+        return Uint16List.fromList(
+            pValue.cast<Uint16>().asTypedList(len).toList());
+      //
+      case UATypes.INT32:
+        return Int32List.fromList(
+            pValue.cast<Int32>().asTypedList(len).toList());
+      case UATypes.UINT32:
+        return Uint32List.fromList(
+            pValue.cast<Uint32>().asTypedList(len).toList());
+      //
+      case UATypes.INT64:
+        return Int64List.fromList(
+            pValue.cast<Int64>().asTypedList(len).toList());
+      case UATypes.UINT64:
+        return Uint64List.fromList(
+            pValue.cast<Uint64>().asTypedList(len).toList());
+      case UATypes.DOUBLE:
+        return Float64List.fromList(pValue.cast<Double>().asTypedList(len));
+      case UATypes.FLOAT:
+        return Float32List.fromList(
+            pValue.cast<Float>().asTypedList(len).toList());
+      case UATypes.STRING:
+        List<String> list = [];
+        for (int i = 0; i < len; i++) {
+          final uaStr = pValue.cast<UA_String>().elementAt(i);
+          list.add(uaStr.ref.data.cast<Utf8>().toDartString().toString());
+        }
+        return list;
+    }
+  }
+
   static dynamic pointer2Dart(Pointer pValue, int uaType) {
     switch (uaType) {
       case UATypes.BOOLEAN:
@@ -156,29 +204,25 @@ class UACOpject {
     Pointer? pValue;
     switch (uaType) {
       case UATypes.BOOLEAN:
+      case UATypes.BYTE:
         List<int> nList = value.map((e) => e ? 1 : 0).toList();
-        final Pointer<Uint8> cBytes = calloc.allocate<Uint8>(value.length);
-        cBytes
+        pValue = cOPC.UA_Array_new(
+            value.length, cOPC.UA_GET_TYPES_FROM_INDEX(uaType));
+        pValue
+            .cast<Uint8>()
             .asTypedList(value.length)
             .setAll(0, Uint8List.fromList(nList.cast()));
-        pValue = cBytes;
         break;
-      case UATypes.BYTE:
-        final Pointer<Uint8> cBytes = calloc.allocate<Uint8>(value.length);
-        cBytes
-            .asTypedList(value.length)
-            .setAll(0, Uint8List.fromList(value.cast()));
-        pValue = cBytes.cast();
-        break;
+
       case UATypes.BYTESTRING:
       case UATypes.STRING:
         final Pointer<UA_String> arrayStrings = cOPC.UA_Array_new(
-                value.length, cOPC.UA_GET_TYPES_FROM_INDEX(UATypes.STRING))
+                value.length, cOPC.UA_GET_TYPES_FROM_INDEX(uaType))
             .cast();
         for (int i = 0; i < value.length; i++) {
-          final chars = (value[i] as String).toNativeUtf8();
-          arrayStrings.elementAt(i).ref.data = chars.cast();
-          arrayStrings.elementAt(i).ref.length = chars.length;
+           
+          arrayStrings.elementAt(i).ref.data = utf8Convert(value[i]);
+          arrayStrings.elementAt(i).ref.length = (value[i] as String).length;
         }
         pValue = arrayStrings.cast();
 
@@ -247,44 +291,67 @@ class UACOpject {
     Pointer? pValue;
     switch (uaType) {
       case UATypes.BOOLEAN:
-        pValue = calloc<Bool>(1)..value = value;
+        pValue = cOPC.UA_Boolean_new()..value = value;
         break;
       case UATypes.BYTE:
-        pValue = calloc<Uint8>(1)..value = value;
+        pValue = cOPC.UA_Byte_new()..value = value;
         break;
       case UATypes.BYTESTRING:
       case UATypes.STRING:
-        final chars = (value as String).toNativeUtf8();
+        Pointer<Uint8> result = utf8Convert(value);
+
         final pUaStr = cOPC.UA_String_new();
-        pUaStr.ref.data = chars.cast();
-        pUaStr.ref.length = chars.length;
+        pUaStr.ref.data = result.cast();
+        pUaStr.ref.length = (value as String).length;
         pValue = pUaStr;
         break;
       case UATypes.INT16:
-        pValue = calloc<Int16>(1)..value = value;
+        pValue = cOPC.UA_Int16_new()..value = value;
         break;
       case UATypes.UINT16:
-        pValue = calloc<Uint16>(1)..value = value;
+        pValue = cOPC.UA_UInt16_new()..value = value;
         break;
       case UATypes.INT32:
-        pValue = calloc<Int32>(1)..value = value;
+        pValue = cOPC.UA_Int32_new()..value = value;
         break;
       case UATypes.UINT32:
-        pValue = calloc<Uint32>(1)..value = value;
+        pValue = cOPC.UA_UInt32_new()..value = value;
         break;
       case UATypes.INT64:
-        pValue = calloc<Int64>(1)..value = value;
+        pValue = cOPC.UA_Int64_new()..value = value;
         break;
       case UATypes.UINT64:
-        pValue = calloc<Uint64>(1)..value = value;
+        pValue = cOPC.UA_UInt64_new()..value = value;
         break;
       case UATypes.FLOAT:
-        pValue = calloc<Float>(1)..value = value;
+        pValue = cOPC.UA_Float_new()..value = value;
         break;
       case UATypes.DOUBLE:
-        pValue = calloc<Double>(1)..value = value;
+        pValue = cOPC.UA_Double_new()..value = value;
         break;
     }
     return pValue!;
   }
+
+  static Pointer<Uint8> utf8Convert(value) {
+    final units = utf8.encode(value);
+    final result = cOPC.UA_Array_new(
+            value.length + 1, cOPC.UA_GET_TYPES_FROM_INDEX(UATypes.BYTE))
+        .cast<Uint8>();
+    final nativeString = result.asTypedList(units.length + 1);
+    nativeString.setAll(0, units);
+    nativeString[units.length] = 0;
+    return result;
+  }
+}
+
+Pointer<Uint8> toNativeUtf8(String str) {
+  final units = utf8.encode(str);
+  final result = cOPC.UA_Array_new(
+          str.length + 1, cOPC.UA_GET_TYPES_FROM_INDEX(UATypes.BYTE))
+      .cast<Uint8>();
+  final nativeString = result.asTypedList(units.length + 1);
+  nativeString.setAll(0, units);
+  nativeString[units.length] = 0;
+  return result.cast();
 }

@@ -1,53 +1,35 @@
 // ignore_for_file: unnecessary_string_interpolations, prefer_interpolation_to_compose_strings
 
 import 'dart:ffi';
-import 'package:open62541/src/opject/c.dart';
+import 'package:ffi/ffi.dart';
 
 import '../gen.dart';
 import '../open62541_gen.dart';
 
 class UANodeId {
-  UANodeId(this._ns, dynamic S_OR_I) {
-    if (S_OR_I is String) {
-      _s = S_OR_I;
-      isString = true;
-    } else if (S_OR_I is int) {
-      _i = S_OR_I;
-      isString = false;
-    } else {
-      throw "";
-    }
-  }
-  UA_NodeId get nodeId =>
-      isString ? _nodeString(free: true) : cOPC.UA_NODEID_NUMERIC(_ns, _i);
-  UA_NodeId get nodeIdNew =>
-      isString ? _nodeString(free: false) : cOPC.UA_NODEID_NUMERIC(_ns, _i);
-
-  UA_NodeId _nodeString({bool free = true}) {
-    final Chars = _s.toCString();
-    final res = cOPC.UA_NODEID_STRING(_ns, Chars.cast());
-    if (free) {
-      Chars.free();
-    }
-    return res;
-  }
-
-  late final int _ns;
-  late final String _s;
-  late final int _i;
-  bool isString = false;
-
-  static String pointer2String(Pointer<UA_NodeId> nodeid) {
+  late UA_NodeId _nodeId;
+  UA_NodeId get nodeId => _nodeId;
+  UA_NodeId get nodeIdNew => _nodeId;
+  static UANodeId fromPoint(Pointer<UA_NodeId> ptr) {
     Pointer<UA_String> uaStr = cOPC.UA_String_new();
     cOPC.UA_String_init(uaStr);
-    cOPC.UA_NodeId_print(nodeid, uaStr);
+    cOPC.UA_NodeId_print(ptr, uaStr);
     String res =
         String.fromCharCodes(uaStr.ref.data.asTypedList(uaStr.ref.length))
             .toString();
     cOPC.UA_String_delete(uaStr);
-    return res;
+    return UANodeId.parse(res);
   }
 
+  UANodeId(int ns, dynamic S_OR_I) {
+    if (S_OR_I is String) {
+      Pointer<Utf8> ptr = S_OR_I.toNativeUtf8();
+      _nodeId = cOPC.UA_NODEID_STRING_ALLOC(ns, ptr.cast());
+      calloc.free(ptr);
+    } else {
+      _nodeId = cOPC.UA_NODEID_NUMERIC(ns, S_OR_I);
+    }
+  }
 
   factory UANodeId.parse(String nodeIdStr) {
     String? s;
@@ -55,7 +37,7 @@ class UANodeId {
     int? ns;
     String IS = nodeIdStr.split(";")[1];
     ns = int.parse(nodeIdStr.split(";")[0].substring(3));
-    
+
     if (IS.startsWith("s=")) {
       s = IS.replaceFirst("s=", '');
     } else {
@@ -70,13 +52,27 @@ class UANodeId {
 
   @override
   String toString() {
-    String res;
-    if(isString){
-      res = "ns=$_ns;s=$_s";
-    }
-    else{
-      res = "ns=$_ns;i=$_i";
-    }
+    Pointer<UA_NodeId> ptrNodeId = cOPC.UA_NodeId_new();
+    ptrNodeId.ref = _nodeId;
+    Pointer<UA_String> uaStr = cOPC.UA_String_new();
+    cOPC.UA_String_init(uaStr);
+    cOPC.UA_NodeId_print(ptrNodeId, uaStr);
+    String res =
+        String.fromCharCodes(uaStr.ref.data.asTypedList(uaStr.ref.length))
+            .toString();
+    cOPC.UA_String_delete(uaStr);
+    cOPC.UA_NodeId_delete(ptrNodeId);
     return res;
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is UANodeId) {
+      return other.toString() == toString();
+    }
+    return false;
+  }
+
+  @override
+  int get hashCode => toString().hashCode;
 }

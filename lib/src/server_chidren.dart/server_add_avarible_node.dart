@@ -38,15 +38,15 @@ bool UAServerAddVariableNodeId(
     Pointer.fromAddress(0),
     Pointer.fromAddress(0),
   );
-  cOPC.UA_Server_addReference(
-      server,
-      nodeid.nodeIdNew,
-      UANodeId(0, UA_NS0ID_HASMODELLINGRULE).nodeId,
-      cOPC.UA_EXPANDEDNODEID_NUMERIC(0, UA_NS0ID_MODELLINGRULE_MANDATORY),
-      true);
+  // cOPC.UA_Server_addReference(
+  //     server,
+  //     nodeid.nodeIdNew,
+  //     UANodeId(0, UA_NS0ID_HASMODELLINGRULE).nodeId,
+  //     cOPC.UA_EXPANDEDNODEID_NUMERIC(0, UA_NS0ID_MODELLINGRULE_MANDATORY),
+  //     true);
   if (dataChangeCallBack != null) {
     UAServerValueChangeListen(server, nodeid, dataChangeCallBack);
   }
-  attr.delete();
+  // attr.delete();
   return retval == 0;
 }
