@@ -76,7 +76,7 @@
 
 /* Multithreading */
 /* #undef UA_ENABLE_IMMUTABLE_NODES */
-#define UA_MULTITHREADING 0
+#define UA_MULTITHREADING 100
 
 /* Advanced Options */
 #define UA_ENABLE_STATUSCODE_DESCRIPTIONS
