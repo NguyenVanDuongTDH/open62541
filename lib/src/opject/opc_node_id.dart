@@ -38,7 +38,8 @@ class UANodeId {
     if (S_OR_I is String) {
       Pointer<Utf8> ptr = S_OR_I.toNativeUtf8();
       _nodeId = cOPC.UA_NODEID_STRING_ALLOC(ns, ptr.cast());
-      // calloc.free(ptr);
+      //
+      calloc.free(ptr);
     } else {
       _nodeId = cOPC.UA_NODEID_NUMERIC(ns, S_OR_I);
     }
