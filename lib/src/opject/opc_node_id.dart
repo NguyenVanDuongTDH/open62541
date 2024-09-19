@@ -22,16 +22,9 @@ class UANodeId {
   }
 
   static UANodeId fromNode(UA_NodeId nodeId) {
-    Pointer<UA_String> uaStr = cOPC.UA_String_new();
-    Pointer<UA_NodeId> ptr = cOPC.UA_NodeId_new();
-    ptr.ref = nodeId;
-    cOPC.UA_String_init(uaStr);
-    cOPC.UA_NodeId_print(ptr, uaStr);
-    String res =
-        String.fromCharCodes(uaStr.ref.data.asTypedList(uaStr.ref.length))
-            .toString();
-    cOPC.UA_String_delete(uaStr);
-    return UANodeId.parse(res);
+    UANodeId _nodeId =  UANodeId(0,0);
+    _nodeId._nodeId = nodeId;
+    return _nodeId;
   }
 
   UANodeId(int ns, dynamic S_OR_I) {
