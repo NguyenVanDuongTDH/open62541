@@ -1,10 +1,9 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers, deprecated_member_use
+
 import 'dart:convert';
 import 'dart:ffi';
 import 'dart:typed_data';
-
-import 'package:ffi/ffi.dart';
 import 'package:open62541/open62541.dart';
-import 'package:open62541/src/gen.dart';
 import 'package:open62541/src/open62541_gen.dart';
 
 class UaConvert {
@@ -19,15 +18,47 @@ class UaConvert {
     return result;
   }
 
-  static Pointer dart2Pointer(dynamic value, int uaType) {
+  static Pointer dart2Pointer(dynamic value, [int? type]) {
+    int uaType = type ?? getUaTypes(value);
     Pointer? _ptr;
     if (value is List) {
-      _ptr = cOPC.UA_Array_new(
-        value.length,
-        cOPC.UA_GET_TYPES_FROM_INDEX(uaType),
-      );
+      _ptr =
+          cOPC.UA_Array_new(value.length, cOPC.UA_GET_TYPES_FROM_INDEX(uaType));
     }
+
     switch (uaType) {
+      case UATypes.VARIANT:
+        if (_ptr != null && value is List) {
+          for (int i = 0; i < value.length; i++) {
+            final element = value[i];
+            if (element is List) {
+              final variant = UAVariant();
+              variant.setScalar(element, UATypes.VARIANT);
+              cOPC.UA_Variant_setScalar(_ptr.cast<UA_Variant>().elementAt(i),
+                  variant.variant.cast(), cOPC.UA_GET_TYPES_FROM_INDEX(uaType));
+            } else {
+              if (element is UAVariant) {
+                cOPC.UA_Variant_setScalar(
+                    _ptr.cast<UA_Variant>().elementAt(i),
+                    element.variant.cast(),
+                    cOPC.UA_GET_TYPES_FROM_INDEX(uaType));
+              } else {
+                final variant0 = UAVariant();
+                variant0.setScalar(element, getUaTypes(element));
+                cOPC.UA_Variant_setScalar(
+                    _ptr.cast<UA_Variant>().elementAt(i),
+                    variant0.variant.cast(),
+                    cOPC.UA_GET_TYPES_FROM_INDEX(uaType));
+              }
+            }
+          }
+        } else {
+          final variant1 = UAVariant();
+          variant1.setScalar(value, getUaTypes(value));
+          return variant1.variant.cast();
+        }
+
+        break;
       case UATypes.BOOLEAN:
         if (value != null) {
           List<int> nList = value.map((e) => e ? 1 : 0).toList();
@@ -127,6 +158,17 @@ class UaConvert {
 
   static dynamic variant2Dart(UAVariant v) {
     switch (v.type) {
+      case UATypes.VARIANT:
+        if (v.arrayLength > 0) {
+          List l = [];
+          for (int i = 0; i < v.arrayLength; i++) {
+            l.add(variant2Dart(
+                UAVariant(v.variant.ref.data.cast<UA_Variant>().elementAt(i))));
+          }
+          return l;
+        } else {
+          return UAVariant(v.variant.ref.data.cast());
+        }
       case UATypes.BOOLEAN:
         if (v.arrayLength > 0) {
           return v.variant.ref.data
@@ -149,8 +191,8 @@ class UaConvert {
       case UATypes.STRING:
         if (v.arrayLength > 0) {
           List<String> arr = [];
-          final ptrArray = v.variant.ref.data.cast<UA_String>();
           for (var i = 0; i < v.arrayLength; i++) {
+            final ptrArray = v.variant.ref.data.cast<UA_String>() + i;
             arr.add(utf8
                 .decode(ptrArray.ref.data.asTypedList(ptrArray.ref.length)));
           }
@@ -218,6 +260,18 @@ class UaConvert {
         } else {
           return v.variant.ref.data.cast<Double>().value;
         }
+    }
+  }
+
+  static int getUaTypes(dynamic value) {
+    if (value is int) {
+      return UATypes.INT64;
+    } else if (value is double) {
+      return UATypes.DOUBLE;
+    } else if (value is String) {
+      return UATypes.STRING;
+    } else {
+      return -1;
     }
   }
 }

@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'dart:ffi';
 
-import 'package:open62541/src/client_childen.dart/client_connect.dart';
-import 'package:open62541/src/client_childen.dart/client_listen_variable.dart';
-import 'package:open62541/src/client_childen.dart/client_read_and_write_node_async.dart';
-import 'package:open62541/src/client_childen.dart/client_read_and_write_nodeid.dart';
-
-import '../open62541.dart';
-import 'client_childen.dart/client_method_call.dart';
+import 'package:open62541/open62541.dart';
+import 'package:open62541/src/client_childen/client_connect.dart';
+import 'package:open62541/src/client_childen/client_listen_variable.dart';
+import 'package:open62541/src/client_childen/client_method_call.dart';
+import 'package:open62541/src/client_childen/client_read_and_write_node_async.dart';
+import 'package:open62541/src/client_childen/client_read_and_write_nodeid.dart';
 
 class UAClient {
   late final Pointer<Void> client;
@@ -59,13 +58,8 @@ class UAClient {
     return UAClientWriteNodeIdAsync(client.cast(), nodeId, variant);
   }
 
-  Future<dynamic> methodCallAsync(
-      UANodeId methodId, int inputSize, UAVariant input) {
-    return Client_Method_call_async(client.cast(), methodId, inputSize, input);
-  }
-
-  dynamic methodCall(UANodeId methodId, UAVariant input) {
-    return Client_Method_call(client.cast(), methodId, input);
+  Future<dynamic> methodCallAsync(UANodeId methodId, UAVariant input) {
+    return Client_Method_call_async(client.cast(), methodId, input);
   }
 
   void listenNodeId(

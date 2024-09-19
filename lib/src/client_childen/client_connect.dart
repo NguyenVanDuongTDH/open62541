@@ -1,8 +1,10 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'dart:ffi';
+import 'dart:io';
+
 import 'package:ffi/ffi.dart';
-import 'package:open62541/src/gen.dart';
+import 'package:open62541/open62541.dart';
 import 'package:open62541/src/open62541_gen.dart';
 import 'package:open62541/src/opject/c.dart';
 
@@ -28,6 +30,10 @@ void UAClientDispose(Pointer<UA_Client> client) {
 }
 
 bool UAClientRunIterate(Pointer<UA_Client> client, int timeOut) {
+  if (Platform.isAndroid) {
+    cOPC.UA_Client_run_iterate_void(client, timeOut);
+    return client.ref.connectStatus == 0;
+  }
   return cOPC.UA_Client_run_iterate(client, timeOut) == 0;
 }
 

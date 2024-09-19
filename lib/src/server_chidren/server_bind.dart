@@ -2,10 +2,9 @@
 
 import 'dart:ffi';
 
+import 'package:open62541/open62541.dart';
+import 'package:open62541/src/open62541_gen.dart';
 import 'package:open62541/src/opject/c.dart';
-
-import '../gen.dart';
-import '../open62541_gen.dart';
 
 Pointer<Void> UAServerCreate() {
   final server = cOPC.UA_Server_new();
@@ -31,6 +30,6 @@ bool UAServerRunStartup(Pointer<UA_Server> server) {
   return cOPC.UA_Server_run_startup(server) == 0;
 }
 
-void UAServerDelete(Pointer<UA_Server> server){
+void UAServerDelete(Pointer<UA_Server> server) {
   cOPC.UA_Server_delete(server);
 }

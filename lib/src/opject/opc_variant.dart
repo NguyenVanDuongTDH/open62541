@@ -1,22 +1,23 @@
 // ignore_for_file: unused_field, camel_case_extensions
 
 import 'dart:ffi';
+
 import 'package:open62541/open62541.dart';
+import 'package:open62541/src/open62541_gen.dart';
 import 'package:open62541/src/opject/ua_convert.dart';
-import '../gen.dart';
-import '../open62541_gen.dart';
 
 class UAVariant {
   UAVariant([Pointer<UA_Variant>? ptr]) {
     if (ptr == null) {
-      variant = cOPC.UA_Variant_new();
-      cOPC.UA_Variant_init(variant);
+      _variant = cOPC.UA_Variant_new();
+      cOPC.UA_Variant_init(_variant!);
     } else {
-      variant = ptr;
+      _variant = ptr;
     }
   }
 
-  late final Pointer<UA_Variant> variant;
+  Pointer<UA_Variant>? _variant;
+  Pointer<UA_Variant> get variant => _variant!;
   int get arrayLength => variant.ref.arrayLength;
   int get arrayDimensionsSize => variant.ref.arrayDimensionsSize;
   int get type => cOPC.UA_GET_TYPES_INTDEX(variant.ref.type);
@@ -86,11 +87,11 @@ extension bool2BOOL on bool {
 }
 
 extension LIST2DF on List<double> {
-  UAVariant uaFloat() {
+  UAVariant uaFloatArray() {
     return UAVariant()..setScalar(this, UATypes.FLOAT);
   }
 
-  UAVariant uaFloatArray() {
+  UAVariant uaDoubleArray() {
     return UAVariant()..setScalar(this, UATypes.DOUBLE);
   }
 }
@@ -181,5 +182,11 @@ extension int2INT on int {
 
   UAVariant uaInt64() {
     return UAVariant()..setScalar(this, UATypes.INT64);
+  }
+}
+
+extension UA_DYNAMIC on dynamic {
+  UAVariant uaDynamic() {
+    return UAVariant()..setScalar(this, UATypes.VARIANT);
   }
 }

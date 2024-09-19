@@ -2,9 +2,8 @@
 
 import 'dart:ffi';
 
-import '../../open62541.dart';
-import '../gen.dart';
-import '../open62541_gen.dart';
+import 'package:open62541/open62541.dart';
+import 'package:open62541/src/open62541_gen.dart';
 
 dynamic UAClientReadNodeId(Pointer<UA_Client> client, UANodeId nodeId) {
   // read data server

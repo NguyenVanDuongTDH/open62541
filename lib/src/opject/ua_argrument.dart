@@ -1,11 +1,8 @@
 import 'dart:ffi';
 
-import '../gen.dart';
-import '../open62541_gen.dart';
-import 'c.dart';
-import 'ua_variable_attributes.dart';
-
-
+import 'package:open62541/open62541.dart';
+import 'package:open62541/src/open62541_gen.dart';
+import 'package:open62541/src/opject/c.dart';
 
 class UAArgument {
   late final Pointer<UA_Argument> attr;
@@ -36,6 +33,7 @@ class UAArgument {
       attr.ref.name = cOPC.UA_String_fromChars(name.toCString().cast());
     }
   }
+
   int get uaType => _uaType!;
   int? _uaType;
 

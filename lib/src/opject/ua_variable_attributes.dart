@@ -1,11 +1,8 @@
 import 'dart:ffi';
 
+import 'package:open62541/open62541.dart';
+import 'package:open62541/src/open62541_gen.dart';
 import 'package:open62541/src/opject/c.dart';
-
-import '../gen.dart';
-import '../open62541_gen.dart';
-import 'opc_type.dart';
-import 'opc_variant.dart';
 
 class UAVariableAttributes {
   late final Pointer<UA_VariableAttributes> attr;

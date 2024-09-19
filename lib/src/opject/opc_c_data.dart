@@ -3,9 +3,8 @@ import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
-import 'package:open62541/src/gen.dart';
-import '../open62541_gen.dart';
-import 'opc_type.dart';
+import 'package:open62541/open62541.dart';
+import 'package:open62541/src/open62541_gen.dart';
 
 class UACOpject {
   late final Pointer _pointer;
@@ -220,7 +219,6 @@ class UACOpject {
                 value.length, cOPC.UA_GET_TYPES_FROM_INDEX(uaType))
             .cast();
         for (int i = 0; i < value.length; i++) {
-           
           arrayStrings.elementAt(i).ref.data = utf8Convert(value[i]);
           arrayStrings.elementAt(i).ref.length = (value[i] as String).length;
         }

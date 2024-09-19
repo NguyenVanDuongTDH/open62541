@@ -2,11 +2,8 @@
 
 import 'dart:ffi';
 
-import 'package:open62541/src/opject/ua_data_value.dart';
-
-import '../../open62541.dart';
-import '../gen.dart';
-import '../open62541_gen.dart';
+import 'package:open62541/open62541.dart';
+import 'package:open62541/src/open62541_gen.dart';
 
 Map<Pointer<UA_Server>, Map<UANodeId, Function(UANodeId nodeId, dynamic value)>>
     _callBack = {};

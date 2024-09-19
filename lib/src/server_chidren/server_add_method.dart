@@ -4,7 +4,6 @@ import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
 import 'package:open62541/open62541.dart';
-import 'package:open62541/src/gen.dart';
 import 'package:open62541/src/open62541_gen.dart';
 import 'package:open62541/src/opject/c.dart';
 
@@ -20,36 +19,53 @@ void UAServerRemoveMethodCallBack(Pointer<UA_Server> server) {
   _callBack.remove(server);
 }
 
+Future<dynamic> UAServerMethodCall(
+    Pointer<UA_Server> server, UANodeId noidId, dynamic value) async {
+  if (_callBack[server] != null) {
+    if (_callBack[server]![noidId] != null) {
+      return await _callBack[server]![noidId]!(noidId, value);
+    } else {
+      throw ("Not find method nodeId: $noidId");
+    }
+  } else {
+    throw ("Not find server callback: $server");
+  }
+}
+
 void UAServerAddMethod(
   Pointer<UA_Server> server, {
-  required UAQualifiedName name,
+  required UAQualifiedName browseName,
   required UANodeId nodeId,
   required UAArgument input,
   required UAArgument output,
   required dynamic Function(UANodeId nodeID, dynamic input) callBack,
-  UANodeId? perentNodeId,
+  UANodeId? parentNodeId,
+  String? displayName,
+  String? description,
 }) {
   _callBack[server]![nodeId] = callBack;
 
   Pointer<UA_MethodAttributes> helloAttr = cOPC.UA_MethodAttributes_new();
   Pointer<Int32> context = calloc.allocate(1);
   context.value = output.uaType;
-  helloAttr.ref.description = cOPC.UA_LOCALIZEDTEXT(
-      UAVariableAttributes.en_US.cast(),
-      "Say `Hello World` async".toCString().cast());
-  helloAttr.ref.displayName = cOPC.UA_LOCALIZEDTEXT(
-      UAVariableAttributes.en_US.cast(),
-      "Hello World async".toCString().cast());
+  if (description != null) {
+    helloAttr.ref.description = cOPC.UA_LOCALIZEDTEXT(
+        UAVariableAttributes.en_US.cast(), description.toCString().cast());
+  }
+  if (displayName != null) {
+    helloAttr.ref.displayName = cOPC.UA_LOCALIZEDTEXT(
+        UAVariableAttributes.en_US.cast(), displayName.toCString().cast());
+  }
   helloAttr.ref.executable = true;
   helloAttr.ref.userExecutable = true;
   cOPC.UA_Server_addMethodNode(
       server,
       nodeId.nodeIdNew,
-      perentNodeId == null
+      parentNodeId == null
           ? cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER)
-          : perentNodeId.nodeIdNew,
+          : parentNodeId.nodeIdNew,
       cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
-      name.ua_qualifiedName_new,
+      browseName.ua_qualifiedName_new,
       helloAttr.ref,
       _UAServerMethodCallbackPtr,
       1,
@@ -58,6 +74,7 @@ void UAServerAddMethod(
       output.attr,
       context.cast(),
       Pointer.fromAddress(0));
+  cOPC.UA_Server_setMethodNodeAsync(server, nodeId.nodeIdNew, true);
 }
 
 int _UAServerMethodCallback(
@@ -72,16 +89,17 @@ int _UAServerMethodCallback(
     Pointer<UA_Variant> input,
     int outputSize,
     Pointer<UA_Variant> output) {
-  UAVariant? res;
-  try {
-    final _methodId = UANodeId.fromPoint(methodId);
-    res = _callBack[server]![_methodId]!(_methodId, UAVariant(input).data);
-    UAVariant(output).copyFrom(res!);
-  } catch (e) {
-    print(e);
-    return -1;
-  }
-  res.delete();
+  // UAVariant? res;
+  // try {
+  //   final methodId0 = UANodeId.fromPoint(methodId);
+  //   res = _callBack[server]![methodId0]!(methodId0, UAVariant(input).data);
+  //   UAVariant(output).copyFrom(res);
+  // } catch (e) {
+  //   print(e);
+  //   return -1;
+  // }
+  // res.clear();
+  // res.delete();
   return 0;
 }
 

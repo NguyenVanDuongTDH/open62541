@@ -2,9 +2,9 @@
 
 import 'dart:async';
 import 'dart:ffi';
+
 import 'package:open62541/open62541.dart';
-import '../gen.dart';
-import '../open62541_gen.dart';
+import 'package:open62541/src/open62541_gen.dart';
 
 Map<Pointer<UA_Client>, Map<int, Completer>> _future = {};
 
@@ -14,13 +14,8 @@ Future<bool> UAClientWriteNodeIdAsync(
   Pointer<UA_UInt32> reqId = cOPC.UA_UInt32_new();
   cOPC.UA_UInt32_init(reqId);
   reqId.value = -1;
-  int res = cOPC.UA_Client_writeValueAttribute_async(
-      client,
-      nodeId.nodeId,
-      variant.variant,
-      _ClientWriteCallbackPtr,
-      Pointer.fromAddress(0),
-      reqId);
+  int res = cOPC.UA_Client_writeValueAttribute_async(client, nodeId.nodeId,
+      variant.variant, _ClientWriteCallbackPtr, Pointer.fromAddress(0), reqId);
   if (res == 0) {
     if (reqId.value >= 0) {
       _future[client] ??= {};

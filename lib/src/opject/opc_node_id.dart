@@ -2,16 +2,29 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-
-import '../gen.dart';
-import '../open62541_gen.dart';
+import 'package:open62541/open62541.dart';
+import 'package:open62541/src/open62541_gen.dart';
 
 class UANodeId {
   late UA_NodeId _nodeId;
   UA_NodeId get nodeId => _nodeId;
   UA_NodeId get nodeIdNew => _nodeId;
+
   static UANodeId fromPoint(Pointer<UA_NodeId> ptr) {
     Pointer<UA_String> uaStr = cOPC.UA_String_new();
+    cOPC.UA_String_init(uaStr);
+    cOPC.UA_NodeId_print(ptr, uaStr);
+    String res =
+        String.fromCharCodes(uaStr.ref.data.asTypedList(uaStr.ref.length))
+            .toString();
+    cOPC.UA_String_delete(uaStr);
+    return UANodeId.parse(res);
+  }
+
+  static UANodeId fromNode(UA_NodeId nodeId) {
+    Pointer<UA_String> uaStr = cOPC.UA_String_new();
+    Pointer<UA_NodeId> ptr = cOPC.UA_NodeId_new();
+    ptr.ref = nodeId;
     cOPC.UA_String_init(uaStr);
     cOPC.UA_NodeId_print(ptr, uaStr);
     String res =
@@ -25,7 +38,7 @@ class UANodeId {
     if (S_OR_I is String) {
       Pointer<Utf8> ptr = S_OR_I.toNativeUtf8();
       _nodeId = cOPC.UA_NODEID_STRING_ALLOC(ns, ptr.cast());
-      calloc.free(ptr);
+      // calloc.free(ptr);
     } else {
       _nodeId = cOPC.UA_NODEID_NUMERIC(ns, S_OR_I);
     }

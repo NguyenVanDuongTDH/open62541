@@ -191,6 +191,125 @@ class NativeLibrary {
 
   set stderr(ffi.Pointer<FILE> value) => _stderr.value = value;
 
+  late final ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Char>>> ___tzname =
+      _lookup<ffi.Pointer<ffi.Pointer<ffi.Char>>>('__tzname');
+
+  ffi.Pointer<ffi.Pointer<ffi.Char>> get __tzname => ___tzname.value;
+
+  set __tzname(ffi.Pointer<ffi.Pointer<ffi.Char>> value) =>
+      ___tzname.value = value;
+
+  late final ffi.Pointer<ffi.Int> ___daylight = _lookup<ffi.Int>('__daylight');
+
+  int get __daylight => ___daylight.value;
+
+  set __daylight(int value) => ___daylight.value = value;
+
+  late final ffi.Pointer<ffi.Long> ___timezone =
+      _lookup<ffi.Long>('__timezone');
+
+  int get __timezone => ___timezone.value;
+
+  set __timezone(int value) => ___timezone.value = value;
+
+  late final ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Char>>> _tzname =
+      _lookup<ffi.Pointer<ffi.Pointer<ffi.Char>>>('tzname');
+
+  ffi.Pointer<ffi.Pointer<ffi.Char>> get tzname => _tzname.value;
+
+  set tzname(ffi.Pointer<ffi.Pointer<ffi.Char>> value) => _tzname.value = value;
+
+  late final ffi.Pointer<ffi.Int> _daylight = _lookup<ffi.Int>('daylight');
+
+  int get daylight => _daylight.value;
+
+  set daylight(int value) => _daylight.value = value;
+
+  late final ffi.Pointer<ffi.Long> _timezone = _lookup<ffi.Long>('timezone');
+
+  int get timezone => _timezone.value;
+
+  set timezone(int value) => _timezone.value = value;
+
+  late final ffi.Pointer<ffi.Int> _getdate_err =
+      _lookup<ffi.Int>('getdate_err');
+
+  int get getdate_err => _getdate_err.value;
+
+  set getdate_err(int value) => _getdate_err.value = value;
+
+  void UA_LOCK_INIT(
+    ffi.Pointer<UA_Lock> lock,
+  ) {
+    return _UA_LOCK_INIT(
+      lock,
+    );
+  }
+
+  late final _UA_LOCK_INITPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<UA_Lock>)>>(
+          'UA_LOCK_INIT');
+  late final _UA_LOCK_INIT =
+      _UA_LOCK_INITPtr.asFunction<void Function(ffi.Pointer<UA_Lock>)>();
+
+  void UA_LOCK_DESTROY(
+    ffi.Pointer<UA_Lock> lock,
+  ) {
+    return _UA_LOCK_DESTROY(
+      lock,
+    );
+  }
+
+  late final _UA_LOCK_DESTROYPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<UA_Lock>)>>(
+          'UA_LOCK_DESTROY');
+  late final _UA_LOCK_DESTROY =
+      _UA_LOCK_DESTROYPtr.asFunction<void Function(ffi.Pointer<UA_Lock>)>();
+
+  void UA_LOCK(
+    ffi.Pointer<UA_Lock> lock,
+  ) {
+    return _UA_LOCK(
+      lock,
+    );
+  }
+
+  late final _UA_LOCKPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<UA_Lock>)>>(
+          'UA_LOCK');
+  late final _UA_LOCK =
+      _UA_LOCKPtr.asFunction<void Function(ffi.Pointer<UA_Lock>)>();
+
+  void UA_UNLOCK(
+    ffi.Pointer<UA_Lock> lock,
+  ) {
+    return _UA_UNLOCK(
+      lock,
+    );
+  }
+
+  late final _UA_UNLOCKPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<UA_Lock>)>>(
+          'UA_UNLOCK');
+  late final _UA_UNLOCK =
+      _UA_UNLOCKPtr.asFunction<void Function(ffi.Pointer<UA_Lock>)>();
+
+  void UA_LOCK_ASSERT(
+    ffi.Pointer<UA_Lock> lock,
+    int num,
+  ) {
+    return _UA_LOCK_ASSERT(
+      lock,
+      num,
+    );
+  }
+
+  late final _UA_LOCK_ASSERTPtr = _lookup<
+          ffi.NativeFunction<ffi.Void Function(ffi.Pointer<UA_Lock>, ffi.Int)>>(
+      'UA_LOCK_ASSERT');
+  late final _UA_LOCK_ASSERT =
+      _UA_LOCK_ASSERTPtr.asFunction<void Function(ffi.Pointer<UA_Lock>, int)>();
+
   ffi.Pointer<ffi.Char> UA_StatusCode_name(
     int code,
   ) {
@@ -23773,6 +23892,7 @@ class NativeLibrary {
   late final _UA_LOG_DEBUG = _UA_LOG_DEBUGPtr.asFunction<
       void Function(ffi.Pointer<UA_Logger>, int, ffi.Pointer<ffi.Char>)>();
 
+
   void UA_LOG_INFO(
     ffi.Pointer<UA_Logger> logger,
     int category,
@@ -27710,6 +27830,82 @@ class NativeLibrary {
   late final _UA_Server_getNamespaceByIndex =
       _UA_Server_getNamespaceByIndexPtr.asFunction<
           int Function(ffi.Pointer<UA_Server>, int, ffi.Pointer<UA_String>)>();
+
+  int UA_Server_setMethodNodeAsync(
+    ffi.Pointer<UA_Server> server,
+    UA_NodeId id,
+    bool isAsync,
+  ) {
+    return _UA_Server_setMethodNodeAsync(
+      server,
+      id,
+      isAsync,
+    );
+  }
+
+  late final _UA_Server_setMethodNodeAsyncPtr = _lookup<
+      ffi.NativeFunction<
+          UA_StatusCode Function(ffi.Pointer<UA_Server>, UA_NodeId,
+              ffi.Bool)>>('UA_Server_setMethodNodeAsync');
+  late final _UA_Server_setMethodNodeAsync = _UA_Server_setMethodNodeAsyncPtr
+      .asFunction<int Function(ffi.Pointer<UA_Server>, UA_NodeId, bool)>();
+
+  bool UA_Server_getAsyncOperationNonBlocking(
+    ffi.Pointer<UA_Server> server,
+    ffi.Pointer<ffi.Int32> type,
+    ffi.Pointer<ffi.Pointer<UA_AsyncOperationRequest>> request,
+    ffi.Pointer<ffi.Pointer<ffi.Void>> context,
+    ffi.Pointer<UA_DateTime> timeout,
+  ) {
+    return _UA_Server_getAsyncOperationNonBlocking(
+      server,
+      type,
+      request,
+      context,
+      timeout,
+    );
+  }
+
+  late final _UA_Server_getAsyncOperationNonBlockingPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Bool Function(
+                  ffi.Pointer<UA_Server>,
+                  ffi.Pointer<ffi.Int32>,
+                  ffi.Pointer<ffi.Pointer<UA_AsyncOperationRequest>>,
+                  ffi.Pointer<ffi.Pointer<ffi.Void>>,
+                  ffi.Pointer<UA_DateTime>)>>(
+      'UA_Server_getAsyncOperationNonBlocking');
+  late final _UA_Server_getAsyncOperationNonBlocking =
+      _UA_Server_getAsyncOperationNonBlockingPtr.asFunction<
+          bool Function(
+              ffi.Pointer<UA_Server>,
+              ffi.Pointer<ffi.Int32>,
+              ffi.Pointer<ffi.Pointer<UA_AsyncOperationRequest>>,
+              ffi.Pointer<ffi.Pointer<ffi.Void>>,
+              ffi.Pointer<UA_DateTime>)>();
+
+  void UA_Server_setAsyncOperationResult(
+    ffi.Pointer<UA_Server> server,
+    ffi.Pointer<UA_AsyncOperationResponse> response,
+    ffi.Pointer<ffi.Void> context,
+  ) {
+    return _UA_Server_setAsyncOperationResult(
+      server,
+      response,
+      context,
+    );
+  }
+
+  late final _UA_Server_setAsyncOperationResultPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Pointer<UA_Server>,
+              ffi.Pointer<UA_AsyncOperationResponse>,
+              ffi.Pointer<ffi.Void>)>>('UA_Server_setAsyncOperationResult');
+  late final _UA_Server_setAsyncOperationResult =
+      _UA_Server_setAsyncOperationResultPtr.asFunction<
+          void Function(ffi.Pointer<UA_Server>,
+              ffi.Pointer<UA_AsyncOperationResponse>, ffi.Pointer<ffi.Void>)>();
 
   UA_ServerStatistics UA_Server_getStatistics(
     ffi.Pointer<UA_Server> server,
@@ -37858,6 +38054,190 @@ class NativeLibrary {
   late final _UA_Server_initPubSubNS0 = _UA_Server_initPubSubNS0Ptr.asFunction<
       int Function(ffi.Pointer<UA_Server>)>();
 
+  void UA_AsyncManager_init(
+    ffi.Pointer<UA_AsyncManager> am,
+    ffi.Pointer<UA_Server> server,
+  ) {
+    return _UA_AsyncManager_init(
+      am,
+      server,
+    );
+  }
+
+  late final _UA_AsyncManager_initPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(ffi.Pointer<UA_AsyncManager>,
+              ffi.Pointer<UA_Server>)>>('UA_AsyncManager_init');
+  late final _UA_AsyncManager_init = _UA_AsyncManager_initPtr.asFunction<
+      void Function(ffi.Pointer<UA_AsyncManager>, ffi.Pointer<UA_Server>)>();
+
+  void UA_AsyncManager_clear(
+    ffi.Pointer<UA_AsyncManager> am,
+    ffi.Pointer<UA_Server> server,
+  ) {
+    return _UA_AsyncManager_clear(
+      am,
+      server,
+    );
+  }
+
+  late final _UA_AsyncManager_clearPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(ffi.Pointer<UA_AsyncManager>,
+              ffi.Pointer<UA_Server>)>>('UA_AsyncManager_clear');
+  late final _UA_AsyncManager_clear = _UA_AsyncManager_clearPtr.asFunction<
+      void Function(ffi.Pointer<UA_AsyncManager>, ffi.Pointer<UA_Server>)>();
+
+  int UA_AsyncManager_createAsyncResponse(
+    ffi.Pointer<UA_AsyncManager> am,
+    ffi.Pointer<UA_Server> server,
+    ffi.Pointer<UA_NodeId> sessionId,
+    int requestId,
+    int requestHandle,
+    int operationType,
+    ffi.Pointer<ffi.Pointer<UA_AsyncResponse>> outAr,
+  ) {
+    return _UA_AsyncManager_createAsyncResponse(
+      am,
+      server,
+      sessionId,
+      requestId,
+      requestHandle,
+      operationType,
+      outAr,
+    );
+  }
+
+  late final _UA_AsyncManager_createAsyncResponsePtr = _lookup<
+          ffi.NativeFunction<
+              UA_StatusCode Function(
+                  ffi.Pointer<UA_AsyncManager>,
+                  ffi.Pointer<UA_Server>,
+                  ffi.Pointer<UA_NodeId>,
+                  UA_UInt32,
+                  UA_UInt32,
+                  ffi.Int32,
+                  ffi.Pointer<ffi.Pointer<UA_AsyncResponse>>)>>(
+      'UA_AsyncManager_createAsyncResponse');
+  late final _UA_AsyncManager_createAsyncResponse =
+      _UA_AsyncManager_createAsyncResponsePtr.asFunction<
+          int Function(
+              ffi.Pointer<UA_AsyncManager>,
+              ffi.Pointer<UA_Server>,
+              ffi.Pointer<UA_NodeId>,
+              int,
+              int,
+              int,
+              ffi.Pointer<ffi.Pointer<UA_AsyncResponse>>)>();
+
+  void UA_AsyncManager_removeAsyncResponse(
+    ffi.Pointer<UA_AsyncManager> am,
+    ffi.Pointer<UA_AsyncResponse> ar,
+  ) {
+    return _UA_AsyncManager_removeAsyncResponse(
+      am,
+      ar,
+    );
+  }
+
+  late final _UA_AsyncManager_removeAsyncResponsePtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Pointer<UA_AsyncManager>,
+                  ffi.Pointer<UA_AsyncResponse>)>>(
+      'UA_AsyncManager_removeAsyncResponse');
+  late final _UA_AsyncManager_removeAsyncResponse =
+      _UA_AsyncManager_removeAsyncResponsePtr.asFunction<
+          void Function(
+              ffi.Pointer<UA_AsyncManager>, ffi.Pointer<UA_AsyncResponse>)>();
+
+  int UA_AsyncManager_createAsyncOp(
+    ffi.Pointer<UA_AsyncManager> am,
+    ffi.Pointer<UA_Server> server,
+    ffi.Pointer<UA_AsyncResponse> ar,
+    int opIndex,
+    ffi.Pointer<UA_CallMethodRequest> opRequest,
+  ) {
+    return _UA_AsyncManager_createAsyncOp(
+      am,
+      server,
+      ar,
+      opIndex,
+      opRequest,
+    );
+  }
+
+  late final _UA_AsyncManager_createAsyncOpPtr = _lookup<
+          ffi.NativeFunction<
+              UA_StatusCode Function(
+                  ffi.Pointer<UA_AsyncManager>,
+                  ffi.Pointer<UA_Server>,
+                  ffi.Pointer<UA_AsyncResponse>,
+                  ffi.Size,
+                  ffi.Pointer<UA_CallMethodRequest>)>>(
+      'UA_AsyncManager_createAsyncOp');
+  late final _UA_AsyncManager_createAsyncOp =
+      _UA_AsyncManager_createAsyncOpPtr.asFunction<
+          int Function(
+              ffi.Pointer<UA_AsyncManager>,
+              ffi.Pointer<UA_Server>,
+              ffi.Pointer<UA_AsyncResponse>,
+              int,
+              ffi.Pointer<UA_CallMethodRequest>)>();
+
+  int UA_Server_processServiceOperationsAsync(
+    ffi.Pointer<UA_Server> server,
+    ffi.Pointer<UA_Session> session,
+    int requestId,
+    int requestHandle,
+    UA_AsyncServiceOperation operationCallback,
+    ffi.Pointer<ffi.Size> requestOperations,
+    ffi.Pointer<UA_DataType> requestOperationsType,
+    ffi.Pointer<ffi.Size> responseOperations,
+    ffi.Pointer<UA_DataType> responseOperationsType,
+    ffi.Pointer<ffi.Pointer<UA_AsyncResponse>> ar,
+  ) {
+    return _UA_Server_processServiceOperationsAsync(
+      server,
+      session,
+      requestId,
+      requestHandle,
+      operationCallback,
+      requestOperations,
+      requestOperationsType,
+      responseOperations,
+      responseOperationsType,
+      ar,
+    );
+  }
+
+  late final _UA_Server_processServiceOperationsAsyncPtr = _lookup<
+          ffi.NativeFunction<
+              UA_StatusCode Function(
+                  ffi.Pointer<UA_Server>,
+                  ffi.Pointer<UA_Session>,
+                  UA_UInt32,
+                  UA_UInt32,
+                  UA_AsyncServiceOperation,
+                  ffi.Pointer<ffi.Size>,
+                  ffi.Pointer<UA_DataType>,
+                  ffi.Pointer<ffi.Size>,
+                  ffi.Pointer<UA_DataType>,
+                  ffi.Pointer<ffi.Pointer<UA_AsyncResponse>>)>>(
+      'UA_Server_processServiceOperationsAsync');
+  late final _UA_Server_processServiceOperationsAsync =
+      _UA_Server_processServiceOperationsAsyncPtr.asFunction<
+          int Function(
+              ffi.Pointer<UA_Server>,
+              ffi.Pointer<UA_Session>,
+              int,
+              int,
+              UA_AsyncServiceOperation,
+              ffi.Pointer<ffi.Size>,
+              ffi.Pointer<UA_DataType>,
+              ffi.Pointer<ffi.Size>,
+              ffi.Pointer<UA_DataType>,
+              ffi.Pointer<ffi.Pointer<UA_AsyncResponse>>)>();
+
   /// /
   late final ffi.Pointer<aa_head> _refNameTree =
       _lookup<aa_head>('refNameTree');
@@ -40704,6 +41084,43 @@ class NativeLibrary {
 
   UA_NodeId get hierarchicalReferences => _hierarchicalReferences.ref;
 
+  void UA_AsyncOperation_delete(
+    ffi.Pointer<UA_AsyncOperation> ar,
+  ) {
+    return _UA_AsyncOperation_delete(
+      ar,
+    );
+  }
+
+  late final _UA_AsyncOperation_deletePtr = _lookup<
+          ffi
+          .NativeFunction<ffi.Void Function(ffi.Pointer<UA_AsyncOperation>)>>(
+      'UA_AsyncOperation_delete');
+  late final _UA_AsyncOperation_delete = _UA_AsyncOperation_deletePtr
+      .asFunction<void Function(ffi.Pointer<UA_AsyncOperation>)>();
+
+  int UA_AsyncManager_sendAsyncResponse(
+    ffi.Pointer<UA_AsyncManager> am,
+    ffi.Pointer<UA_Server> server,
+    ffi.Pointer<UA_AsyncResponse> ar,
+  ) {
+    return _UA_AsyncManager_sendAsyncResponse(
+      am,
+      server,
+      ar,
+    );
+  }
+
+  late final _UA_AsyncManager_sendAsyncResponsePtr = _lookup<
+          ffi.NativeFunction<
+              UA_StatusCode Function(ffi.Pointer<UA_AsyncManager>,
+                  ffi.Pointer<UA_Server>, ffi.Pointer<UA_AsyncResponse>)>>(
+      'UA_AsyncManager_sendAsyncResponse');
+  late final _UA_AsyncManager_sendAsyncResponse =
+      _UA_AsyncManager_sendAsyncResponsePtr.asFunction<
+          int Function(ffi.Pointer<UA_AsyncManager>, ffi.Pointer<UA_Server>,
+              ffi.Pointer<UA_AsyncResponse>)>();
+
   late final ffi.Pointer<UA_Byte> _NM_VERSION_MASK =
       _lookup<UA_Byte>('NM_VERSION_MASK');
 
@@ -42105,6 +42522,11 @@ class NativeLibrary {
   set dataTypeKindIndex(ffi.Pointer<UA_Byte> value) =>
       _dataTypeKindIndex.value = value;
 
+  late final ffi.Pointer<pthread_mutex_t> _printf_mutex =
+      _lookup<pthread_mutex_t>('printf_mutex');
+
+  pthread_mutex_t get printf_mutex => _printf_mutex.ref;
+
   late final ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Char>>> _logLevelNames =
       _lookup<ffi.Pointer<ffi.Pointer<ffi.Char>>>('logLevelNames');
 
@@ -42626,53 +43048,6 @@ class NativeLibrary {
   late final _UA_PubSubChannelUDPMC_close = _UA_PubSubChannelUDPMC_closePtr
       .asFunction<int Function(ffi.Pointer<UA_PubSubChannel>)>();
 
-  late final ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Char>>> ___tzname =
-      _lookup<ffi.Pointer<ffi.Pointer<ffi.Char>>>('__tzname');
-
-  ffi.Pointer<ffi.Pointer<ffi.Char>> get __tzname => ___tzname.value;
-
-  set __tzname(ffi.Pointer<ffi.Pointer<ffi.Char>> value) =>
-      ___tzname.value = value;
-
-  late final ffi.Pointer<ffi.Int> ___daylight = _lookup<ffi.Int>('__daylight');
-
-  int get __daylight => ___daylight.value;
-
-  set __daylight(int value) => ___daylight.value = value;
-
-  late final ffi.Pointer<ffi.Long> ___timezone =
-      _lookup<ffi.Long>('__timezone');
-
-  int get __timezone => ___timezone.value;
-
-  set __timezone(int value) => ___timezone.value = value;
-
-  late final ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Char>>> _tzname =
-      _lookup<ffi.Pointer<ffi.Pointer<ffi.Char>>>('tzname');
-
-  ffi.Pointer<ffi.Pointer<ffi.Char>> get tzname => _tzname.value;
-
-  set tzname(ffi.Pointer<ffi.Pointer<ffi.Char>> value) => _tzname.value = value;
-
-  late final ffi.Pointer<ffi.Int> _daylight = _lookup<ffi.Int>('daylight');
-
-  int get daylight => _daylight.value;
-
-  set daylight(int value) => _daylight.value = value;
-
-  late final ffi.Pointer<ffi.Long> _timezone = _lookup<ffi.Long>('timezone');
-
-  int get timezone => _timezone.value;
-
-  set timezone(int value) => _timezone.value = value;
-
-  late final ffi.Pointer<ffi.Int> _getdate_err =
-      _lookup<ffi.Int>('getdate_err');
-
-  int get getdate_err => _getdate_err.value;
-
-  set getdate_err(int value) => _getdate_err.value = value;
-
   ffi.Pointer<UA_DataType> UA_GET_TYPES_FROM_INDEX(
     int index,
   ) {
@@ -42780,63 +43155,144 @@ class NativeLibrary {
       _UA_Client_SubSubscriptions_CheckPtr.asFunction<
           int Function(ffi.Pointer<UA_CreateSubscriptionResponse>)>();
 
-  ffi.Pointer<UA_Variant> UA_Client_method_call(
+  late final ffi.Pointer<UA_FFICallback_method_async> __callBack =
+      _lookup<UA_FFICallback_method_async>('_callBack');
+
+  UA_FFICallback_method_async get _callBack => __callBack.value;
+
+  set _callBack(UA_FFICallback_method_async value) => __callBack.value = value;
+
+  void UA_FFIClient_callBack_method(
     ffi.Pointer<UA_Client> client,
-    UA_NodeId methodId,
-    int inputSize,
-    ffi.Pointer<UA_Variant> input,
-    ffi.Pointer<ffi.Size> outputSsize,
-    ffi.Pointer<UA_Variant> output,
-  ) {
-    return _UA_Client_method_call(
-      client,
-      methodId,
-      inputSize,
-      input,
-      outputSsize,
-      output,
-    );
-  }
-
-  late final _UA_Client_method_callPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<UA_Variant> Function(
-              ffi.Pointer<UA_Client>,
-              UA_NodeId,
-              UA_Int64,
-              ffi.Pointer<UA_Variant>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<UA_Variant>)>>('UA_Client_method_call');
-  late final _UA_Client_method_call = _UA_Client_method_callPtr.asFunction<
-      ffi.Pointer<UA_Variant> Function(
-          ffi.Pointer<UA_Client>,
-          UA_NodeId,
-          int,
-          ffi.Pointer<UA_Variant>,
-          ffi.Pointer<ffi.Size>,
-          ffi.Pointer<UA_Variant>)>();
-
-  ffi.Pointer<UA_Variant> UA_CallResponse_2_Variant(
+    ffi.Pointer<ffi.Void> userdata,
+    int requestId,
     ffi.Pointer<UA_CallResponse> response,
   ) {
-    return _UA_CallResponse_2_Variant(
+    return _UA_FFIClient_callBack_method(
+      client,
+      userdata,
+      requestId,
       response,
     );
   }
 
-  late final _UA_CallResponse_2_VariantPtr = _lookup<
+  late final _UA_FFIClient_callBack_methodPtr = _lookup<
       ffi.NativeFunction<
-          ffi.Pointer<UA_Variant> Function(
-              ffi.Pointer<UA_CallResponse>)>>('UA_CallResponse_2_Variant');
-  late final _UA_CallResponse_2_Variant =
-      _UA_CallResponse_2_VariantPtr.asFunction<
-          ffi.Pointer<UA_Variant> Function(ffi.Pointer<UA_CallResponse>)>();
+          ffi.Void Function(
+              ffi.Pointer<UA_Client>,
+              ffi.Pointer<ffi.Void>,
+              UA_UInt32,
+              ffi.Pointer<UA_CallResponse>)>>('UA_FFIClient_callBack_method');
+  late final _UA_FFIClient_callBack_method =
+      _UA_FFIClient_callBack_methodPtr.asFunction<
+          void Function(ffi.Pointer<UA_Client>, ffi.Pointer<ffi.Void>, int,
+              ffi.Pointer<UA_CallResponse>)>();
 
-  late final ffi.Pointer<ffi.Bool> _running = _lookup<ffi.Bool>('running');
+  int UA_FFIClient_call_async(
+    ffi.Pointer<UA_Client> client,
+    UA_NodeId objectId,
+    UA_NodeId methodId,
+    int inputSize,
+    ffi.Pointer<UA_Variant> input,
+    UA_FFICallback_method_async callBack,
+    ffi.Pointer<ffi.Void> userdata,
+    ffi.Pointer<UA_UInt32> reqId,
+  ) {
+    return _UA_FFIClient_call_async(
+      client,
+      objectId,
+      methodId,
+      inputSize,
+      input,
+      callBack,
+      userdata,
+      reqId,
+    );
+  }
 
-  bool get running => _running.value;
+  late final _UA_FFIClient_call_asyncPtr = _lookup<
+      ffi.NativeFunction<
+          UA_StatusCode Function(
+              ffi.Pointer<UA_Client>,
+              UA_NodeId,
+              UA_NodeId,
+              ffi.Size,
+              ffi.Pointer<UA_Variant>,
+              UA_FFICallback_method_async,
+              ffi.Pointer<ffi.Void>,
+              ffi.Pointer<UA_UInt32>)>>('UA_FFIClient_call_async');
+  late final _UA_FFIClient_call_async = _UA_FFIClient_call_asyncPtr.asFunction<
+      int Function(
+          ffi.Pointer<UA_Client>,
+          UA_NodeId,
+          UA_NodeId,
+          int,
+          ffi.Pointer<UA_Variant>,
+          UA_FFICallback_method_async,
+          ffi.Pointer<ffi.Void>,
+          ffi.Pointer<UA_UInt32>)>();
 
-  set running(bool value) => _running.value = value;
+  void UA_Server_run_iterate_void(
+    ffi.Pointer<UA_Server> server,
+    bool waitInternal,
+  ) {
+    return _UA_Server_run_iterate_void(
+      server,
+      waitInternal,
+    );
+  }
+
+  late final _UA_Server_run_iterate_voidPtr = _lookup<
+          ffi
+          .NativeFunction<ffi.Void Function(ffi.Pointer<UA_Server>, ffi.Bool)>>(
+      'UA_Server_run_iterate_void');
+  late final _UA_Server_run_iterate_void = _UA_Server_run_iterate_voidPtr
+      .asFunction<void Function(ffi.Pointer<UA_Server>, bool)>();
+
+  void UA_Client_run_iterate_void(
+    ffi.Pointer<UA_Client> client,
+    int timeout,
+  ) {
+    return _UA_Client_run_iterate_void(
+      client,
+      timeout,
+    );
+  }
+
+  late final _UA_Client_run_iterate_voidPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(ffi.Pointer<UA_Client>,
+              UA_UInt32)>>('UA_Client_run_iterate_void');
+  late final _UA_Client_run_iterate_void = _UA_Client_run_iterate_voidPtr
+      .asFunction<void Function(ffi.Pointer<UA_Client>, int)>();
+
+  void UA_Server_call_1(
+    ffi.Pointer<UA_Server> server,
+    ffi.Pointer<ffi.Pointer<UA_AsyncOperationRequest>> request,
+    ffi.Pointer<ffi.Void> context,
+    ffi.Pointer<UA_Variant> out,
+  ) {
+    return _UA_Server_call_1(
+      server,
+      request,
+      context,
+      out,
+    );
+  }
+
+  late final _UA_Server_call_1Ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Pointer<UA_Server>,
+              ffi.Pointer<ffi.Pointer<UA_AsyncOperationRequest>>,
+              ffi.Pointer<ffi.Void>,
+              ffi.Pointer<UA_Variant>)>>('UA_Server_call_1');
+  late final _UA_Server_call_1 = _UA_Server_call_1Ptr.asFunction<
+      void Function(
+          ffi.Pointer<UA_Server>,
+          ffi.Pointer<ffi.Pointer<UA_AsyncOperationRequest>>,
+          ffi.Pointer<ffi.Void>,
+          ffi.Pointer<UA_Variant>)>();
 }
 
 final class __atomic_wide_counter extends ffi.Union {
@@ -43131,6 +43587,15 @@ typedef Dart__off64_t = int;
 final class _IO_codecvt extends ffi.Opaque {}
 
 final class _IO_wide_data extends ffi.Opaque {}
+
+final class UA_Lock extends ffi.Struct {
+  external pthread_mutex_t mutex;
+
+  external pthread_mutexattr_t mutexAttr;
+
+  @ffi.Int()
+  external int mutexCounter;
+}
 
 /// Common Definitions
 /// ==================
@@ -46508,6 +46973,8 @@ final class UA_Server extends ffi.Struct {
   @UA_UInt32()
   external int lastTokenId;
 
+  external UA_AsyncManager asyncManager;
+
   external session_list sessions;
 
   @UA_UInt32()
@@ -46534,17 +47001,21 @@ final class UA_Server extends ffi.Struct {
   @ffi.Size()
   external int monitoredItemsSize;
 
-  external UnnamedStruct28 subscriptions;
+  external UnnamedStruct31 subscriptions;
 
   @UA_UInt32()
   external int lastSubscriptionId;
 
-  external UnnamedStruct29 localMonitoredItems;
+  external UnnamedStruct32 localMonitoredItems;
 
   @UA_UInt32()
   external int lastLocalMonitoredItemId;
 
   external UA_PubSubManager pubSubManager;
+
+  external UA_Lock networkMutex;
+
+  external UA_Lock serviceMutex;
 
   external UA_NetworkStatistics networkStatistics;
 
@@ -46717,6 +47188,14 @@ final class UA_ServerConfig extends ffi.Struct {
 
   @UA_UInt32()
   external int maxReferencesPerNode;
+
+  @UA_Double()
+  external double asyncOperationTimeout;
+
+  @ffi.Size()
+  external int maxAsyncOperationQueueSize;
+
+  external UA_Server_AsyncOperationNotifyCallback asyncOperationNotifyCallback;
 
   @UA_UInt32()
   external int maxSubscriptions;
@@ -47472,6 +47951,13 @@ final class UA_GlobalNodeLifecycle extends ffi.Struct {
               ffi.Pointer<UA_NodeId> targetNodeId)>> generateChildNodeId;
 }
 
+typedef UA_Server_AsyncOperationNotifyCallback = ffi.Pointer<
+    ffi.NativeFunction<UA_Server_AsyncOperationNotifyCallbackFunction>>;
+typedef UA_Server_AsyncOperationNotifyCallbackFunction = ffi.Void Function(
+    ffi.Pointer<UA_Server> server);
+typedef DartUA_Server_AsyncOperationNotifyCallbackFunction = void Function(
+    ffi.Pointer<UA_Server> server);
+
 final class UA_DurationRange extends ffi.Struct {
   @UA_Duration()
   external double min;
@@ -47921,6 +48407,60 @@ final class UA_AsymmetricAlgorithmSecurityHeader extends ffi.Struct {
   external UA_ByteString receiverCertificateThumbprint;
 }
 
+final class UA_AsyncManager extends ffi.Struct {
+  external UnnamedStruct27 asyncResponses;
+
+  @ffi.Size()
+  external int asyncResponsesCount;
+
+  external UA_Lock queueLock;
+
+  external UA_AsyncOperationQueue newQueue;
+
+  external UA_AsyncOperationQueue dispatchedQueue;
+
+  external UA_AsyncOperationQueue resultQueue;
+
+  @ffi.Size()
+  external int opsCount;
+
+  @UA_UInt64()
+  external int checkTimeoutCallbackId;
+}
+
+final class UnnamedStruct27 extends ffi.Struct {
+  external ffi.Pointer<UA_AsyncResponse> tqh_first;
+
+  external ffi.Pointer<ffi.Pointer<UA_AsyncResponse>> tqh_last;
+}
+
+final class UA_AsyncResponse extends ffi.Opaque {}
+
+final class UA_AsyncOperationQueue extends ffi.Struct {
+  external ffi.Pointer<UA_AsyncOperation> tqh_first;
+
+  external ffi.Pointer<ffi.Pointer<UA_AsyncOperation>> tqh_last;
+}
+
+final class UA_AsyncOperation extends ffi.Struct {
+  external UnnamedStruct29 pointers;
+
+  external UA_CallMethodRequest request;
+
+  external UA_CallMethodResult response;
+
+  @ffi.Size()
+  external int index;
+
+  external ffi.Pointer<UA_AsyncResponse> parent;
+}
+
+final class UnnamedStruct29 extends ffi.Struct {
+  external ffi.Pointer<UA_AsyncOperation> tqe_next;
+
+  external ffi.Pointer<ffi.Pointer<UA_AsyncOperation>> tqe_prev;
+}
+
 final class session_list extends ffi.Struct {
   external ffi.Pointer<session_list_entry> lh_first;
 }
@@ -47928,12 +48468,12 @@ final class session_list extends ffi.Struct {
 final class session_list_entry extends ffi.Struct {
   external UA_TimerEntry cleanupCallback;
 
-  external UnnamedStruct27 pointers;
+  external UnnamedStruct30 pointers;
 
   external UA_Session session;
 }
 
-final class UnnamedStruct27 extends ffi.Struct {
+final class UnnamedStruct30 extends ffi.Struct {
   external ffi.Pointer<session_list_entry> le_next;
 
   external ffi.Pointer<ffi.Pointer<session_list_entry>> le_prev;
@@ -48170,6 +48710,8 @@ final class UA_Timer extends ffi.Struct {
 
   @UA_UInt64()
   external int idCounter;
+
+  external UA_Lock timerMutex;
 }
 
 final class aa_head extends ffi.Struct {
@@ -48193,11 +48735,11 @@ abstract class aa_cmp {
   static const int AA_CMP_MORE = 1;
 }
 
-final class UnnamedStruct28 extends ffi.Struct {
+final class UnnamedStruct31 extends ffi.Struct {
   external ffi.Pointer<UA_Subscription> lh_first;
 }
 
-final class UnnamedStruct29 extends ffi.Struct {
+final class UnnamedStruct32 extends ffi.Struct {
   external ffi.Pointer<UA_MonitoredItem> lh_first;
 }
 
@@ -48240,7 +48782,7 @@ final class UA_PubSubConnection extends ffi.Struct {
   @ffi.Size()
   external int readerGroupsSize;
 
-  external UnnamedStruct35 listEntry;
+  external UnnamedStruct38 listEntry;
 
   @UA_UInt16()
   external int configurationFreezeCounter;
@@ -48379,7 +48921,7 @@ final class UA_WriterGroup extends ffi.Struct {
 
   external UA_WriterGroupConfig config;
 
-  external UnnamedStruct30 listEntry;
+  external UnnamedStruct33 listEntry;
 
   external UA_NodeId identifier;
 
@@ -48537,7 +49079,7 @@ abstract class UA_PubSubRTLevel {
   static const int UA_PUBSUB_RT_DETERMINISTIC = 4;
 }
 
-final class UnnamedStruct30 extends ffi.Struct {
+final class UnnamedStruct33 extends ffi.Struct {
   external ffi.Pointer<UA_WriterGroup> le_next;
 
   external ffi.Pointer<ffi.Pointer<UA_WriterGroup>> le_prev;
@@ -48553,7 +49095,7 @@ final class UA_DataSetWriter extends ffi.Struct {
 
   external UA_DataSetWriterConfig config;
 
-  external UnnamedStruct31 listEntry;
+  external UnnamedStruct34 listEntry;
 
   external UA_NodeId identifier;
 
@@ -48606,7 +49148,7 @@ final class UA_DataSetWriterConfig extends ffi.Struct {
   external ffi.Pointer<UA_KeyValuePair> dataSetWriterProperties;
 }
 
-final class UnnamedStruct31 extends ffi.Struct {
+final class UnnamedStruct34 extends ffi.Struct {
   external ffi.Pointer<UA_DataSetWriter> le_next;
 
   external ffi.Pointer<ffi.Pointer<UA_DataSetWriter>> le_prev;
@@ -48633,7 +49175,7 @@ final class UA_NetworkMessageOffset extends ffi.Struct {
   @ffi.Int32()
   external int contentType;
 
-  external UnnamedUnion11 offsetData;
+  external UnnamedUnion12 offsetData;
 
   @ffi.Size()
   external int offset;
@@ -48655,13 +49197,13 @@ abstract class UA_NetworkMessageOffsetType {
   static const int UA_PUBSUB_OFFSETTYPE_DATASETWRITERID = 11;
 }
 
-final class UnnamedUnion11 extends ffi.Union {
-  external UnnamedStruct32 value;
+final class UnnamedUnion12 extends ffi.Union {
+  external UnnamedStruct35 value;
 
   external ffi.Pointer<UA_DateTime> timestamp;
 }
 
-final class UnnamedStruct32 extends ffi.Struct {
+final class UnnamedStruct35 extends ffi.Struct {
   external ffi.Pointer<UA_DataValue> value;
 
   @ffi.Size()
@@ -48712,13 +49254,13 @@ final class UA_NetworkMessage extends ffi.Struct {
   @ffi.Int32()
   external int networkMessageType;
 
-  external UnnamedUnion12 publisherId;
+  external UnnamedUnion13 publisherId;
 
   external UA_Guid dataSetClassId;
 
   external UA_NetworkMessageGroupHeader groupHeader;
 
-  external UnnamedUnion13 payloadHeader;
+  external UnnamedUnion14 payloadHeader;
 
   @UA_DateTime()
   external int timestamp;
@@ -48733,7 +49275,7 @@ final class UA_NetworkMessage extends ffi.Struct {
 
   external UA_NetworkMessageSecurityHeader securityHeader;
 
-  external UnnamedUnion14 payload;
+  external UnnamedUnion15 payload;
 
   external UA_ByteString securityFooter;
 }
@@ -48752,7 +49294,7 @@ abstract class UA_NetworkMessageType {
   static const int UA_NETWORKMESSAGE_DISCOVERY_RESPONSE = 2;
 }
 
-final class UnnamedUnion12 extends ffi.Union {
+final class UnnamedUnion13 extends ffi.Union {
   @UA_Byte()
   external int publisherIdByte;
 
@@ -48798,7 +49340,7 @@ final class UA_NetworkMessageGroupHeader extends ffi.Struct {
   external int sequenceNumber;
 }
 
-final class UnnamedUnion13 extends ffi.Union {
+final class UnnamedUnion14 extends ffi.Union {
   external UA_DataSetPayloadHeader dataSetPayloadHeader;
 }
 
@@ -48834,7 +49376,7 @@ final class UA_NetworkMessageSecurityHeader extends ffi.Struct {
   external int securityFooterSize;
 }
 
-final class UnnamedUnion14 extends ffi.Union {
+final class UnnamedUnion15 extends ffi.Union {
   external UA_DataSetPayload dataSetPayload;
 }
 
@@ -48847,7 +49389,7 @@ final class UA_DataSetPayload extends ffi.Struct {
 final class UA_DataSetMessage extends ffi.Struct {
   external UA_DataSetMessageHeader header;
 
-  external UnnamedUnion15 data;
+  external UnnamedUnion16 data;
 }
 
 final class UA_DataSetMessageHeader extends ffi.Struct {
@@ -48911,7 +49453,7 @@ abstract class UA_DataSetMessageType {
   static const int UA_DATASETMESSAGE_KEEPALIVE = 3;
 }
 
-final class UnnamedUnion15 extends ffi.Union {
+final class UnnamedUnion16 extends ffi.Union {
   external UA_DataSetMessage_DataKeyFrameData keyFrameData;
 
   external UA_DataSetMessage_DataDeltaFrameData deltaFrameData;
@@ -48954,7 +49496,7 @@ final class UA_ReaderGroup extends ffi.Struct {
 
   external UA_NodeId linkedConnection;
 
-  external UnnamedStruct33 listEntry;
+  external UnnamedStruct36 listEntry;
 
   external UA_ListOfPubSubDataSetReader readers;
 
@@ -49034,7 +49576,7 @@ final class UA_PubSubSecurityParameters extends ffi.Struct {
   external ffi.Pointer<UA_Int32> keyServers;
 }
 
-final class UnnamedStruct33 extends ffi.Struct {
+final class UnnamedStruct36 extends ffi.Struct {
   external ffi.Pointer<UA_ReaderGroup> le_next;
 
   external ffi.Pointer<ffi.Pointer<UA_ReaderGroup>> le_prev;
@@ -49055,7 +49597,7 @@ final class UA_DataSetReader extends ffi.Struct {
 
   external UA_NodeId linkedReaderGroup;
 
-  external UnnamedStruct34 listEntry;
+  external UnnamedStruct37 listEntry;
 
   @ffi.Int32()
   external int state;
@@ -49094,7 +49636,7 @@ final class UA_DataSetReaderConfig extends ffi.Struct {
   @ffi.Int32()
   external int subscribedDataSetType;
 
-  external UnnamedUnion16 subscribedDataSet;
+  external UnnamedUnion17 subscribedDataSet;
 
   @ffi.Int32()
   external int expectedEncoding;
@@ -49117,7 +49659,7 @@ abstract class UA_SubscribedDataSetEnumType {
   static const int UA_PUBSUB_SDS_MIRROR = 1;
 }
 
-final class UnnamedUnion16 extends ffi.Union {
+final class UnnamedUnion17 extends ffi.Union {
   external UA_TargetVariables subscribedDataSetTarget;
 }
 
@@ -49165,13 +49707,13 @@ abstract class UA_PubSubRtEncoding {
   static const int UA_PUBSUB_RT_RAW = 4;
 }
 
-final class UnnamedStruct34 extends ffi.Struct {
+final class UnnamedStruct37 extends ffi.Struct {
   external ffi.Pointer<UA_DataSetReader> le_next;
 
   external ffi.Pointer<ffi.Pointer<UA_DataSetReader>> le_prev;
 }
 
-final class UnnamedStruct35 extends ffi.Struct {
+final class UnnamedStruct38 extends ffi.Struct {
   external ffi.Pointer<UA_PubSubConnection> tqe_next;
 
   external ffi.Pointer<ffi.Pointer<UA_PubSubConnection>> tqe_prev;
@@ -49202,7 +49744,7 @@ final class UA_PublishedDataSet extends ffi.Struct {
   @UA_UInt16()
   external int configurationFreezeCounter;
 
-  external UnnamedStruct38 listEntry;
+  external UnnamedStruct41 listEntry;
 
   @ffi.Bool()
   external bool configurationFrozen;
@@ -49214,7 +49756,7 @@ final class UA_PublishedDataSetConfig extends ffi.Struct {
   @ffi.Int32()
   external int publishedDataSetType;
 
-  external UnnamedUnion17 config;
+  external UnnamedUnion18 config;
 }
 
 /// PublishedDataSets
@@ -49232,7 +49774,7 @@ abstract class UA_PublishedDataSetType {
   static const int UA_PUBSUB_DATASET_PUBLISHEDEVENTS_TEMPLATE = 3;
 }
 
-final class UnnamedUnion17 extends ffi.Union {
+final class UnnamedUnion18 extends ffi.Union {
   external UA_PublishedDataItemsTemplateConfig itemsTemplate;
 
   external UA_PublishedEventConfig event;
@@ -49278,7 +49820,7 @@ final class UA_ListOfDataSetField extends ffi.Struct {
 final class UA_DataSetField extends ffi.Struct {
   external UA_DataSetFieldConfig config;
 
-  external UnnamedStruct37 listEntry;
+  external UnnamedStruct40 listEntry;
 
   external UA_NodeId identifier;
 
@@ -49300,7 +49842,7 @@ final class UA_DataSetFieldConfig extends ffi.Struct {
   @ffi.Int32()
   external int dataSetFieldType;
 
-  external UnnamedUnion18 field;
+  external UnnamedUnion19 field;
 }
 
 abstract class UA_DataSetFieldType {
@@ -49308,7 +49850,7 @@ abstract class UA_DataSetFieldType {
   static const int UA_PUBSUB_DATASETFIELD_EVENT = 1;
 }
 
-final class UnnamedUnion18 extends ffi.Union {
+final class UnnamedUnion19 extends ffi.Union {
   external UA_DataSetVariableConfig variable;
 }
 
@@ -49328,10 +49870,10 @@ final class UA_DataSetVariableConfig extends ffi.Struct {
 
   external UA_PublishedVariableDataType publishParameters;
 
-  external UnnamedStruct36 rtValueSource;
+  external UnnamedStruct39 rtValueSource;
 }
 
-final class UnnamedStruct36 extends ffi.Struct {
+final class UnnamedStruct39 extends ffi.Struct {
   @ffi.Bool()
   external bool rtFieldSourceEnabled;
 
@@ -49341,13 +49883,13 @@ final class UnnamedStruct36 extends ffi.Struct {
   external ffi.Pointer<ffi.Pointer<UA_DataValue>> staticValueSource;
 }
 
-final class UnnamedStruct37 extends ffi.Struct {
+final class UnnamedStruct40 extends ffi.Struct {
   external ffi.Pointer<UA_DataSetField> tqe_next;
 
   external ffi.Pointer<ffi.Pointer<UA_DataSetField>> tqe_prev;
 }
 
-final class UnnamedStruct38 extends ffi.Struct {
+final class UnnamedStruct41 extends ffi.Struct {
   external ffi.Pointer<UA_PublishedDataSet> tqe_next;
 
   external ffi.Pointer<ffi.Pointer<UA_PublishedDataSet>> tqe_prev;
@@ -49411,11 +49953,11 @@ final class UA_Client extends ffi.Struct {
   @ffi.Bool()
   external bool pendingConnectivityCheck;
 
-  external UnnamedStruct39 asyncServiceCalls;
+  external UnnamedStruct42 asyncServiceCalls;
 
-  external UnnamedStruct41 pendingNotificationsAcks;
+  external UnnamedStruct44 pendingNotificationsAcks;
 
-  external UnnamedStruct43 subscriptions;
+  external UnnamedStruct46 subscriptions;
 
   @UA_UInt32()
   external int monitoredItemHandles;
@@ -49588,13 +50130,13 @@ typedef DartUA_ConnectClientConnectionFunction = UA_Connection Function(
     DartUA_UInt32 timeout,
     ffi.Pointer<UA_Logger> logger);
 
-final class UnnamedStruct39 extends ffi.Struct {
+final class UnnamedStruct42 extends ffi.Struct {
   external ffi.Pointer<AsyncServiceCall> lh_first;
 }
 
 /// /
 final class AsyncServiceCall extends ffi.Struct {
-  external UnnamedStruct40 pointers;
+  external UnnamedStruct43 pointers;
 
   @UA_UInt32()
   external int requestId;
@@ -49614,7 +50156,7 @@ final class AsyncServiceCall extends ffi.Struct {
   external ffi.Pointer<ffi.Void> responsedata;
 }
 
-final class UnnamedStruct40 extends ffi.Struct {
+final class UnnamedStruct43 extends ffi.Struct {
   external ffi.Pointer<AsyncServiceCall> le_next;
 
   external ffi.Pointer<ffi.Pointer<AsyncServiceCall>> le_prev;
@@ -49653,28 +50195,28 @@ typedef DartUA_ClientAsyncServiceCallbackFunction = void Function(
     DartUA_UInt32 requestId,
     ffi.Pointer<ffi.Void> response);
 
-final class UnnamedStruct41 extends ffi.Struct {
+final class UnnamedStruct44 extends ffi.Struct {
   external ffi.Pointer<UA_Client_NotificationsAckNumber> lh_first;
 }
 
 final class UA_Client_NotificationsAckNumber extends ffi.Struct {
-  external UnnamedStruct42 listEntry;
+  external UnnamedStruct45 listEntry;
 
   external UA_SubscriptionAcknowledgement subAck;
 }
 
-final class UnnamedStruct42 extends ffi.Struct {
+final class UnnamedStruct45 extends ffi.Struct {
   external ffi.Pointer<UA_Client_NotificationsAckNumber> le_next;
 
   external ffi.Pointer<ffi.Pointer<UA_Client_NotificationsAckNumber>> le_prev;
 }
 
-final class UnnamedStruct43 extends ffi.Struct {
+final class UnnamedStruct46 extends ffi.Struct {
   external ffi.Pointer<UA_Client_Subscription> lh_first;
 }
 
 final class UA_Client_Subscription extends ffi.Struct {
-  external UnnamedStruct44 listEntry;
+  external UnnamedStruct47 listEntry;
 
   @UA_UInt32()
   external int subscriptionId;
@@ -49697,10 +50239,10 @@ final class UA_Client_Subscription extends ffi.Struct {
   @UA_DateTime()
   external int lastActivity;
 
-  external UnnamedStruct45 monitoredItems;
+  external UnnamedStruct48 monitoredItems;
 }
 
-final class UnnamedStruct44 extends ffi.Struct {
+final class UnnamedStruct47 extends ffi.Struct {
   external ffi.Pointer<UA_Client_Subscription> le_next;
 
   external ffi.Pointer<ffi.Pointer<UA_Client_Subscription>> le_prev;
@@ -49750,12 +50292,12 @@ typedef DartUA_Client_DeleteSubscriptionCallbackFunction = void Function(
     DartUA_UInt32 subId,
     ffi.Pointer<ffi.Void> subContext);
 
-final class UnnamedStruct45 extends ffi.Struct {
+final class UnnamedStruct48 extends ffi.Struct {
   external ffi.Pointer<UA_Client_MonitoredItem> lh_first;
 }
 
 final class UA_Client_MonitoredItem extends ffi.Struct {
-  external UnnamedStruct46 listEntry;
+  external UnnamedStruct49 listEntry;
 
   @UA_UInt32()
   external int monitoredItemId;
@@ -49767,13 +50309,13 @@ final class UA_Client_MonitoredItem extends ffi.Struct {
 
   external UA_Client_DeleteMonitoredItemCallback deleteCallback;
 
-  external UnnamedUnion19 handler;
+  external UnnamedUnion20 handler;
 
   @ffi.Bool()
   external bool isEventMonitoredItem;
 }
 
-final class UnnamedStruct46 extends ffi.Struct {
+final class UnnamedStruct49 extends ffi.Struct {
   external ffi.Pointer<UA_Client_MonitoredItem> le_next;
 
   external ffi.Pointer<ffi.Pointer<UA_Client_MonitoredItem>> le_prev;
@@ -49796,7 +50338,7 @@ typedef DartUA_Client_DeleteMonitoredItemCallbackFunction = void Function(
     DartUA_UInt32 monId,
     ffi.Pointer<ffi.Void> monContext);
 
-final class UnnamedUnion19 extends ffi.Union {
+final class UnnamedUnion20 extends ffi.Union {
   external UA_Client_DataChangeNotificationCallback dataChangeCallback;
 
   external UA_Client_EventNotificationCallback eventCallback;
@@ -50154,6 +50696,9 @@ final class UA_MethodNode extends ffi.Struct {
   external bool executable;
 
   external UA_MethodCallback method;
+
+  @ffi.Bool()
+  external bool async1;
 }
 
 /// .. _methodnode:
@@ -50435,6 +50980,19 @@ typedef DartUA_Server_DataChangeNotificationCallbackFunction = void Function(
     ffi.Pointer<ffi.Void> nodeContext,
     DartUA_UInt32 attributeId,
     ffi.Pointer<UA_DataValue> value);
+
+abstract class UA_AsyncOperationType {
+  static const int UA_ASYNCOPERATIONTYPE_INVALID = 0;
+  static const int UA_ASYNCOPERATIONTYPE_CALL = 1;
+}
+
+final class UA_AsyncOperationRequest extends ffi.Union {
+  external UA_CallMethodRequest callMethodRequest;
+}
+
+final class UA_AsyncOperationResponse extends ffi.Union {
+  external UA_CallMethodResult callMethodResult;
+}
 
 /// Statistics
 /// ----------
@@ -51110,6 +51668,27 @@ abstract class UA_MonitoredItemSamplingType {
 
 final class UA_ConditionSource extends ffi.Opaque {}
 
+typedef UA_AsyncServiceOperation
+    = ffi.Pointer<ffi.NativeFunction<UA_AsyncServiceOperationFunction>>;
+typedef UA_AsyncServiceOperationFunction = ffi.Void Function(
+    ffi.Pointer<UA_Server> server,
+    ffi.Pointer<UA_Session> session,
+    UA_UInt32 requestId,
+    UA_UInt32 requestHandle,
+    ffi.Size opIndex,
+    ffi.Pointer<ffi.Void> requestOperation,
+    ffi.Pointer<ffi.Void> responseOperation,
+    ffi.Pointer<ffi.Pointer<UA_AsyncResponse>> ar);
+typedef DartUA_AsyncServiceOperationFunction = void Function(
+    ffi.Pointer<UA_Server> server,
+    ffi.Pointer<UA_Session> session,
+    DartUA_UInt32 requestId,
+    DartUA_UInt32 requestHandle,
+    int opIndex,
+    ffi.Pointer<ffi.Void> requestOperation,
+    ffi.Pointer<ffi.Void> responseOperation,
+    ffi.Pointer<ffi.Pointer<UA_AsyncResponse>> ar);
+
 final class UA_LocalMonitoredItem extends ffi.Opaque {}
 
 abstract class UA_DiagnosticEvent {
@@ -51239,10 +51818,10 @@ final class UA_PrintContext extends ffi.Struct {
   @ffi.Size()
   external int depth;
 
-  external UnnamedStruct48 outputs;
+  external UnnamedStruct51 outputs;
 }
 
-final class UnnamedStruct48 extends ffi.Struct {
+final class UnnamedStruct51 extends ffi.Struct {
   external ffi.Pointer<UA_PrintElement> tqh_first;
 
   external ffi.Pointer<ffi.Pointer<UA_PrintElement>> tqh_last;
@@ -51416,6 +51995,18 @@ typedef Dartsa_family_t = int;
 typedef socklen_t = __socklen_t;
 typedef __socklen_t = ffi.UnsignedInt;
 typedef Dart__socklen_t = int;
+typedef UA_FFICallback_method_async
+    = ffi.Pointer<ffi.NativeFunction<UA_FFICallback_method_asyncFunction>>;
+typedef UA_FFICallback_method_asyncFunction = ffi.Void Function(
+    ffi.Pointer<UA_Client> client,
+    ffi.Pointer<ffi.Void> userdata,
+    UA_UInt32 requestId,
+    ffi.Pointer<UA_Variant> response);
+typedef DartUA_FFICallback_method_asyncFunction = void Function(
+    ffi.Pointer<UA_Client> client,
+    ffi.Pointer<ffi.Void> userdata,
+    DartUA_UInt32 requestId,
+    ffi.Pointer<UA_Variant> response);
 
 const int MSG_OOB = 1;
 
@@ -51508,6 +52099,8 @@ const int IPPROTO_ENCAP = 98;
 const int IPPROTO_PIM = 103;
 
 const int IPPROTO_COMP = 108;
+
+const int IPPROTO_L2TP = 115;
 
 const int IPPROTO_SCTP = 132;
 
@@ -52301,6 +52894,8 @@ const int SEGV_MTEAERR = 8;
 
 const int SEGV_MTESERR = 9;
 
+const int SEGV_CPERR = 10;
+
 const int BUS_ADRALN = 1;
 
 const int BUS_ADRERR = 2;
@@ -52387,6 +52982,68 @@ const int TCP_SEND_QUEUE = 2;
 
 const int TCP_QUEUES_NR = 3;
 
+const int PTHREAD_CREATE_JOINABLE = 0;
+
+const int PTHREAD_CREATE_DETACHED = 1;
+
+const int PTHREAD_MUTEX_TIMED_NP = 0;
+
+const int PTHREAD_MUTEX_RECURSIVE_NP = 1;
+
+const int PTHREAD_MUTEX_ERRORCHECK_NP = 2;
+
+const int PTHREAD_MUTEX_ADAPTIVE_NP = 3;
+
+const int PTHREAD_MUTEX_NORMAL = 0;
+
+const int PTHREAD_MUTEX_RECURSIVE = 1;
+
+const int PTHREAD_MUTEX_ERRORCHECK = 2;
+
+const int PTHREAD_MUTEX_DEFAULT = 0;
+
+const int PTHREAD_MUTEX_STALLED = 0;
+
+const int PTHREAD_MUTEX_STALLED_NP = 0;
+
+const int PTHREAD_MUTEX_ROBUST = 1;
+
+const int PTHREAD_MUTEX_ROBUST_NP = 1;
+
+const int PTHREAD_PRIO_NONE = 0;
+
+const int PTHREAD_PRIO_INHERIT = 1;
+
+const int PTHREAD_PRIO_PROTECT = 2;
+
+const int PTHREAD_RWLOCK_PREFER_READER_NP = 0;
+
+const int PTHREAD_RWLOCK_PREFER_WRITER_NP = 1;
+
+const int PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP = 2;
+
+const int PTHREAD_RWLOCK_DEFAULT_NP = 0;
+
+const int PTHREAD_INHERIT_SCHED = 0;
+
+const int PTHREAD_EXPLICIT_SCHED = 1;
+
+const int PTHREAD_SCOPE_SYSTEM = 0;
+
+const int PTHREAD_SCOPE_PROCESS = 1;
+
+const int PTHREAD_PROCESS_PRIVATE = 0;
+
+const int PTHREAD_PROCESS_SHARED = 1;
+
+const int PTHREAD_CANCEL_ENABLE = 0;
+
+const int PTHREAD_CANCEL_DISABLE = 1;
+
+const int PTHREAD_CANCEL_DEFERRED = 0;
+
+const int PTHREAD_CANCEL_ASYNCHRONOUS = 1;
+
 const int UA_OPEN62541_VER_MAJOR = 1;
 
 const int UA_OPEN62541_VER_MINOR = 3;
@@ -52401,7 +53058,7 @@ const String UA_OPEN62541_VERSION = 'v1.3.6';
 
 const int UA_LOGLEVEL = 300;
 
-const int UA_MULTITHREADING = 0;
+const int UA_MULTITHREADING = 100;
 
 const int UA_VALGRIND_INTERACTIVE_INTERVAL = 1000;
 
@@ -52469,6 +53126,8 @@ const int __GLIBC_USE_DEPRECATED_GETS = 0;
 
 const int __GLIBC_USE_DEPRECATED_SCANF = 0;
 
+const int __GLIBC_USE_C2X_STRTOL = 1;
+
 const int _STDC_PREDEF_H = 1;
 
 const int __STDC_IEC_559__ = 1;
@@ -52485,7 +53144,7 @@ const int __GNU_LIBRARY__ = 6;
 
 const int __GLIBC__ = 2;
 
-const int __GLIBC_MINOR__ = 35;
+const int __GLIBC_MINOR__ = 39;
 
 const int _SYS_CDEFS_H = 1;
 
@@ -52540,6 +53199,8 @@ const int __WCHAR_MIN = -2147483648;
 const int _BITS_STDINT_INTN_H = 1;
 
 const int _BITS_STDINT_UINTN_H = 1;
+
+const int _BITS_STDINT_LEAST_H = 1;
 
 const int INT8_MIN = -128;
 
@@ -52653,11 +53314,11 @@ const int _BITS_TYPES___LOCALE_T_H = 1;
 
 const int _STRINGS_H = 1;
 
+const int __bool_true_false_are_defined = 1;
+
 const int true1 = 1;
 
 const int false1 = 0;
-
-const int __bool_true_false_are_defined = 1;
 
 const int _INTTYPES_H = 1;
 
@@ -53619,6 +54280,12 @@ const int SOL_TLS = 282;
 
 const int SOL_XDP = 283;
 
+const int SOL_MPTCP = 284;
+
+const int SOL_MCTP = 285;
+
+const int SOL_SMC = 286;
+
 const int SOMAXCONN = 4096;
 
 const int _BITS_SOCKADDR_H = 1;
@@ -53843,6 +54510,16 @@ const int SO_NETNS_COOKIE = 71;
 
 const int SO_BUF_LOCK = 72;
 
+const int SO_RESERVE_MEM = 73;
+
+const int SO_TXREHASH = 74;
+
+const int SO_RCVMARK = 75;
+
+const int SO_PASSPIDFD = 76;
+
+const int SO_PEERPIDFD = 77;
+
 const int SO_TIMESTAMP = 29;
 
 const int SO_TIMESTAMPNS = 35;
@@ -53980,6 +54657,10 @@ const int IP_PMTUDISC_PROBE = 3;
 const int IP_PMTUDISC_INTERFACE = 4;
 
 const int IP_PMTUDISC_OMIT = 5;
+
+const int IP_LOCAL_PORT_RANGE = 51;
+
+const int IP_PROTOCOL = 52;
 
 const int SOL_IP = 0;
 
@@ -54168,6 +54849,8 @@ const int IPPROTO_ENCAP1 = 98;
 const int IPPROTO_PIM1 = 103;
 
 const int IPPROTO_COMP1 = 108;
+
+const int IPPROTO_L2TP1 = 115;
 
 const int IPPROTO_SCTP1 = 132;
 
@@ -55770,16 +56453,6 @@ const int POSIX_FADV_DONTNEED = 4;
 
 const int POSIX_FADV_NOREUSE = 5;
 
-const int AT_FDCWD = -100;
-
-const int AT_SYMLINK_NOFOLLOW = 256;
-
-const int AT_REMOVEDIR = 512;
-
-const int AT_SYMLINK_FOLLOW = 1024;
-
-const int AT_EACCESS = 512;
-
 const int _BITS_STAT_H = 1;
 
 const int _BITS_STRUCT_STAT_H = 1;
@@ -55861,6 +56534,16 @@ const int S_IWOTH = 2;
 const int S_IXOTH = 1;
 
 const int S_IRWXO = 7;
+
+const int AT_FDCWD = -100;
+
+const int AT_SYMLINK_NOFOLLOW = 256;
+
+const int AT_REMOVEDIR = 512;
+
+const int AT_SYMLINK_FOLLOW = 1024;
+
+const int AT_EACCESS = 512;
 
 const int _SYS_PARAM_H = 1;
 
@@ -56248,6 +56931,8 @@ const int SEGV_MTEAERR1 = 8;
 
 const int SEGV_MTESERR1 = 9;
 
+const int SEGV_CPERR1 = 10;
+
 const int BUS_ADRALN1 = 1;
 
 const int BUS_ADRERR1 = 2;
@@ -56540,6 +57225,8 @@ const int TCP_MD5SIG_MAXKEYLEN = 80;
 
 const int TCP_MD5SIG_FLAG_PREFIX = 1;
 
+const int TCP_MD5SIG_FLAG_IFINDEX = 2;
+
 const int TCP_COOKIE_MIN = 8;
 
 const int TCP_COOKIE_MAX = 16;
@@ -56648,8 +57335,6 @@ const int _ALLOCA_H = 1;
 
 const int _STDIO_H = 1;
 
-const int __GNUC_VA_LIST = 1;
-
 const int _____fpos_t_defined = 1;
 
 const int ____mbstate_t_defined = 1;
@@ -56668,6 +57353,8 @@ const int _IO_ERR_SEEN = 32;
 
 const int _IO_USER_LOCK = 32768;
 
+const int __cookie_io_functions_t_defined = 1;
+
 const int _IOFBF = 0;
 
 const int _IOLBF = 1;
@@ -56680,17 +57367,105 @@ const int EOF = -1;
 
 const String P_tmpdir = '/tmp';
 
-const int _BITS_STDIO_LIM_H = 1;
-
 const int L_tmpnam = 20;
 
 const int TMP_MAX = 238328;
+
+const int _BITS_STDIO_LIM_H = 1;
 
 const int FILENAME_MAX = 4096;
 
 const int L_ctermid = 9;
 
 const int FOPEN_MAX = 16;
+
+const int _PTHREAD_H = 1;
+
+const int _SCHED_H = 1;
+
+const int _BITS_SCHED_H = 1;
+
+const int SCHED_OTHER = 0;
+
+const int SCHED_FIFO = 1;
+
+const int SCHED_RR = 2;
+
+const int _BITS_TYPES_STRUCT_SCHED_PARAM = 1;
+
+const int _BITS_CPU_SET_H = 1;
+
+const int __CPU_SETSIZE = 1024;
+
+const int __NCPUBITS = 64;
+
+const int _TIME_H = 1;
+
+const int _BITS_TIME_H = 1;
+
+const int CLOCKS_PER_SEC = 1000000;
+
+const int CLOCK_REALTIME = 0;
+
+const int CLOCK_MONOTONIC = 1;
+
+const int CLOCK_PROCESS_CPUTIME_ID = 2;
+
+const int CLOCK_THREAD_CPUTIME_ID = 3;
+
+const int CLOCK_MONOTONIC_RAW = 4;
+
+const int CLOCK_REALTIME_COARSE = 5;
+
+const int CLOCK_MONOTONIC_COARSE = 6;
+
+const int CLOCK_BOOTTIME = 7;
+
+const int CLOCK_REALTIME_ALARM = 8;
+
+const int CLOCK_BOOTTIME_ALARM = 9;
+
+const int CLOCK_TAI = 11;
+
+const int TIMER_ABSTIME = 1;
+
+const int __struct_tm_defined = 1;
+
+const int __itimerspec_defined = 1;
+
+const int TIME_UTC = 1;
+
+const int _BITS_SETJMP_H = 1;
+
+const int __jmp_buf_tag_defined = 1;
+
+const int PTHREAD_CREATE_JOINABLE1 = 0;
+
+const int PTHREAD_CREATE_DETACHED1 = 1;
+
+const int PTHREAD_INHERIT_SCHED1 = 0;
+
+const int PTHREAD_EXPLICIT_SCHED1 = 1;
+
+const int PTHREAD_SCOPE_SYSTEM1 = 0;
+
+const int PTHREAD_SCOPE_PROCESS1 = 1;
+
+const int PTHREAD_PROCESS_PRIVATE1 = 0;
+
+const int PTHREAD_PROCESS_SHARED1 = 1;
+
+const int PTHREAD_CANCEL_ENABLE1 = 0;
+
+const int PTHREAD_CANCEL_DISABLE1 = 1;
+
+const int PTHREAD_CANCEL_DEFERRED1 = 0;
+
+const int PTHREAD_CANCEL_ASYNCHRONOUS1 = 1;
+
+const int PTHREAD_ONCE_INIT = 0;
+
+const int PTHREAD_BARRIER_SERIAL_THREAD = -1;
 
 const int UA_STATUSCODE_INFOTYPE_DATAVALUE = 1024;
 
@@ -87303,42 +88078,6 @@ const int LOG_PERROR = 32;
 const int LOGBUFSIZE = 512;
 
 const int RECEIVE_MSG_BUFFER_SIZE = 4096;
-
-const int _TIME_H = 1;
-
-const int _BITS_TIME_H = 1;
-
-const int CLOCKS_PER_SEC = 1000000;
-
-const int CLOCK_REALTIME = 0;
-
-const int CLOCK_MONOTONIC = 1;
-
-const int CLOCK_PROCESS_CPUTIME_ID = 2;
-
-const int CLOCK_THREAD_CPUTIME_ID = 3;
-
-const int CLOCK_MONOTONIC_RAW = 4;
-
-const int CLOCK_REALTIME_COARSE = 5;
-
-const int CLOCK_MONOTONIC_COARSE = 6;
-
-const int CLOCK_BOOTTIME = 7;
-
-const int CLOCK_REALTIME_ALARM = 8;
-
-const int CLOCK_BOOTTIME_ALARM = 9;
-
-const int CLOCK_TAI = 11;
-
-const int TIMER_ABSTIME = 1;
-
-const int __struct_tm_defined = 1;
-
-const int __itimerspec_defined = 1;
-
-const int TIME_UTC = 1;
 
 const int _SYS_TIME_H = 1;
 
