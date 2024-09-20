@@ -14,14 +14,14 @@ void main() {
       return "$uaNodeId $value".uaString();
     },
   );
-  // server.addMethod(
-  //   browseName: UAQualifiedName(1, "GetDrives.listFilesAndDirectories"),
-  //   nodeId: UANodeId(1, "1234"),
-  //   input: UAArgument(name: "Input", uaType: UATypes.STRING),
-  //   output: UAArgument(name: "Output", uaType: UATypes.STRING),
-  //   callBack: (uaNodeId, value) {
-  //     return "$uaNodeId $value".uaString();
-  //   },
-  // );
+  server.addMethod(
+    browseName: UAQualifiedName(1, "GetDrives.listFilesAndDirectories"),
+    nodeId: UANodeId(1, "1234"),
+    input: UAArgument(name: "Input", uaType: UATypes.STRING),
+    output: UAArgument(name: "Output", uaType: UATypes.STRING),
+    callBack: (uaNodeId, value) {
+      return "$uaNodeId $value".uaString();
+    },
+  );
   server.start();
 }

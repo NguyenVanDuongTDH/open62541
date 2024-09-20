@@ -1,8 +1,8 @@
 output: 'lib/src/open62541_gen.dart'
 headers:
   entry-points:
-    - 'open62541.h'
-    - 'open62541.c'
+    - 'open62541_1_4/open62541.h'
+    - 'open62541_1_4/open62541.c'
 enums:
   exclude:
     - "^_.*"
