@@ -32,7 +32,7 @@ class UAVariant {
   }
 
   void deleteMembers() {
-    cOPC.UA_Variant_deleteMembers(variant);
+    // cOPC.UA_Variant_deleteMembers(variant);
   }
 
   void clear() {

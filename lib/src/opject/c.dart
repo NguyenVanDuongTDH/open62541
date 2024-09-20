@@ -1,13 +1,7 @@
-
 import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
-
-
-
-
-
 
 class CObject {
   Pointer reference;
@@ -15,6 +9,7 @@ class CObject {
   void free() {
     calloc.free(reference);
   }
+
   Pointer<U> cast<U extends NativeType>() {
     return reference.cast();
   }
@@ -54,34 +49,14 @@ class CString extends CObject {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 extension DARTSTRINGTOC on String {
   CString toCString() {
     return CString.fromString(this);
   }
 }
 
-extension DARTSTRINGTOC_CBytes on Uint8List{
-  CBytes toCBytes(){
+extension DARTSTRINGTOC_CBytes on Uint8List {
+  CBytes toCBytes() {
     return CBytes.fromUint8List(this);
   }
 }

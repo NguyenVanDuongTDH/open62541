@@ -14,7 +14,7 @@ class UAVariableAttributes {
     attr.ref.accessLevel = 255;
   }
   void delete() {
-    cOPC.UA_VariableAttributes_deleteMembers(attr);
+    // cOPC.UA_VariableAttributes_deleteMembers(attr);
     cOPC.UA_VariableAttributes_delete(attr);
   }
 

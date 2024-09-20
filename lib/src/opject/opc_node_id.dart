@@ -22,7 +22,7 @@ class UANodeId {
   }
 
   static UANodeId fromNode(UA_NodeId nodeId) {
-    UANodeId _nodeId =  UANodeId(0,0);
+    UANodeId _nodeId = UANodeId(0, 0);
     _nodeId._nodeId = nodeId;
     return _nodeId;
   }
@@ -30,6 +30,7 @@ class UANodeId {
   UANodeId(int ns, dynamic S_OR_I) {
     if (S_OR_I is String) {
       Pointer<Utf8> ptr = S_OR_I.toNativeUtf8();
+
       _nodeId = cOPC.UA_NODEID_STRING_ALLOC(ns, ptr.cast());
       //
       calloc.free(ptr);

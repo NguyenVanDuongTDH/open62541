@@ -89,17 +89,6 @@ int _UAServerMethodCallback(
     Pointer<UA_Variant> input,
     int outputSize,
     Pointer<UA_Variant> output) {
-  // UAVariant? res;
-  // try {
-  //   final methodId0 = UANodeId.fromPoint(methodId);
-  //   res = _callBack[server]![methodId0]!(methodId0, UAVariant(input).data);
-  //   UAVariant(output).copyFrom(res);
-  // } catch (e) {
-  //   print(e);
-  //   return -1;
-  // }
-  // res.clear();
-  // res.delete();
   return 0;
 }
 

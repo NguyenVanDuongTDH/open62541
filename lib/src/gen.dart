@@ -7,9 +7,9 @@ NativeLibrary get cOPC => NativeLibrary(DynamicLibrary.open(_getPathLib()));
 
 String _getPathLib() {
   if (Platform.isLinux) {
-    return "/home/duong/Documents/git/open62541/open62541/open62541.so";
+    return "/home/duong/Documents/git/open62541/open62541_1_4/open62541.so";
   } else if (Platform.isWindows) {
-    return "open62541/open62541.dll";
+    return "open62541_1_4/open62541.dll";
   } else if (Platform.isAndroid) {
     return "libopen62541.so";
   }
@@ -33,7 +33,7 @@ extension GENFFI on NativeLibrary {
     }
     final _ptr = data.toNativeUtf8();
 
-    cOPC.UA_LOG_INFO(cOPC.UA_Log_Stdout, 0, _ptr.cast());
+    // cOPC.UA_LOG_INFO(cOPC.UA_Log_Stdout, 0, _ptr.cast());
     calloc.free(_ptr);
   }
 }
