@@ -20,7 +20,7 @@ void UAServerValueChangeListen(Pointer<UA_Server> server, UANodeId nodeID,
     Function(UANodeId nodeId, dynamic value) callBack) {
   _callBack[server]![nodeID] = callBack;
   UA_MonitoredItemCreateRequest monRequest =
-      cOPC.UA_MonitoredItemCreateRequest_default(nodeID.nodeIdNew);
+      cOPC.UA_MonitoredItemCreateRequest_default(nodeID.nodeId);
   monRequest.requestedParameters.samplingInterval = 100.0;
   cOPC.UA_Server_createDataChangeMonitoredItem(
       server,
@@ -39,7 +39,6 @@ void _UAServerDataChangeCallback(
     int attributeId,
     Pointer<UA_DataValue> value) {
   dynamic res = UADataValue.toDart(value);
-
   _callBack[server]![UANodeId.fromPoint(nodeid)]!(
       UANodeId.fromPoint(nodeid), res);
 }

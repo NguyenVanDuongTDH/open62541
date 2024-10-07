@@ -15,6 +15,9 @@ bool UAServerAddVariableNodeId(
   UANodeId? parentNodeId,
   Function(UANodeId nodeId, dynamic value)? dataChangeCallBack,
 }) {
+  UANodeId copyNodeId = nodeid.clone();
+  UANodeId? copyParentNodeId = parentNodeId?.clone();
+
   UA_NodeId parent = cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
   //var
 
@@ -26,8 +29,8 @@ bool UAServerAddVariableNodeId(
 
   int retval = cOPC.UA_Server_addVariableNode(
     server,
-    nodeid.nodeIdNew,
-    parentNodeId == null ? parent : parentNodeId.nodeIdNew,
+    copyNodeId.nodeId,
+    copyParentNodeId == null ? parent : copyParentNodeId.nodeId,
     // parent,
     cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES),
     cOPC.UA_QUALIFIEDNAME(
@@ -44,8 +47,9 @@ bool UAServerAddVariableNodeId(
   //     cOPC.UA_EXPANDEDNODEID_NUMERIC(0, UA_NS0ID_MODELLINGRULE_MANDATORY),
   //     true);
   if (dataChangeCallBack != null) {
-    UAServerValueChangeListen(server, nodeid, dataChangeCallBack);
+    UAServerValueChangeListen(server, copyNodeId, dataChangeCallBack);
   }
+
   // attr.delete();
   return retval == 0;
 }

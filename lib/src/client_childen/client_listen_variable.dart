@@ -8,7 +8,8 @@ import 'package:open62541/src/open62541_gen.dart';
 import 'package:open62541/src/opject/c.dart';
 
 final Map<Pointer<UA_Client>,
-    Map<String, Function(UANodeId nodeId, dynamic value)>> _callBack = {};
+        Map<Pointer<UA_NodeId>, Function(UANodeId nodeId, dynamic value)>>
+    _callBack = {};
 
 void UAClientAddClientCallBack(Pointer<UA_Client> client) {
   _callBack[client] = {};
@@ -20,7 +21,7 @@ void UAClientRemoveClientCallBack(Pointer<UA_Client> client) {
 
 void UAClientListenNodeId(Pointer<UA_Client> client, UANodeId nodeId,
     Function(UANodeId nodeID, dynamic value) callBack) {
-  _callBack[client]![nodeId.toString()] = callBack;
+  _callBack[client]![nodeId.pNodeId] = callBack;
 
   UA_CreateSubscriptionRequest request =
       cOPC.UA_CreateSubscriptionRequest_default();
@@ -34,8 +35,8 @@ void UAClientListenNodeId(Pointer<UA_Client> client, UANodeId nodeId,
           .cast();
 
   int response = cOPC.UA_Client_SubSubscriptions_Check(res.cast());
-  UA_NodeId target = nodeId.nodeIdNew;
-  final cString = nodeId.toString().toCString();
+  UA_NodeId target = nodeId.pNodeId.ref;
+  final context = nodeId.pNodeId;
   UA_MonitoredItemCreateRequest monRequest =
       cOPC.UA_MonitoredItemCreateRequest_default(target);
   monRequest.requestedParameters.samplingInterval = 100.0;
@@ -44,7 +45,7 @@ void UAClientListenNodeId(Pointer<UA_Client> client, UANodeId nodeId,
       response,
       UA_TimestampsToReturn.UA_TIMESTAMPSTORETURN_BOTH,
       monRequest,
-      cString.cast(),
+      context.cast(),
       _UAClientDataChangeCallbackPtr,
       Pointer.fromAddress(0));
 }
@@ -57,8 +58,8 @@ void _UAClientDataChangeCallBack(
     Pointer<Void> monContext,
     Pointer<UA_DataValue> value) {
   dynamic res = UADataValue.toDart(value);
-  String context = monContext.cast<Utf8>().toDartString().toString();
-  _callBack[client]![context]!(UANodeId.parse(context), res);
+  Pointer<UA_NodeId> context = monContext.cast();
+  _callBack[client]![context]!(UANodeId.fromPoint(context), res);
 }
 
 final _UAClientDataChangeCallbackPtr = Pointer.fromFunction<

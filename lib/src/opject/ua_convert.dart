@@ -2,19 +2,21 @@
 
 import 'dart:convert';
 import 'dart:ffi';
+import 'package:ffi/ffi.dart';
 import 'dart:typed_data';
 import 'package:open62541/open62541.dart';
 import 'package:open62541/src/open62541_gen.dart';
 
 class UaConvert {
-  static Pointer<Uint8> utf8Convert(value) {
-    final units = utf8.encode(value);
-    final result = cOPC.UA_Array_new(
-            value.length + 1, cOPC.UA_GET_TYPES_FROM_INDEX(UATypes.BYTE))
-        .cast<Uint8>();
-    final nativeString = result.asTypedList(units.length + 1);
-    nativeString.setAll(0, units);
-    nativeString[units.length] = 0;
+  static Pointer<Uint8> str2Point(dynamic value) {
+    final result = calloc.allocate<Uint8>(value.length);
+    result.asTypedList(value.length).setAll(
+        0,
+        value is String
+            ? value.codeUnits
+            : value is Uint8List
+                ? value
+                : throw "STRING OR UINT8LSIT");
     return result;
   }
 
@@ -84,15 +86,12 @@ class UaConvert {
       case UATypes.STRING:
         if (_ptr != null) {
           for (int i = 0; i < value.length; i++) {
-            _ptr.cast<UA_String>().elementAt(i).ref.data =
-                utf8Convert(value[i]);
-            _ptr.cast<UA_String>().elementAt(i).ref.length =
-                (value[i] as String).length;
+            _ptr.cast<UA_String>().elementAt(i).ref =
+                cOPC.UA_STRING(str2Point(value[i]).cast());
           }
         } else {
           _ptr = cOPC.UA_String_new();
-          _ptr.cast<UA_String>().ref.data = utf8Convert(value);
-          _ptr.cast<UA_String>().ref.length = (value as String).length;
+          _ptr.cast<UA_String>().ref = cOPC.UA_STRING(str2Point(value).cast());
         }
 
         break;

@@ -7,11 +7,15 @@ import 'package:open62541/src/open62541_gen.dart';
 import 'package:open62541/src/opject/c.dart';
 
 bool UAServerTypeNodeId(Pointer<UA_Server> server,
-    {required UANodeId nodeID,
+    {required UANodeId nodeId,
     required UAQualifiedName qualifiedName,
     UANodeId? parentNodeId,
     String? description,
     String? displayName}) {
+  //
+  UANodeId copyNodeId = nodeId.clone();
+  UANodeId? copyParentNodeId = parentNodeId?.clone();
+  //
   UA_NodeId parent = cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_BASEOBJECTTYPE);
   Pointer<UA_ObjectTypeAttributes> attr = cOPC.UA_ObjectTypeAttributes_new();
   if (description != null) {
@@ -26,14 +30,14 @@ bool UAServerTypeNodeId(Pointer<UA_Server> server,
   }
   int ret = cOPC.UA_Server_addObjectTypeNode(
       server,
-      nodeID.nodeIdNew,
-      parentNodeId == null ? parent : parentNodeId.nodeIdNew,
+      copyNodeId.nodeId,
+      copyParentNodeId == null ? parent : copyParentNodeId.nodeId,
       cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_HASSUBTYPE),
       cOPC.UA_QUALIFIEDNAME(
           qualifiedName.nsIndex, qualifiedName.name.toCString().cast()),
       attr.ref,
       Pointer.fromAddress(0),
       Pointer.fromAddress(0));
-  // cOPC.UA_ObjectTypeAttributes_delete(attr);
+
   return ret == 0;
 }

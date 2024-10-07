@@ -16,12 +16,17 @@ Future<bool> UAClientWriteNodeIdAsync(
   reqId.value = -1;
   int res = cOPC.UA_Client_writeValueAttribute_async(client, nodeId.nodeId,
       variant.variant, _ClientWriteCallbackPtr, Pointer.fromAddress(0), reqId);
-  if (res == 0) {
-    if (reqId.value >= 0) {
-      _future[client] ??= {};
-      _future[client]![reqId.value] = compile;
-      return compile.future;
+
+  try {
+    if (res == 0) {
+      if (reqId.value >= 0) {
+        _future[client] ??= {};
+        _future[client]![reqId.value] = compile;
+        return compile.future;
+      }
     }
+  } finally {
+    nodeId.delete();
   }
   cOPC.UA_UInt32_delete(reqId);
   variant.delete();
@@ -30,17 +35,21 @@ Future<bool> UAClientWriteNodeIdAsync(
 
 Future<dynamic> UAClientReadNodeIdAsync(
     Pointer<UA_Client> client, UANodeId nodeId) async {
-  Pointer<UA_UInt32> requestId = cOPC.UA_UInt32_new();
-  requestId.value = -1;
-  int retval = cOPC.UA_Client_readValueAttribute_async(client, nodeId.nodeId,
-      _ClientReadNodeAsyncPtr, Pointer.fromAddress(0), requestId.cast());
-  if (retval == 0 && requestId.value >= 0) {
-    final compile = Completer();
-    _future[client]![requestId.value] = compile;
-    cOPC.UA_UInt32_delete(requestId);
-    return compile.future;
-  } else {
-    return null;
+  try {
+    Pointer<UA_UInt32> requestId = cOPC.UA_UInt32_new();
+    requestId.value = -1;
+    int retval = cOPC.UA_Client_readValueAttribute_async(client, nodeId.nodeId,
+        _ClientReadNodeAsyncPtr, Pointer.fromAddress(0), requestId.cast());
+    if (retval == 0 && requestId.value >= 0) {
+      final compile = Completer();
+      _future[client]![requestId.value] = compile;
+      cOPC.UA_UInt32_delete(requestId);
+      return compile.future;
+    } else {
+      return null;
+    }
+  } finally {
+    nodeId.delete();
   }
 }
 

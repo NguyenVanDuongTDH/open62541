@@ -1,12 +1,14 @@
+import 'dart:async';
+
 import 'package:open62541/open62541.dart';
 
 void main() {
   UAServer server = UAServer();
-  server.setAddress(ip: "192.168.31.19", port: 5555);
 
   server.addMethod(
     browseName: UAQualifiedName(1, "GetDrives.availables"),
-    nodeId: UANodeId.parse("ns=1;i=1234"),
+    nodeId: UANodeId(1, '"UANodeId.2"'),
+    // nodeId: UANodeId(1, 1997),
     input: UAArgument(name: "Input", uaType: UATypes.STRING),
     output: UAArgument(name: "Output", uaType: UATypes.STRING),
     callBack: (uaNodeId, value) async {
@@ -14,9 +16,11 @@ void main() {
       return "$uaNodeId $value".uaString();
     },
   );
+  var uaNodeId2 = UANodeId(1, '"UANodeId.1"');
   server.addMethod(
     browseName: UAQualifiedName(1, "GetDrives.listFilesAndDirectories"),
-    nodeId: UANodeId(1, "1234"),
+    nodeId: uaNodeId2,
+    // nodeId: UANodeId(1, 1999),
     input: UAArgument(name: "Input", uaType: UATypes.STRING),
     output: UAArgument(name: "Output", uaType: UATypes.STRING),
     callBack: (uaNodeId, value) {
@@ -24,4 +28,10 @@ void main() {
     },
   );
   server.start();
+  Timer.periodic(
+    const Duration(seconds: 1),
+    (timer) {
+      print(uaNodeId2);
+    },
+  );
 }

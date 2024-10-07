@@ -7,14 +7,18 @@ import 'package:open62541/src/open62541_gen.dart';
 import 'package:open62541/src/opject/c.dart';
 
 bool UAServerAddObjectNodeId(Pointer<UA_Server> server,
-    {required UANodeId nodeID,
+    {required UANodeId nodeId,
     required UANodeId nodeIdTypeNodeid,
     required UAQualifiedName qualifiedName,
     UANodeId? parentNodeId,
     String? description,
     String? displayName}) {
-  UA_NodeId parent;
-  parent = cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
+  //
+  UANodeId copyNodeId = nodeId.clone();
+  UANodeId? copyParentNodeId = parentNodeId?.clone();
+  UANodeId copynodeIdTypeNodeid = nodeIdTypeNodeid.clone();
+
+  UA_NodeId parent = cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
   Pointer<UA_ObjectAttributes> attr = cOPC.UA_ObjectAttributes_new();
   cOPC.UA_ObjectAttributes_init(attr);
   if (description != null) {
@@ -30,12 +34,12 @@ bool UAServerAddObjectNodeId(Pointer<UA_Server> server,
 
   int ret = cOPC.UA_Server_addObjectNode(
       server,
-      nodeID.nodeIdNew,
-      parentNodeId == null ? parent : parentNodeId.nodeIdNew,
+      copyNodeId.nodeId,
+      copyParentNodeId == null ? parent : copyParentNodeId.nodeId,
       cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
       cOPC.UA_QUALIFIEDNAME(
           qualifiedName.nsIndex, qualifiedName.name.toCString().cast()),
-      nodeIdTypeNodeid.nodeId,
+      copynodeIdTypeNodeid.nodeId,
       attr.ref,
       Pointer.fromAddress(0),
       Pointer.fromAddress(0));

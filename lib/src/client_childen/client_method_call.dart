@@ -22,21 +22,24 @@ Future<dynamic> Client_Method_call_async(
       _UAClientMethodCallbackPtr,
       Pointer.fromAddress(0),
       reqId);
-  if (rev == 0) {
-    _callBack[client] ??= {};
-    _callBack[client]![reqId.value] = Completer();
-    return _callBack[client]![reqId.value]!.future;
-  } else {
-    return 0;
+
+  try {
+    if (rev == 0) {
+      _callBack[client] ??= {};
+      _callBack[client]![reqId.value] = Completer();
+      return _callBack[client]![reqId.value]!.future;
+    } else {
+      return 0;
+    }
+  } finally {
+    methodId.delete();
   }
 }
 
 void _UAClientMethodCallBack(Pointer<UA_Client> client, Pointer<Void> userData,
     int requestID, Pointer<UA_Variant> response) {
-print("OK");
-
-  // _callBack[client]![requestID]!.complete(UAVariant(response).data);
-  // _callBack[client]!.remove(requestID);
+  _callBack[client]![requestID]!.complete(UAVariant(response).data);
+  _callBack[client]!.remove(requestID);
 }
 
 final _UAClientMethodCallbackPtr = Pointer.fromFunction<

@@ -33,6 +33,7 @@ class UAServer {
         Pointer<Int32> type = calloc.allocate(1);
         Pointer<Pointer<UA_AsyncOperationRequest>> request = calloc.allocate(1);
         Pointer<Pointer<Void>> context = calloc.allocate(1);
+
         if (cOPC.UA_Server_getAsyncOperationNonBlocking(server.cast(), type,
                 request, context, Pointer.fromAddress(0)) ==
             true) {
@@ -51,6 +52,7 @@ class UAServer {
         calloc.free(type);
         calloc.free(request);
         calloc.free(context);
+
         //
         //
         //
@@ -84,7 +86,7 @@ class UAServer {
     String? displayName,
   }) {
     return UAServerTypeNodeId(server.cast(),
-        nodeID: nodeID,
+        nodeId: nodeID,
         qualifiedName: qualifiedName,
         description: description,
         displayName: description,
@@ -100,7 +102,7 @@ class UAServer {
     String? displayName,
   }) {
     return UAServerAddObjectNodeId(server.cast(),
-        nodeID: nodeID,
+        nodeId: nodeID,
         nodeIdTypeNodeid: nodeIdTypeNodeid,
         qualifiedName: qualifiedName,
         description: description,

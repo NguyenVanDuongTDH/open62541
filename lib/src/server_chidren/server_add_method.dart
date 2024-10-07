@@ -43,7 +43,10 @@ void UAServerAddMethod(
   String? displayName,
   String? description,
 }) {
-  _callBack[server]![nodeId] = callBack;
+  UANodeId copyNodeId = nodeId.clone();
+  UANodeId? copyParentNodeId = parentNodeId?.clone();
+
+  _callBack[server]![copyNodeId] = callBack;
 
   Pointer<UA_MethodAttributes> helloAttr = cOPC.UA_MethodAttributes_new();
   Pointer<Int32> context = calloc.allocate(1);
@@ -60,10 +63,10 @@ void UAServerAddMethod(
   helloAttr.ref.userExecutable = true;
   cOPC.UA_Server_addMethodNode(
       server,
-      nodeId.nodeIdNew,
-      parentNodeId == null
+      copyNodeId.nodeId,
+      copyParentNodeId == null
           ? cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER)
-          : parentNodeId.nodeIdNew,
+          : copyParentNodeId.nodeId,
       cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
       browseName.ua_qualifiedName_new,
       helloAttr.ref,
@@ -74,7 +77,7 @@ void UAServerAddMethod(
       output.attr,
       context.cast(),
       Pointer.fromAddress(0));
-  cOPC.UA_Server_setMethodNodeAsync(server, nodeId.nodeIdNew, true);
+  cOPC.UA_Server_setMethodNodeAsync(server, copyNodeId.nodeId, true);
 }
 
 int _UAServerMethodCallback(
