@@ -205,8 +205,7 @@ class UACOpject {
       case UATypes.BOOLEAN:
       case UATypes.BYTE:
         List<int> nList = value.map((e) => e ? 1 : 0).toList();
-        pValue = cOPC.UA_Array_new(
-            value.length, cOPC.UA_GET_TYPES_FROM_INDEX(uaType));
+        pValue = cOPC.UA_Array_new(value.length, UATypes.call(uaType).type);
         pValue
             .cast<Uint8>()
             .asTypedList(value.length)
@@ -215,9 +214,8 @@ class UACOpject {
 
       case UATypes.BYTESTRING:
       case UATypes.STRING:
-        final Pointer<UA_String> arrayStrings = cOPC.UA_Array_new(
-                value.length, cOPC.UA_GET_TYPES_FROM_INDEX(uaType))
-            .cast();
+        final Pointer<UA_String> arrayStrings =
+            cOPC.UA_Array_new(value.length, UATypes.call(uaType).type).cast();
         for (int i = 0; i < value.length; i++) {
           arrayStrings.elementAt(i).ref.data = utf8Convert(value[i]);
           arrayStrings.elementAt(i).ref.length = (value[i] as String).length;
@@ -333,9 +331,9 @@ class UACOpject {
 
   static Pointer<Uint8> utf8Convert(value) {
     final units = utf8.encode(value);
-    final result = cOPC.UA_Array_new(
-            value.length + 1, cOPC.UA_GET_TYPES_FROM_INDEX(UATypes.BYTE))
-        .cast<Uint8>();
+    final result =
+        cOPC.UA_Array_new(value.length + 1, UATypes.call(UATypes.BYTE).type)
+            .cast<Uint8>();
     final nativeString = result.asTypedList(units.length + 1);
     nativeString.setAll(0, units);
     nativeString[units.length] = 0;
@@ -345,9 +343,9 @@ class UACOpject {
 
 Pointer<Uint8> toNativeUtf8(String str) {
   final units = utf8.encode(str);
-  final result = cOPC.UA_Array_new(
-          str.length + 1, cOPC.UA_GET_TYPES_FROM_INDEX(UATypes.BYTE))
-      .cast<Uint8>();
+  final result =
+      cOPC.UA_Array_new(str.length + 1, UATypes.call(UATypes.BYTE).type)
+          .cast<Uint8>();
   final nativeString = result.asTypedList(units.length + 1);
   nativeString.setAll(0, units);
   nativeString[units.length] = 0;
