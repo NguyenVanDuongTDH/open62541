@@ -12,26 +12,31 @@ Future<dynamic> Client_Method_call_async(
   UAVariant input,
 ) async {
   Pointer<Uint32> reqId = calloc.allocate(1);
-
-  int rev = cOPC.UA_FFIClient_call_async(
-      client.cast(),
-      UANodeId(0, UA_NS0ID_OBJECTSFOLDER).nodeId,
-      methodId.nodeId,
-      1,
-      input.variant,
-      _UAClientMethodCallbackPtr,
-      Pointer.fromAddress(0),
-      reqId);
-
   try {
+    int rev = cOPC.UA_FFIClient_call_async(
+        client.cast(),
+        UANodeId(0, UA_NS0ID_OBJECTSFOLDER).nodeId,
+        methodId.nodeId,
+        1,
+        input.variant,
+        _UAClientMethodCallbackPtr,
+        Pointer.fromAddress(0),
+        reqId);
+
     if (rev == 0) {
+      final compile = Completer();
       _callBack[client] ??= {};
-      _callBack[client]![reqId.value] = Completer();
+      _callBack[client]![reqId.value] = compile;
+      compile.future.timeout(const Duration(milliseconds: 3000), onTimeout: () {
+        compile.completeError(Exception("TimeOut ReadNodeId Async"));
+        _callBack[client]!.remove(reqId.value);
+      });
       return _callBack[client]![reqId.value]!.future;
     } else {
-      return 0;
+      return null;
     }
   } finally {
+    calloc.free(reqId);
     methodId.delete();
   }
 }
