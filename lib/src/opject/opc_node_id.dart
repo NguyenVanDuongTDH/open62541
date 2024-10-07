@@ -3,7 +3,6 @@
 import 'dart:convert';
 import 'dart:ffi';
 import 'dart:typed_data';
-import 'package:ffi/ffi.dart';
 import 'package:open62541/open62541.dart';
 import 'package:open62541/src/open62541_gen.dart';
 import 'package:open62541/src/opject/ua_convert.dart';
