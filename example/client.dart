@@ -5,9 +5,9 @@ Future<void> main() async {
   final rev = client.connect("opc.tcp://127.0.0.1:4840/");
   print("connect: $rev");
 
-  for (var i = 0; i < 100; i++) {
+  for (var i = 0; i < 1000; i++) {
     await Future.delayed(const Duration(milliseconds: 1));
-    print(await client.writeNodeIdAsync(UANodeId(1, "Availible"), "123".uaString()));
+    print(await client.writeNodeIdAsync(UANodeId(1, "Availible"), "$i".uaString()));
     print("read: ${await client.readNodeIdAsync(UANodeId(1, "Availible"))}");
   }
   // client.disconnect();
