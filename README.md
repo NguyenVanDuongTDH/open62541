@@ -10,7 +10,6 @@ git clone https://github.com/NguyenVanDuongTDH/open62541.git
 
 .
 
-```
-yaml
+```yaml
 https://github.com/NguyenVanDuongTDH/open62541.git
 ```
