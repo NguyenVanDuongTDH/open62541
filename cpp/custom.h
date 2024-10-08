@@ -26,12 +26,24 @@ UA_EXPORT void UA_FFI_Client_run_iterate(UA_Client *client, UA_UInt32 timeout){
 
 UA_EXPORT void
 UA_FFI_Server_call(UA_Server *server, const UA_AsyncOperationRequest **request, void *context,  UA_Variant *out) {
-    UA_CallMethodResult response =
+    // UA_CallMethodResult response =
+    //     UA_Server_call(server, &(*request)->callMethodRequest);
+    // UA_Variant_copy(out, response.outputArguments);
+    // response.outputArgumentsSize = 1;
+    // UA_Server_setAsyncOperationResult(
+    //             server, (UA_AsyncOperationResponse *)&response, context);
+    // UA_CallMethodResult_clear(&response);
+    
+        UA_CallMethodResult response =
         UA_Server_call(server, &(*request)->callMethodRequest);
+    // if(out != NULL){
     UA_Variant_copy(out, response.outputArguments);
     response.outputArgumentsSize = 1;
+    // }
+        
     UA_Server_setAsyncOperationResult(
                 server, (UA_AsyncOperationResponse *)&response, context);
+
     UA_CallMethodResult_clear(&response);
     
 }
