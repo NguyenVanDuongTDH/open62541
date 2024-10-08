@@ -1,33 +1,26 @@
 output: 'lib/src/open62541_gen.dart'
 headers:
   entry-points:
-    - 'open62541_1_3/open62541.h'
-    - 'open62541_1_3/open62541.c'
-    - 'open62541_1_3/custom.h'
-# enums:
-#   exclude:
-#     - "^_.*"
-#     - "^(?!UA_).*"
+    - 'cpp/open62541.h'
+    - 'cpp/open62541.c'
+    - 'cpp/custom.h'
 
-# functions:
-#   exclude:
-#     - "^_.*"
-#     - "^(?!UA_).*"  # Corrected to provide the pattern directly as a string
-# structs:
-#   exclude:
-#     - "^_.*"
-#     - "^(?!UA_).*"
-# libraries:  # Corrected the typo
-#   exclude:
-#     - "^_.*"
-# variables:
-#   exclude:
-#     - "^_.*"
-#     - "^(?!UA_).*"
-# defines:
-#   exclude:
-#     - "^_.*"
-#     - "^(?!UA_).*"
+objc-interfaces:
+  exclude:
+    - "^(?!UA_).*"
+enums:
+  exclude:
+    - "^(?!UA_).*"
+functions:
+  exclude:
+    - "^(?!UA_).*"
+structs:
+  exclude:
+    - "^(?!UA_).*"
+globals:
+  exclude:
+    - "^(?!UA_).*"
+
 # dart run ffigen --config config.yaml
 # // AUTO GENERATED FILE, DO NOT EDIT.
 # //
