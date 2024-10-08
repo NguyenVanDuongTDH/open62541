@@ -1,3 +1,5 @@
+// ignore_for_file: dead_code
+
 import 'dart:ffi';
 import 'dart:io';
 import 'package:open62541/src/open62541_gen.dart';
