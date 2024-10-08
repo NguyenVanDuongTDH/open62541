@@ -1,7 +1,5 @@
 // ignore_for_file: unused_field, camel_case_extensions
-
 import 'dart:ffi';
-
 import 'package:open62541/open62541.dart';
 import 'package:open62541/src/open62541_gen.dart';
 import 'package:open62541/src/opject/ua_convert.dart';
@@ -57,15 +55,6 @@ class UAVariant {
     }
   }
 
-  static variant2Dart(UA_Variant variant) {
-    final type = UATypes.call(variant.type).index;
-    final len = variant.arrayLength;
-    if (len > 0) {
-      return UACOpject.pointer2DartList(variant.data, len, type);
-    } else {
-      return UACOpject.pointer2Dart(variant.data, type);
-    }
-  }
 
   @override
   String toString() {

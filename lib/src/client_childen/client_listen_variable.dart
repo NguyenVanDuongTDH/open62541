@@ -18,7 +18,9 @@ void UAClientRemoveClientCallBack(Pointer<UA_Client> client) {
 
 void UAClientListenNodeId(Pointer<UA_Client> client, UANodeId nodeId,
     Function(UANodeId nodeID, dynamic value) callBack) {
-  _callBack[client]![nodeId.pNodeId] = callBack;
+  //
+  final copyNodeId = nodeId.clone();
+  _callBack[client]![copyNodeId.pNodeId] = callBack;
 
   UA_CreateSubscriptionRequest request =
       cOPC.UA_CreateSubscriptionRequest_default();
@@ -32,8 +34,11 @@ void UAClientListenNodeId(Pointer<UA_Client> client, UANodeId nodeId,
           .cast();
 
   int response = cOPC.UA_Client_SubSubscriptions_Check(res.cast());
-  UA_NodeId target = nodeId.pNodeId.ref;
-  final context = nodeId.pNodeId;
+  //
+  // cOPC.UA_Client_Subscriptions_create
+  //
+  UA_NodeId target = copyNodeId.nodeId;
+  final context = copyNodeId.pNodeId;
   UA_MonitoredItemCreateRequest monRequest =
       cOPC.UA_MonitoredItemCreateRequest_default(target);
   monRequest.requestedParameters.samplingInterval = 100.0;
