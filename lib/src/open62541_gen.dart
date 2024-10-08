@@ -33074,13 +33074,13 @@ class NativeLibrary {
       _UA_Client_SubSubscriptions_CheckPtr.asFunction<
           int Function(ffi.Pointer<UA_CreateSubscriptionResponse>)>();
 
-  void UA_FFIClient_callBack_method(
+  void UA_FFI_Client_callBack_method(
     ffi.Pointer<UA_Client> client,
     ffi.Pointer<ffi.Void> userdata,
     int requestId,
     ffi.Pointer<UA_CallResponse> response,
   ) {
-    return _UA_FFIClient_callBack_method(
+    return _UA_FFI_Client_callBack_method(
       client,
       userdata,
       requestId,
@@ -33088,19 +33088,19 @@ class NativeLibrary {
     );
   }
 
-  late final _UA_FFIClient_callBack_methodPtr = _lookup<
+  late final _UA_FFI_Client_callBack_methodPtr = _lookup<
       ffi.NativeFunction<
           ffi.Void Function(
               ffi.Pointer<UA_Client>,
               ffi.Pointer<ffi.Void>,
               UA_UInt32,
-              ffi.Pointer<UA_CallResponse>)>>('UA_FFIClient_callBack_method');
-  late final _UA_FFIClient_callBack_method =
-      _UA_FFIClient_callBack_methodPtr.asFunction<
+              ffi.Pointer<UA_CallResponse>)>>('UA_FFI_Client_callBack_method');
+  late final _UA_FFI_Client_callBack_method =
+      _UA_FFI_Client_callBack_methodPtr.asFunction<
           void Function(ffi.Pointer<UA_Client>, ffi.Pointer<ffi.Void>, int,
               ffi.Pointer<UA_CallResponse>)>();
 
-  int UA_FFIClient_call_async(
+  int UA_FFI_Client_call_async(
     ffi.Pointer<UA_Client> client,
     UA_NodeId objectId,
     UA_NodeId methodId,
@@ -33110,7 +33110,7 @@ class NativeLibrary {
     ffi.Pointer<ffi.Void> userdata,
     ffi.Pointer<UA_UInt32> reqId,
   ) {
-    return _UA_FFIClient_call_async(
+    return _UA_FFI_Client_call_async(
       client,
       objectId,
       methodId,
@@ -33122,7 +33122,7 @@ class NativeLibrary {
     );
   }
 
-  late final _UA_FFIClient_call_asyncPtr = _lookup<
+  late final _UA_FFI_Client_call_asyncPtr = _lookup<
       ffi.NativeFunction<
           UA_StatusCode Function(
               ffi.Pointer<UA_Client>,
@@ -33132,17 +33132,18 @@ class NativeLibrary {
               ffi.Pointer<UA_Variant>,
               UA_FFICallback_method_async,
               ffi.Pointer<ffi.Void>,
-              ffi.Pointer<UA_UInt32>)>>('UA_FFIClient_call_async');
-  late final _UA_FFIClient_call_async = _UA_FFIClient_call_asyncPtr.asFunction<
-      int Function(
-          ffi.Pointer<UA_Client>,
-          UA_NodeId,
-          UA_NodeId,
-          int,
-          ffi.Pointer<UA_Variant>,
-          UA_FFICallback_method_async,
-          ffi.Pointer<ffi.Void>,
-          ffi.Pointer<UA_UInt32>)>();
+              ffi.Pointer<UA_UInt32>)>>('UA_FFI_Client_call_async');
+  late final _UA_FFI_Client_call_async =
+      _UA_FFI_Client_call_asyncPtr.asFunction<
+          int Function(
+              ffi.Pointer<UA_Client>,
+              UA_NodeId,
+              UA_NodeId,
+              int,
+              ffi.Pointer<UA_Variant>,
+              UA_FFICallback_method_async,
+              ffi.Pointer<ffi.Void>,
+              ffi.Pointer<UA_UInt32>)>();
 
   void UA_Server_run_iterate_void(
     ffi.Pointer<UA_Server> server,
@@ -33177,34 +33178,6 @@ class NativeLibrary {
               UA_UInt32)>>('UA_Client_run_iterate_void');
   late final _UA_Client_run_iterate_void = _UA_Client_run_iterate_voidPtr
       .asFunction<void Function(ffi.Pointer<UA_Client>, int)>();
-
-  void UA_Server_call_1(
-    ffi.Pointer<UA_Server> server,
-    ffi.Pointer<ffi.Pointer<UA_AsyncOperationRequest>> request,
-    ffi.Pointer<ffi.Void> context,
-    ffi.Pointer<UA_Variant> out,
-  ) {
-    return _UA_Server_call_1(
-      server,
-      request,
-      context,
-      out,
-    );
-  }
-
-  late final _UA_Server_call_1Ptr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<UA_Server>,
-              ffi.Pointer<ffi.Pointer<UA_AsyncOperationRequest>>,
-              ffi.Pointer<ffi.Void>,
-              ffi.Pointer<UA_Variant>)>>('UA_Server_call_1');
-  late final _UA_Server_call_1 = _UA_Server_call_1Ptr.asFunction<
-      void Function(
-          ffi.Pointer<UA_Server>,
-          ffi.Pointer<ffi.Pointer<UA_AsyncOperationRequest>>,
-          ffi.Pointer<ffi.Void>,
-          ffi.Pointer<UA_Variant>)>();
 
   /// base64_encode - Base64 encode
   /// @src: Data to be encoded

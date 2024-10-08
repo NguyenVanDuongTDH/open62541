@@ -4,11 +4,11 @@ Future<void> main() async {
   UAClient client = UAClient();
   final rev = client.connect("opc.tcp://duong-Surface-Pro:4840/");
   print("connect: $rev");
-  print(
-      "read: ${await client.methodCallAsync(UANodeId(1, 'MethodId'), "vcl".uaString())}");
 
-  print(
-      "write: ${await client.writeNodeIdAsync(UANodeId(1, "Availible"), "123".uaString())}");
-  print("read: ${await client.readNodeIdAsync(UANodeId(1, "Availible"))}");
-  client.disconnect();
+  for (var i = 0; i < 1000; i++) {
+    await Future.delayed(const Duration(milliseconds: 1));
+      await client.writeNodeIdAsync(UANodeId(1, "Availible"), "123".uaString());
+      print("read: ${await client.readNodeIdAsync(UANodeId(1, "Availible"))}");
+  }
+  // client.disconnect();
 }

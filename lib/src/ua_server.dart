@@ -45,7 +45,7 @@ class UAServer {
 
           UAVariant res = await UAServerMethodCall(
               server.cast(), methodNodeId, inputAgrument.data);
-          cOPC.UA_Server_call_1(
+          cOPC.UA_FFI_Server_call(
               server.cast(), request, context.value, res.variant);
           res.delete();
         }

@@ -83,19 +83,21 @@ typedef void (*UA_FFICallback_method_async)(UA_Client *client, void *userdata,
 
 UA_FFICallback_method_async _callBack;
 
+//
 UA_EXPORT void
-UA_FFIClient_callBack_method(UA_Client *client, void *userdata, UA_UInt32 requestId,
+UA_FFI_Client_callBack_method(UA_Client *client, void *userdata, UA_UInt32 requestId,
              UA_CallResponse *response) {
     _callBack(client, userdata, requestId, response->results[0].outputArguments);
     UA_CallResponse_clear(response);
 }
+//
 
 UA_EXPORT UA_StatusCode
-UA_FFIClient_call_async(UA_Client *client, const UA_NodeId objectId, const UA_NodeId methodId, size_t inputSize, 
+UA_FFI_Client_call_async(UA_Client *client, const UA_NodeId objectId, const UA_NodeId methodId, size_t inputSize, 
 const UA_Variant *input, UA_FFICallback_method_async callBack, void *userdata, UA_UInt32 *reqId) {
     _callBack = callBack;
   return  UA_Client_call_async(client, objectId,
-                         methodId, inputSize, input, UA_FFIClient_callBack_method, userdata, reqId);
+                         methodId, inputSize, input, UA_FFI_Client_callBack_method, userdata, reqId);
 }
 
 
@@ -107,20 +109,20 @@ UA_EXPORT void UA_Client_run_iterate_void(UA_Client *client, UA_UInt32 timeout){
     UA_Client_run_iterate(client,timeout);
 }
 
-UA_EXPORT void
-UA_Server_call_1(UA_Server *server, const UA_AsyncOperationRequest **request, void *context,  UA_Variant *out) {
-    UA_CallMethodResult response =
-        UA_Server_call(server, &(*request)->callMethodRequest);
-    // if(out != NULL){
-    UA_Variant_copy(out, response.outputArguments);
-    response.outputArgumentsSize = 1;
-    // }
+// UA_EXPORT void
+// UA_Server_call_1(UA_Server *server, const UA_AsyncOperationRequest **request, void *context,  UA_Variant *out) {
+//     UA_CallMethodResult response =
+//         UA_Server_call(server, &(*request)->callMethodRequest);
+//     // if(out != NULL){
+//     UA_Variant_copy(out, response.outputArguments);
+//     response.outputArgumentsSize = 1;
+//     // }
         
-    UA_Server_setAsyncOperationResult(
-                server, (UA_AsyncOperationResponse *)&response, context);
+//     UA_Server_setAsyncOperationResult(
+//                 server, (UA_AsyncOperationResponse *)&response, context);
 
-    UA_CallMethodResult_clear(&response);
+//     UA_CallMethodResult_clear(&response);
     
-}
+// }
 
 

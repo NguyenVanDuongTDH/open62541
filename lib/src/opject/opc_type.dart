@@ -6,21 +6,32 @@ import 'package:open62541/open62541.dart';
 import 'package:open62541/src/open62541_gen.dart';
 
 class _TYPES {
-  dynamic __index;
-  _TYPES(this.__index);
+  dynamic _value;
+  _TYPES(this._value);
+  //
   Pointer<UA_DataType> get type => _type();
   Pointer<UA_DataType> _type() {
-    return cOPC.UA_FFI_type_from_index(__index);
+    if (_value is int) {
+      return cOPC.UA_FFI_type_from_index(_value);
+    } else {
+      return _value;
+    }
   }
-
+  //
   int get index => _index();
   int _index() {
-    return cOPC.UA_FFI_intdex_from_type(__index);
+    if (_value is int) {
+      return _value;
+    }
+    return cOPC.UA_FFI_intdex_from_type(_value);
   }
 
   UA_NodeId get typeId => _typeId();
   UA_NodeId _typeId() {
-    return cOPC.UA_FFI_typeId_from_index(__index);
+    if (_value! is int) {
+      _value = _index();
+    }
+    return cOPC.UA_FFI_typeId_from_index(_value);
   }
 }
 

@@ -13,7 +13,7 @@ Future<dynamic> Client_Method_call_async(
 ) async {
   Pointer<Uint32> reqId = calloc.allocate(1);
   try {
-    int rev = cOPC.UA_FFIClient_call_async(
+    int rev = cOPC.UA_FFI_Client_call_async(
         client.cast(),
         UANodeId(0, UA_NS0ID_OBJECTSFOLDER).nodeId,
         methodId.nodeId,
