@@ -9,7 +9,7 @@ String _getPathLib() {
     return "/home/duong/Desktop/open62541/open62541_1_3/open62541.so";
     return "${Platform.script.toFilePath().replaceAll('/server', "")}/open62541_1_3/open62541.so";
   } else if (Platform.isWindows) {
-    return "open62541_1_4/open62541.dll";
+    return "open62541_1_3/open62541.dll";
   } else if (Platform.isAndroid) {
     return "libopen62541.so";
   }
