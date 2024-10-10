@@ -35,7 +35,7 @@ void UAClientListenNodeId(Pointer<UA_Client> client, UANodeId nodeId,
 
   int response = cOPC.UA_Client_SubSubscriptions_Check(res.cast());
   UA_NodeId target = nodeId.nodeId;
-  final cString = nodeId.toString().toCString();
+  final cString = nodeId.toString().toNativeUtf8();
   UA_MonitoredItemCreateRequest monRequest =
       cOPC.UA_MonitoredItemCreateRequest_default(target);
   monRequest.requestedParameters.samplingInterval = 100.0;

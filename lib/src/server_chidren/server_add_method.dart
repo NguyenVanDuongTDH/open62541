@@ -50,11 +50,11 @@ void UAServerAddMethod(
   context.value = output.uaType;
   if (description != null) {
     helloAttr.ref.description = cOPC.UA_LOCALIZEDTEXT(
-        UAVariableAttributes.en_US.cast(), description.toCString().cast());
+        UAVariableAttributes.en_US.cast(), description.toNativeUtf8().cast());
   }
   if (displayName != null) {
     helloAttr.ref.displayName = cOPC.UA_LOCALIZEDTEXT(
-        UAVariableAttributes.en_US.cast(), displayName.toCString().cast());
+        UAVariableAttributes.en_US.cast(), displayName.toNativeUtf8().cast());
   }
   helloAttr.ref.executable = true;
   helloAttr.ref.userExecutable = true;

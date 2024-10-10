@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:ffi/ffi.dart';
 import 'package:open62541/open62541.dart';
 import 'package:open62541/src/open62541_gen.dart';
 import 'package:open62541/src/opject/c.dart';
@@ -23,14 +24,13 @@ class UAArgument {
   void setDescription(String? description) {
     if (description != null) {
       attr.ref.description = cOPC.UA_LOCALIZEDTEXT(
-          UAVariableAttributes.en_US.cast(),
-          CString.fromString(description).cast());
+          UAVariableAttributes.en_US.cast(), description.toNativeUtf8().cast());
     }
   }
 
   void setName(String? name) {
     if (name != null) {
-      attr.ref.name = cOPC.UA_String_fromChars(name.toCString().cast());
+      attr.ref.name = cOPC.UA_String_fromChars(name.toNativeUtf8().cast());
     }
   }
 

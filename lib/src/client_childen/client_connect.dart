@@ -15,9 +15,9 @@ Pointer<Void> UAClientCreate() {
 }
 
 bool UAClientConnect(Pointer<UA_Client> client, String endpointUrl) {
-  final EndpointUrl = endpointUrl.toCString();
+  final EndpointUrl = endpointUrl.toNativeUtf8();
   int retval = cOPC.UA_Client_connect(client, EndpointUrl.cast());
-  EndpointUrl.free();
+  // EndpointUrl.free();
   return retval == 0;
 }
 
