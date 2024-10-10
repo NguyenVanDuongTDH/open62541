@@ -1,49 +1,6 @@
 // ignore_for_file: constant_identifier_names
 
-import 'dart:ffi';
-
-import 'package:open62541/open62541.dart';
-import 'package:open62541/src/open62541_gen.dart';
-
-class _TYPES {
-  dynamic _value;
-  _TYPES(this._value);
-  //
-  Pointer<UA_DataType> get type => _type();
-  Pointer<UA_DataType> _type() {
-    if (_value is int) {
-      return cOPC.UA_FFI_type_from_index(_value);
-    } else {
-      return _value;
-    }
-  }
-  //
-  int get index => _index();
-  int _index() {
-    if (_value is int) {
-      return _value;
-    }
-    return cOPC.UA_FFI_intdex_from_type(_value);
-  }
-
-  UA_NodeId get typeId => _typeId();
-  UA_NodeId _typeId() {
-    if (_value! is int) {
-      _value = _index();
-    }
-    return cOPC.UA_FFI_typeId_from_index(_value);
-  }
-}
-
 class UATypes {
-  _TYPES operator [](dynamic index) {
-    return _TYPES(index);
-  }
-
-  static _TYPES call(dynamic value) {
-    return _TYPES(value);
-  }
-
   static const int COUNT = 191;
   static const BOOLEAN = 0;
   static const SBYTE = 1;

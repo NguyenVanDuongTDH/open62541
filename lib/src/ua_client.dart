@@ -17,6 +17,7 @@ class UAClient {
   }
   bool connect(String endpointUrl) {
     final retval = UAClientConnect(client.cast(), endpointUrl);
+    print("connect");
     if (retval && _timer == null) {
       _timer ??= Timer.periodic(const Duration(milliseconds: 1), (timer) {
         runIterate(1);

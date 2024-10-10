@@ -14,7 +14,7 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE.
  */
-#include "custom.h"
+
 #ifndef UA_DYNAMIC_LINKING_EXPORT
 # define UA_DYNAMIC_LINKING_EXPORT
 # define MDNSD_DYNAMIC_LINKING
@@ -50369,7 +50369,9 @@ cleanup:
     UA_free(cc);
 }
 
-UA_CreateSubscriptionResponse
+
+
+UA_CreateSubscriptionResponse 
 UA_Client_Subscriptions_create(UA_Client *client,
                                const UA_CreateSubscriptionRequest request,
                                void *subscriptionContext,
@@ -50913,7 +50915,7 @@ UA_Client_MonitoredItems_createDataChanges_async(UA_Client *client,
         userdata, requestId);
 }
 
-UA_MonitoredItemCreateResult
+UA_EXPORT UA_MonitoredItemCreateResult
 UA_Client_MonitoredItems_createDataChange(UA_Client *client, UA_UInt32 subscriptionId,
                                           UA_TimestampsToReturn timestampsToReturn,
                                           const UA_MonitoredItemCreateRequest item,
@@ -82104,6 +82106,3 @@ UA_ClientConnectionTCP_init(UA_ConnectionConfig config, const UA_String endpoint
     /* Return connection with state UA_CONNECTIONSTATE_OPENING */
     return connection;
 }
-
-
-

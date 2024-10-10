@@ -1,54 +1,24 @@
-
 #include "open62541.h"
-#include <stdio.h>
 
-UA_EXPORT const UA_DataType *
-UA_FFI_type_from_index(int index) {
+
+
+UA_EXPORT UA_DataType *
+UA_GET_TYPES_FROM_INDEX(int index) {
     return &UA_TYPES[index];
 }
 UA_EXPORT UA_NodeId
-UA_FFI_typeId_from_index(int index) {
+UA_GET_TYPES_TYPEID(int index) {
     return UA_TYPES[index].typeId;
 }
-UA_EXPORT int UA_FFI_intdex_from_type(UA_DataType *type){
-    for(int i = 0; i < UA_TYPES_COUNT; i++) 
-        if(&UA_TYPES[i] == type) 
+UA_EXPORT int 
+UA_GET_TYPES_INTDEX(UA_DataType *type) {
+    for(int i = 0; i < UA_TYPES_COUNT; i++) {
+        if(&UA_TYPES[i] == type) {
             return i;
+        }
+    }
     return -1;
 }
-UA_EXPORT void UA_FFI_Server_run_iterate(UA_Server *server, UA_Boolean waitInternal){
-    UA_Server_run_iterate(server, waitInternal);
-}
-
-UA_EXPORT void UA_FFI_Client_run_iterate(UA_Client *client, UA_UInt32 timeout){
-    UA_Client_run_iterate(client,timeout);
-}
-
-UA_EXPORT void
-UA_FFI_Server_call(UA_Server *server, const UA_AsyncOperationRequest **request, void *context,  UA_Variant *out) {
-    // UA_CallMethodResult response =
-    //     UA_Server_call(server, &(*request)->callMethodRequest);
-    // UA_Variant_copy(out, response.outputArguments);
-    // response.outputArgumentsSize = 1;
-    // UA_Server_setAsyncOperationResult(
-    //             server, (UA_AsyncOperationResponse *)&response, context);
-    // UA_CallMethodResult_clear(&response);
-    
-        UA_CallMethodResult response =
-        UA_Server_call(server, &(*request)->callMethodRequest);
-    // if(out != NULL){
-    UA_Variant_copy(out, response.outputArguments);
-    response.outputArgumentsSize = 1;
-    // }
-        
-    UA_Server_setAsyncOperationResult(
-                server, (UA_AsyncOperationResponse *)&response, context);
-
-    UA_CallMethodResult_clear(&response);
-    
-}
-
-
 UA_EXPORT int
 UA_CLIENT_WriteResponse_STATUS(UA_WriteResponse *res) {
     if(res == NULL) {
@@ -95,21 +65,19 @@ typedef void (*UA_FFICallback_method_async)(UA_Client *client, void *userdata,
 
 UA_FFICallback_method_async _callBack;
 
-//
 UA_EXPORT void
-UA_FFI_Client_callBack_method(UA_Client *client, void *userdata, UA_UInt32 requestId,
+UA_FFIClient_callBack_method(UA_Client *client, void *userdata, UA_UInt32 requestId,
              UA_CallResponse *response) {
     _callBack(client, userdata, requestId, response->results[0].outputArguments);
     UA_CallResponse_clear(response);
 }
-//
 
 UA_EXPORT UA_StatusCode
-UA_FFI_Client_call_async(UA_Client *client, const UA_NodeId objectId, const UA_NodeId methodId, size_t inputSize, 
+UA_FFIClient_call_async(UA_Client *client, const UA_NodeId objectId, const UA_NodeId methodId, size_t inputSize, 
 const UA_Variant *input, UA_FFICallback_method_async callBack, void *userdata, UA_UInt32 *reqId) {
     _callBack = callBack;
   return  UA_Client_call_async(client, objectId,
-                         methodId, inputSize, input, UA_FFI_Client_callBack_method, userdata, reqId);
+                         methodId, inputSize, input, UA_FFIClient_callBack_method, userdata, reqId);
 }
 
 
@@ -121,20 +89,18 @@ UA_EXPORT void UA_Client_run_iterate_void(UA_Client *client, UA_UInt32 timeout){
     UA_Client_run_iterate(client,timeout);
 }
 
-// UA_EXPORT void
-// UA_Server_call_1(UA_Server *server, const UA_AsyncOperationRequest **request, void *context,  UA_Variant *out) {
-//     UA_CallMethodResult response =
-//         UA_Server_call(server, &(*request)->callMethodRequest);
-//     // if(out != NULL){
-//     UA_Variant_copy(out, response.outputArguments);
-//     response.outputArgumentsSize = 1;
-//     // }
+UA_EXPORT void
+UA_Server_call_1(UA_Server *server, const UA_AsyncOperationRequest **request, void *context,  UA_Variant *out) {
+    UA_CallMethodResult response =
+        UA_Server_call(server, &(*request)->callMethodRequest);
+    // if(out != NULL){
+    UA_Variant_copy(out, response.outputArguments);
+    response.outputArgumentsSize = 1;
+    // }
         
-//     UA_Server_setAsyncOperationResult(
-//                 server, (UA_AsyncOperationResponse *)&response, context);
+    UA_Server_setAsyncOperationResult(
+                server, (UA_AsyncOperationResponse *)&response, context);
 
-//     UA_CallMethodResult_clear(&response);
+    UA_CallMethodResult_clear(&response);
     
-// }
-
-
+}

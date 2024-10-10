@@ -7,8 +7,8 @@ Future<void> main() async {
 
   for (var i = 0; i < 1000; i++) {
     await Future.delayed(const Duration(milliseconds: 1));
-    print(await client.writeNodeIdAsync(UANodeId(1, "Availible"), "$i".uaString()));
-    print("read: ${await client.readNodeIdAsync(UANodeId(1, "Availible"))}");
+    print(await client.writeNodeIdAsync(UANodeId(1, 123), "$i".uaString()));
+    print("read: ${await client.readNodeIdAsync(UANodeId(1, 123))}");
   }
   // client.disconnect();
 }

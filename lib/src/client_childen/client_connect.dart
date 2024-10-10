@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:ffi/ffi.dart';
 import 'package:open62541/open62541.dart';
 import 'package:open62541/src/open62541_gen.dart';
+import 'package:open62541/src/opject/c.dart';
 
 Pointer<Void> UAClientCreate() {
   final client = cOPC.UA_Client_new();
@@ -14,7 +15,9 @@ Pointer<Void> UAClientCreate() {
 }
 
 bool UAClientConnect(Pointer<UA_Client> client, String endpointUrl) {
-  int retval = cOPC.UA_Client_connect(client, endpointUrl.toNativeUtf8().cast());
+  final EndpointUrl = endpointUrl.toCString();
+  int retval = cOPC.UA_Client_connect(client, EndpointUrl.cast());
+  EndpointUrl.free();
   return retval == 0;
 }
 
@@ -28,16 +31,17 @@ void UAClientDispose(Pointer<UA_Client> client) {
 
 bool UAClientRunIterate(Pointer<UA_Client> client, int timeOut) {
   if (Platform.isAndroid) {
-    cOPC.UA_FFI_Client_run_iterate(client, timeOut);
+    cOPC.UA_Client_run_iterate_void(client, timeOut);
     return client.ref.connectStatus == 0;
   }
   return cOPC.UA_Client_run_iterate(client, timeOut) == 0;
 }
 
-final  Pointer<Uint32> _connectStatus = calloc.allocate(1);
 bool UAClientConnected(Pointer<UA_Client> client) {
+  Pointer<Uint32> connectStatus = calloc.allocate(1);
   cOPC.UA_Client_getState(
-      client, Pointer.fromAddress(0), Pointer.fromAddress(0), _connectStatus);
-  int retval = _connectStatus.value;
+      client, Pointer.fromAddress(0), Pointer.fromAddress(0), connectStatus);
+  int retval = connectStatus.value;
+  calloc.free(connectStatus);
   return retval == 0;
 }

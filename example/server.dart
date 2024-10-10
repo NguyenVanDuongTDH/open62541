@@ -7,7 +7,7 @@ void main() {
 
   server.addVariableNodeId(
       uaVariant: "hello world!".uaString(),
-      nodeid: UANodeId(1, "Availible"),
+      nodeid: UANodeId(1, 123),
       qualifiedName: UAQualifiedName(1, "Availible"));
 
   server.addMethod(

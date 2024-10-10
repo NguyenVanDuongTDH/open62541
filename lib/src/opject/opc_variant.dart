@@ -1,5 +1,7 @@
 // ignore_for_file: unused_field, camel_case_extensions
+
 import 'dart:ffi';
+
 import 'package:open62541/open62541.dart';
 import 'package:open62541/src/open62541_gen.dart';
 import 'package:open62541/src/opject/ua_convert.dart';
@@ -18,7 +20,7 @@ class UAVariant {
   Pointer<UA_Variant> get variant => _variant!;
   int get arrayLength => variant.ref.arrayLength;
   int get arrayDimensionsSize => variant.ref.arrayDimensionsSize;
-  int get type => UATypes.call(variant.ref.type).index;
+  int get type => cOPC.UA_GET_TYPES_INTDEX(variant.ref.type);
   dynamic get data => UaConvert.variant2Dart(this);
 
   bool isEmpty() {
@@ -48,13 +50,23 @@ class UAVariant {
   void setScalar(dynamic value, int uaType) {
     Pointer ptr = UaConvert.dart2Pointer(value, uaType);
     if (value is List) {
-      cOPC.UA_Variant_setArray(
-          variant, ptr.cast(), value.length, UATypes.call(uaType).type);
+      cOPC.UA_Variant_setArray(variant, ptr.cast(), value.length,
+          cOPC.UA_GET_TYPES_FROM_INDEX(uaType));
     } else {
-      cOPC.UA_Variant_setScalar(variant, ptr.cast(), UATypes.call(uaType).type);
+      cOPC.UA_Variant_setScalar(
+          variant, ptr.cast(), cOPC.UA_GET_TYPES_FROM_INDEX(uaType));
     }
   }
 
+  static variant2Dart(UA_Variant variant) {
+    final type = cOPC.UA_GET_TYPES_INTDEX(variant.type);
+    final len = variant.arrayLength;
+    if (len > 0) {
+      return UACOpject.pointer2DartList(variant.data, len, type);
+    } else {
+      return UACOpject.pointer2Dart(variant.data, type);
+    }
+  }
 
   @override
   String toString() {

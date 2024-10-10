@@ -12,12 +12,11 @@ dynamic UAClientReadNodeId(Pointer<UA_Client> client, UANodeId nodeId) {
   int res = cOPC.UA_Client_readValueAttribute(
       client, nodeId.nodeId, variant.variant.cast());
   if (res == 0) {
-    result = variant.data;
+    result = variant.data();
   } else {
     result = null;
   }
   variant.delete();
-  nodeId.delete();
   return result;
 }
 
@@ -25,7 +24,7 @@ bool UAClientWriteNodeId(
     Pointer<UA_Client> client, UANodeId nodeId, UAVariant variant) {
   int res = cOPC.UA_Client_writeValueAttribute(
       client, nodeId.nodeId, variant.variant);
-  nodeId.delete();
+
   variant.delete();
   return res == 0;
 }

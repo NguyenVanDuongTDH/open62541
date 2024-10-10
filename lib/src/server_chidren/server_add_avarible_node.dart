@@ -1,8 +1,8 @@
 import 'dart:ffi';
 
-import 'package:ffi/ffi.dart';
 import 'package:open62541/open62541.dart';
 import 'package:open62541/src/open62541_gen.dart';
+import 'package:open62541/src/opject/c.dart';
 import 'package:open62541/src/server_chidren/server_add_listen.dart';
 
 bool UAServerAddVariableNodeId(
@@ -15,9 +15,6 @@ bool UAServerAddVariableNodeId(
   UANodeId? parentNodeId,
   Function(UANodeId nodeId, dynamic value)? dataChangeCallBack,
 }) {
-  UANodeId copyNodeId = nodeid.clone();
-  UANodeId? copyParentNodeId = parentNodeId?.clone();
-
   UA_NodeId parent = cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
   //var
 
@@ -29,12 +26,12 @@ bool UAServerAddVariableNodeId(
 
   int retval = cOPC.UA_Server_addVariableNode(
     server,
-    copyNodeId.nodeId,
-    copyParentNodeId == null ? parent : copyParentNodeId.nodeId,
+    nodeid.nodeId,
+    parentNodeId == null ? parent : parentNodeId.nodeId,
     // parent,
     cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES),
     cOPC.UA_QUALIFIEDNAME(
-        qualifiedName.nsIndex, qualifiedName.name.toNativeUtf8().cast()),
+        qualifiedName.nsIndex, CString.fromString(qualifiedName.name).cast()),
     cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE),
     attr.attr.ref,
     Pointer.fromAddress(0),
@@ -47,9 +44,8 @@ bool UAServerAddVariableNodeId(
   //     cOPC.UA_EXPANDEDNODEID_NUMERIC(0, UA_NS0ID_MODELLINGRULE_MANDATORY),
   //     true);
   if (dataChangeCallBack != null) {
-    UAServerValueChangeListen(server, copyNodeId, dataChangeCallBack);
+    UAServerValueChangeListen(server, nodeid, dataChangeCallBack);
   }
-
   // attr.delete();
   return retval == 0;
 }

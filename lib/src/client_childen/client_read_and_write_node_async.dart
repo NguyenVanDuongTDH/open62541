@@ -10,54 +10,42 @@ Map<Pointer<UA_Client>, Map<int, Completer>> _future = {};
 
 Future<bool> UAClientWriteNodeIdAsync(
     Pointer<UA_Client> client, UANodeId nodeId, UAVariant variant) async {
-  Pointer<UA_UInt32> reqId = cOPC.UA_UInt32_new()..value = -1;
   final compile = Completer<bool>();
-
-  try {
-    int res = cOPC.UA_Client_writeValueAttribute_async(client, nodeId.nodeId,
-        variant.variant, _clientWriteAsync, Pointer.fromAddress(0), reqId);
-    if (res == 0 && reqId.value >= 0) {
+  Pointer<UA_UInt32> reqId = cOPC.UA_UInt32_new();
+  cOPC.UA_UInt32_init(reqId);
+  reqId.value = -1;
+  int res = cOPC.UA_Client_writeValueAttribute_async(client, nodeId.nodeId,
+      variant.variant, _ClientWriteCallbackPtr, Pointer.fromAddress(0), reqId);
+  if (res == 0) {
+    if (reqId.value >= 0) {
       _future[client] ??= {};
       _future[client]![reqId.value] = compile;
-
-      compile.future.timeout(const Duration(milliseconds: 3000), onTimeout: () {
-        compile.completeError(Exception("TimeOut ReadNodeId Async"));
-        _future[client]!.remove(reqId.value);
-        return false;
-      });
-      return await compile.future;
+      return compile.future;
     }
-    return false;
-  } finally {
-    cOPC.UA_UInt32_delete(reqId);
-    variant.delete();
-    nodeId.delete();
   }
+  cOPC.UA_UInt32_delete(reqId);
+  variant.delete();
+  return false;
 }
 
 Future<dynamic> UAClientReadNodeIdAsync(
     Pointer<UA_Client> client, UANodeId nodeId) async {
   Pointer<UA_UInt32> requestId = cOPC.UA_UInt32_new();
   requestId.value = -1;
+  int retval = cOPC.UA_Client_readValueAttribute_async(client, nodeId.nodeId,
+      _ClientReadNodeAsyncPtr, Pointer.fromAddress(0), requestId.cast());
+  nodeId.delete();
 
-  try {
-    int retval = cOPC.UA_Client_readValueAttribute_async(client, nodeId.nodeId,
-        _clientReadAsync, Pointer.fromAddress(0), requestId.cast());
-    if (retval == 0 && requestId.value >= 0) {
-      final compile = Completer();
-      _future[client] ??= {};
-      _future[client]![requestId.value] = compile;
-      compile.future.timeout(const Duration(milliseconds: 3000), onTimeout: () {
-        compile.completeError(Exception("TimeOut ReadNodeId Async"));
-        _future[client]!.remove(requestId.value);
-      });
-      return await compile.future;
-    } else {
-      return null;
-    }
-  } finally {
+  if (retval == 0 && requestId.value >= 0) {
+    final compile = Completer();
+    _future[client]![requestId.value] = compile;
     cOPC.UA_UInt32_delete(requestId);
-    nodeId.delete();
+    compile.future.then((value) {
+      nodeId.delete();
+    });
+    return compile.future;
+  } else {
+    return null;
   }
 }
 
@@ -70,7 +58,7 @@ void _ClientReadNodeAsync(Pointer<UA_Client> client, Pointer<Void> a,
   }
 }
 
-final _clientReadAsync = Pointer.fromFunction<
+final _ClientReadNodeAsyncPtr = Pointer.fromFunction<
     Void Function(Pointer<UA_Client>, Pointer<Void>, Uint32, Uint32,
         Pointer<UA_DataValue>)>(
   _ClientReadNodeAsync,
@@ -83,7 +71,7 @@ void _ClientWriteAsyncCallback(Pointer<UA_Client> client, Pointer<Void> v,
   _future[client]!.remove(requestId);
 }
 
-final _clientWriteAsync = Pointer.fromFunction<
+final _ClientWriteCallbackPtr = Pointer.fromFunction<
     Void Function(
         Pointer<UA_Client>, Pointer<Void>, Uint32, Pointer<UA_WriteResponse>)>(
   _ClientWriteAsyncCallback,

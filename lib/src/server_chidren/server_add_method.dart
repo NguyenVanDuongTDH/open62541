@@ -5,6 +5,7 @@ import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'package:open62541/open62541.dart';
 import 'package:open62541/src/open62541_gen.dart';
+import 'package:open62541/src/opject/c.dart';
 
 Map<Pointer<UA_Server>,
         Map<UANodeId, dynamic Function(UANodeId nodeID, dynamic input)>>
@@ -42,30 +43,27 @@ void UAServerAddMethod(
   String? displayName,
   String? description,
 }) {
-  UANodeId copyNodeId = nodeId.clone();
-  UANodeId? copyParentNodeId = parentNodeId?.clone();
-
-  _callBack[server]![copyNodeId] = callBack;
+  _callBack[server]![nodeId] = callBack;
 
   Pointer<UA_MethodAttributes> helloAttr = cOPC.UA_MethodAttributes_new();
   Pointer<Int32> context = calloc.allocate(1);
   context.value = output.uaType;
   if (description != null) {
     helloAttr.ref.description = cOPC.UA_LOCALIZEDTEXT(
-        UAVariableAttributes.en_US.cast(), description.toNativeUtf8().cast());
+        UAVariableAttributes.en_US.cast(), description.toCString().cast());
   }
   if (displayName != null) {
     helloAttr.ref.displayName = cOPC.UA_LOCALIZEDTEXT(
-        UAVariableAttributes.en_US.cast(), displayName.toNativeUtf8().cast());
+        UAVariableAttributes.en_US.cast(), displayName.toCString().cast());
   }
   helloAttr.ref.executable = true;
   helloAttr.ref.userExecutable = true;
   cOPC.UA_Server_addMethodNode(
       server,
-      copyNodeId.nodeId,
-      copyParentNodeId == null
+      nodeId.nodeId,
+      parentNodeId == null
           ? cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER)
-          : copyParentNodeId.nodeId,
+          : parentNodeId.nodeId,
       cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
       browseName.ua_qualifiedName_new,
       helloAttr.ref,
@@ -76,7 +74,7 @@ void UAServerAddMethod(
       output.attr,
       context.cast(),
       Pointer.fromAddress(0));
-  cOPC.UA_Server_setMethodNodeAsync(server, copyNodeId.nodeId, true);
+  cOPC.UA_Server_setMethodNodeAsync(server, nodeId.nodeId, true);
 }
 
 int _UAServerMethodCallback(

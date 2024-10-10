@@ -39,6 +39,7 @@ void _UAServerDataChangeCallback(
     int attributeId,
     Pointer<UA_DataValue> value) {
   dynamic res = UADataValue.toDart(value);
+
   _callBack[server]![UANodeId.fromPoint(nodeid)]!(
       UANodeId.fromPoint(nodeid), res);
 }

@@ -14,7 +14,6 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE.
  */
-// #pragma once
 
 #ifndef OPEN62541_H_
 #define OPEN62541_H_

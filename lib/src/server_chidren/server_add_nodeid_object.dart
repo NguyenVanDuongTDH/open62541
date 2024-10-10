@@ -2,44 +2,40 @@
 
 import 'dart:ffi';
 
-import 'package:ffi/ffi.dart';
 import 'package:open62541/open62541.dart';
 import 'package:open62541/src/open62541_gen.dart';
+import 'package:open62541/src/opject/c.dart';
 
 bool UAServerAddObjectNodeId(Pointer<UA_Server> server,
-    {required UANodeId nodeId,
+    {required UANodeId nodeID,
     required UANodeId nodeIdTypeNodeid,
     required UAQualifiedName qualifiedName,
     UANodeId? parentNodeId,
     String? description,
     String? displayName}) {
-  //
-  UANodeId copyNodeId = nodeId.clone();
-  UANodeId? copyParentNodeId = parentNodeId?.clone();
-  UANodeId copynodeIdTypeNodeid = nodeIdTypeNodeid.clone();
-
-  UA_NodeId parent = cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
+  UA_NodeId parent;
+  parent = cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
   Pointer<UA_ObjectAttributes> attr = cOPC.UA_ObjectAttributes_new();
   cOPC.UA_ObjectAttributes_init(attr);
   if (description != null) {
     attr.ref.description = cOPC.UA_LOCALIZEDTEXT(
         UAVariableAttributes.en_US.cast(),
-       description.toNativeUtf8().cast());
+        CString.fromString(description).cast());
   }
   if (displayName != null) {
     attr.ref.displayName = cOPC.UA_LOCALIZEDTEXT(
         UAVariableAttributes.en_US.cast(),
-        displayName.toNativeUtf8().cast());
+        CString.fromString(displayName).cast());
   }
 
   int ret = cOPC.UA_Server_addObjectNode(
       server,
-      copyNodeId.nodeId,
-      copyParentNodeId == null ? parent : copyParentNodeId.nodeId,
+      nodeID.nodeId,
+      parentNodeId == null ? parent : parentNodeId.nodeId,
       cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
       cOPC.UA_QUALIFIEDNAME(
-          qualifiedName.nsIndex, qualifiedName.name.toNativeUtf8().cast()),
-      copynodeIdTypeNodeid.nodeId,
+          qualifiedName.nsIndex, qualifiedName.name.toCString().cast()),
+      nodeIdTypeNodeid.nodeId,
       attr.ref,
       Pointer.fromAddress(0),
       Pointer.fromAddress(0));
