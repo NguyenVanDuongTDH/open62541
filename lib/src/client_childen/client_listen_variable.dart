@@ -55,7 +55,7 @@ void _UAClientDataChangeCallBack(
     int monId,
     Pointer<Void> monContext,
     Pointer<UA_DataValue> value) {
-  dynamic res = UADataValue.toDart(value);
+  dynamic res = UAVariant(value.cast()).data;
   String context = monContext.cast<Utf8>().toDartString().toString();
   _callBack[client]![context]!(UANodeId.parse(context), res);
 }

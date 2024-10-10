@@ -25,7 +25,6 @@ class UAServer {
   }
 
   bool start() {
-    UA_CallMethodResult a;
     bool retval = UAServerRunStartup(server.cast());
     if (retval) {
       _timer = Timer.periodic(const Duration(milliseconds: 2), (timer) async {
@@ -46,17 +45,16 @@ class UAServer {
           UAVariant output = await UAServerMethodCall(
               server.cast(), methodNodeId, inputAgrument.data);
           // call c backup
-          final response = cOPC.UA_FFI_Server_call(server.cast(),request);
+          final response = cOPC.UA_FFI_Server_call(server.cast(), request);
           // copy output
           cOPC.UA_Variant_copy(output.variant, response.ref.outputArguments);
           response.ref.outputArgumentsSize = 1;
           output.delete();
           // return Result for client
           cOPC.UA_FFI_Server_setAsyncOperationResult(
-                server.cast(), response, context.cast());
+              server.cast(), response, context.cast());
           // free response
           cOPC.UA_CallMethodResult_delete(response);
-
         }
         calloc.free(type);
         calloc.free(request);

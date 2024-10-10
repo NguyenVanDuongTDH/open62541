@@ -154,8 +154,6 @@ UA_EXPORT int UA_FFI_Client_SubSubscriptions_Check(UA_CreateSubscriptionResponse
 }
 
 
- 
-
 
 
 UA_EXPORT void UA_FFI_Server_run_iterate_void(UA_Server *server, UA_Boolean waitInternal){
