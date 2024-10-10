@@ -41,7 +41,7 @@ class UAServer {
               UANodeId.fromNode(request.value.ref.callMethodRequest.methodId);
           final inputAgrument =
               UAVariant(request.value.ref.callMethodRequest.inputArguments);
-
+          print(inputAgrument);
           UAVariant res = await UAServerMethodCall(
               server.cast(), methodNodeId, inputAgrument.data);
           cOPC.UA_Server_call_1(
