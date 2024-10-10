@@ -84,11 +84,11 @@ class UAServer {
     String? displayName,
   }) {
     return UAServerTypeNodeId(server.cast(),
-        nodeID: nodeID,
+        nodeId: nodeID.clone(),
         qualifiedName: qualifiedName,
         description: description,
         displayName: description,
-        parentNodeId: parentNodeId);
+        parentNodeId: parentNodeId?.clone());
   }
 
   bool addObjectNodeId({
@@ -100,12 +100,12 @@ class UAServer {
     String? displayName,
   }) {
     return UAServerAddObjectNodeId(server.cast(),
-        nodeID: nodeID,
+        nodeId: nodeID.clone(),
         nodeIdTypeNodeid: nodeIdTypeNodeid,
         qualifiedName: qualifiedName,
         description: description,
         displayName: displayName,
-        parentNodeId: parentNodeId);
+        parentNodeId: parentNodeId?.clone());
   }
 
   bool addVariableNodeId({
@@ -120,18 +120,18 @@ class UAServer {
     return UAServerAddVariableNodeId(
       server.cast(),
       variant: uaVariant,
-      nodeid: nodeid,
+      nodeid: nodeid.clone(),
       qualifiedName: qualifiedName,
       dataChangeCallBack: dataChangeCallBack,
       description: description,
       displayName: displayName,
-      parentNodeId: parentNodeId,
+      parentNodeId: parentNodeId?.clone(),
     );
   }
 
   void listenNodeId(UANodeId nodeID,
       dynamic Function(UANodeId nodeId, dynamic value) callBack) {
-    UAServerValueChangeListen(server.cast(), nodeID, callBack);
+    UAServerValueChangeListen(server.cast(), nodeID.clone(), callBack);
   }
 
   void addMethod({
@@ -148,10 +148,10 @@ class UAServer {
         description: description,
         displayName: displayName,
         browseName: browseName,
-        nodeId: nodeId,
+        nodeId: nodeId.clone(),
         input: input,
         output: output,
         callBack: callBack,
-        parentNodeId: perentNodeId);
+        parentNodeId: perentNodeId?.clone());
   }
 }

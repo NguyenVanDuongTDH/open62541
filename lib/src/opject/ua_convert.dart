@@ -20,17 +20,6 @@ class UaConvert {
     return result;
   }
 
-  static Pointer<Uint8> utf8Convert(value) {
-    final units = utf8.encode(value);
-    final result = cOPC.UA_Array_new(
-            value.length + 1, cOPC.UA_GET_TYPES_FROM_INDEX(UATypes.BYTE))
-        .cast<Uint8>();
-    final nativeString = result.asTypedList(units.length + 1);
-    nativeString.setAll(0, units);
-    nativeString[units.length] = 0;
-    return result;
-  }
-
   static Pointer dart2Pointer(dynamic value, [int? type]) {
     int uaType = type ?? getUaTypes(value);
     Pointer? _ptr;
@@ -97,14 +86,13 @@ class UaConvert {
       case UATypes.STRING:
         if (_ptr != null) {
           for (int i = 0; i < value.length; i++) {
-            _ptr.cast<UA_String>().elementAt(i).ref.data =
-                utf8Convert(value[i]);
+            _ptr.cast<UA_String>().elementAt(i).ref.data = str2Point(value[i]);
             _ptr.cast<UA_String>().elementAt(i).ref.length =
                 (value[i] as String).length;
           }
         } else {
           _ptr = cOPC.UA_String_new();
-          _ptr.cast<UA_String>().ref.data = utf8Convert(value);
+          _ptr.cast<UA_String>().ref.data = str2Point(value);
           _ptr.cast<UA_String>().ref.length = (value as String).length;
         }
 

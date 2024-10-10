@@ -58,15 +58,15 @@ class UAVariant {
     }
   }
 
-  static variant2Dart(UA_Variant variant) {
-    final type = cOPC.UA_GET_TYPES_INTDEX(variant.type);
-    final len = variant.arrayLength;
-    if (len > 0) {
-      return UACOpject.pointer2DartList(variant.data, len, type);
-    } else {
-      return UACOpject.pointer2Dart(variant.data, type);
-    }
-  }
+  // static variant2Dart(UA_Variant variant) {
+  //   final type = cOPC.UA_GET_TYPES_INTDEX(variant.type);
+  //   final len = variant.arrayLength;
+  //   if (len > 0) {
+  //     return UACOpject.pointer2DartList(variant.data, len, type);
+  //   } else {
+  //     return UACOpject.pointer2Dart(variant.data, type);
+  //   }
+  // }
 
   @override
   String toString() {

@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:ffi';
 import 'dart:typed_data';
+import 'package:ffi/ffi.dart';
 import 'package:open62541/open62541.dart';
 import 'package:open62541/src/open62541_gen.dart';
 import 'package:open62541/src/opject/ua_convert.dart';
@@ -30,7 +31,7 @@ class UANodeId {
       } else if (identifier is String) {
         _pNodeId = cOPC.UA_NodeId_new();
         _pNodeId!.ref = cOPC.UA_NODEID_STRING(
-            namespaceIndex, UaConvert.str2Point(identifier).cast());
+            namespaceIndex, identifier.toString().toNativeUtf8().cast());
       } else if (identifier is Uint8List) {
         _pNodeId = cOPC.UA_NodeId_new();
         _pNodeId!.ref = cOPC.UA_NODEID_BYTESTRING(
@@ -53,8 +54,10 @@ class UANodeId {
       case UA_NodeIdType.UA_NODEIDTYPE_STRING:
         return UANodeId(
             id.namespaceIndex,
-            utf8.decode(id.identifier.string.data
-                .asTypedList(id.identifier.string.length)));
+            utf8
+                .decode(id.identifier.string.data
+                    .asTypedList(id.identifier.string.length))
+                .toString());
       case UA_NodeIdType.UA_NODEIDTYPE_BYTESTRING:
         return UANodeId(
             id.namespaceIndex,
@@ -69,11 +72,11 @@ class UANodeId {
     final pId = cOPC.UA_NodeId_new();
     final uaStr = nodeIdStr.uaString();
     cOPC.UA_NodeId_parse(pId, uaStr.variant.ref.data.cast<UA_String>().ref);
-    uaStr.delete();
     try {
       return UANodeId.fromNode(pId.ref);
     } finally {
-      cOPC.UA_NodeId_delete(pId);
+      // uaStr.delete();
+      // cOPC.UA_NodeId_delete(pId);
     }
   }
 

@@ -8,7 +8,7 @@ import 'package:open62541/src/open62541_gen.dart';
 import 'package:open62541/src/opject/c.dart';
 
 bool UAServerTypeNodeId(Pointer<UA_Server> server,
-    {required UANodeId nodeID,
+    {required UANodeId nodeId,
     required UAQualifiedName qualifiedName,
     UANodeId? parentNodeId,
     String? description,
@@ -25,7 +25,7 @@ bool UAServerTypeNodeId(Pointer<UA_Server> server,
   }
   int ret = cOPC.UA_Server_addObjectTypeNode(
       server,
-      nodeID.nodeId,
+      nodeId.nodeId,
       parentNodeId == null ? parent : parentNodeId.nodeId,
       cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_HASSUBTYPE),
       cOPC.UA_QUALIFIEDNAME(
