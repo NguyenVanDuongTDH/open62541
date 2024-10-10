@@ -20,7 +20,7 @@ class UAVariant {
   Pointer<UA_Variant> get variant => _variant!;
   int get arrayLength => variant.ref.arrayLength;
   int get arrayDimensionsSize => variant.ref.arrayDimensionsSize;
-  int get type => cOPC.UA_GET_TYPES_INTDEX(variant.ref.type);
+  int get type => cOPC.UA_FFI_GET_INTDEX_FROM_TYPES(variant.ref.type);
   dynamic get data => UaConvert.variant2Dart(this);
 
   bool isEmpty() {
@@ -51,10 +51,10 @@ class UAVariant {
     Pointer ptr = UaConvert.dart2Pointer(value, uaType);
     if (value is List) {
       cOPC.UA_Variant_setArray(variant, ptr.cast(), value.length,
-          cOPC.UA_GET_TYPES_FROM_INDEX(uaType));
+          cOPC.UA_FFI_GET_TYPES_FROM_INDEX(uaType));
     } else {
       cOPC.UA_Variant_setScalar(
-          variant, ptr.cast(), cOPC.UA_GET_TYPES_FROM_INDEX(uaType));
+          variant, ptr.cast(), cOPC.UA_FFI_GET_TYPES_FROM_INDEX(uaType));
     }
   }
 

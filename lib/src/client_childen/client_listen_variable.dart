@@ -25,7 +25,7 @@ void UAClientListenNodeId(Pointer<UA_Client> client, UANodeId nodeId,
   UA_CreateSubscriptionRequest request =
       cOPC.UA_CreateSubscriptionRequest_default();
   Pointer<UA_CreateSubscriptionResponse> res =
-      cOPC.UA_Client_Subscriptions_create_(
+      cOPC.UA_FFI_Client_Subscriptions_create(
               client,
               request,
               Pointer.fromAddress(0),
@@ -33,7 +33,7 @@ void UAClientListenNodeId(Pointer<UA_Client> client, UANodeId nodeId,
               Pointer.fromAddress(0))
           .cast();
 
-  int response = cOPC.UA_Client_SubSubscriptions_Check(res.cast());
+  int response = cOPC.UA_FFI_Client_SubSubscriptions_Check(res.cast());
   UA_NodeId target = nodeId.nodeId;
   final cString = nodeId.toString().toNativeUtf8();
   UA_MonitoredItemCreateRequest monRequest =

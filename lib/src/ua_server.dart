@@ -25,6 +25,7 @@ class UAServer {
   }
 
   bool start() {
+    UA_CallMethodResult a;
     bool retval = UAServerRunStartup(server.cast());
     if (retval) {
       _timer = Timer.periodic(const Duration(milliseconds: 2), (timer) async {
@@ -36,17 +37,26 @@ class UAServer {
         if (cOPC.UA_Server_getAsyncOperationNonBlocking(server.cast(), type,
                 request, context, Pointer.fromAddress(0)) ==
             true) {
-          //
+          // get nodeId && input
           final methodNodeId =
               UANodeId.fromNode(request.value.ref.callMethodRequest.methodId);
           final inputAgrument =
               UAVariant(request.value.ref.callMethodRequest.inputArguments);
-
-          UAVariant res = await UAServerMethodCall(
+          // call dart method
+          UAVariant output = await UAServerMethodCall(
               server.cast(), methodNodeId, inputAgrument.data);
-          cOPC.UA_Server_call_1(
-              server.cast(), request, context.value, res.variant);
-          res.delete();
+          // call c backup
+          final response = cOPC.UA_FFI_Server_call(server.cast(),request);
+          // copy output
+          cOPC.UA_Variant_copy(output.variant, response.ref.outputArguments);
+          response.ref.outputArgumentsSize = 1;
+          output.delete();
+          // return Result for client
+          cOPC.UA_FFI_Server_setAsyncOperationResult(
+                server.cast(), response, context.cast());
+          // free response
+          cOPC.UA_CallMethodResult_delete(response);
+
         }
         calloc.free(type);
         calloc.free(request);

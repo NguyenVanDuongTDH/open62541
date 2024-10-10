@@ -7,7 +7,7 @@ NativeLibrary get cOPC => NativeLibrary(DynamicLibrary.open(_getPathLib()));
 
 String _getPathLib() {
   if (Platform.isLinux) {
-    return "/home/duong/Documents/git/open62541/open62541_1_4/open62541.so";
+    return "/home/duong/Downloads/open62541/cpp/open62541.so";
   } else if (Platform.isWindows) {
     return "cpp/open62541.dll";
   } else if (Platform.isAndroid) {

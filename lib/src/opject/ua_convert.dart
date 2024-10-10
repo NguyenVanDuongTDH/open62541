@@ -25,7 +25,7 @@ class UaConvert {
     Pointer? _ptr;
     if (value is List) {
       _ptr =
-          cOPC.UA_Array_new(value.length, cOPC.UA_GET_TYPES_FROM_INDEX(uaType));
+          cOPC.UA_Array_new(value.length, cOPC.UA_FFI_GET_TYPES_FROM_INDEX(uaType));
     }
 
     switch (uaType) {
@@ -37,20 +37,20 @@ class UaConvert {
               final variant = UAVariant();
               variant.setScalar(element, UATypes.VARIANT);
               cOPC.UA_Variant_setScalar(_ptr.cast<UA_Variant>().elementAt(i),
-                  variant.variant.cast(), cOPC.UA_GET_TYPES_FROM_INDEX(uaType));
+                  variant.variant.cast(), cOPC.UA_FFI_GET_TYPES_FROM_INDEX(uaType));
             } else {
               if (element is UAVariant) {
                 cOPC.UA_Variant_setScalar(
                     _ptr.cast<UA_Variant>().elementAt(i),
                     element.variant.cast(),
-                    cOPC.UA_GET_TYPES_FROM_INDEX(uaType));
+                    cOPC.UA_FFI_GET_TYPES_FROM_INDEX(uaType));
               } else {
                 final variant0 = UAVariant();
                 variant0.setScalar(element, getUaTypes(element));
                 cOPC.UA_Variant_setScalar(
                     _ptr.cast<UA_Variant>().elementAt(i),
                     variant0.variant.cast(),
-                    cOPC.UA_GET_TYPES_FROM_INDEX(uaType));
+                    cOPC.UA_FFI_GET_TYPES_FROM_INDEX(uaType));
               }
             }
           }
