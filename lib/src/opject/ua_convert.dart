@@ -3,20 +3,18 @@
 import 'dart:convert';
 import 'dart:ffi';
 import 'dart:typed_data';
-import 'package:ffi/ffi.dart';
 import 'package:open62541/open62541.dart';
 import 'package:open62541/src/open62541_gen.dart';
 
 class UaConvert {
-  static Pointer<Uint8> str2Point(dynamic value) {
-    final result = calloc.allocate<Uint8>(value.length);
-    result.asTypedList(value.length).setAll(
-        0,
-        value is String
-            ? value.codeUnits
-            : value is Uint8List
-                ? value
-                : throw "STRING OR UINT8LSIT");
+  static Pointer<Uint8> utf8Convert(value) {
+    final units = utf8.encode(value);
+    final result = cOPC.UA_Array_new(
+            value.length + 1, cOPC.UA_GET_TYPES_FROM_INDEX(UATypes.BYTE))
+        .cast<Uint8>();
+    final nativeString = result.asTypedList(units.length + 1);
+    nativeString.setAll(0, units);
+    nativeString[units.length] = 0;
     return result;
   }
 
@@ -25,7 +23,7 @@ class UaConvert {
     Pointer? _ptr;
     if (value is List) {
       _ptr =
-          cOPC.UA_Array_new(value.length, cOPC.UA_FFI_GET_TYPES_FROM_INDEX(uaType));
+          cOPC.UA_Array_new(value.length, cOPC.UA_GET_TYPES_FROM_INDEX(uaType));
     }
 
     switch (uaType) {
@@ -37,20 +35,20 @@ class UaConvert {
               final variant = UAVariant();
               variant.setScalar(element, UATypes.VARIANT);
               cOPC.UA_Variant_setScalar(_ptr.cast<UA_Variant>().elementAt(i),
-                  variant.variant.cast(), cOPC.UA_FFI_GET_TYPES_FROM_INDEX(uaType));
+                  variant.variant.cast(), cOPC.UA_GET_TYPES_FROM_INDEX(uaType));
             } else {
               if (element is UAVariant) {
                 cOPC.UA_Variant_setScalar(
                     _ptr.cast<UA_Variant>().elementAt(i),
                     element.variant.cast(),
-                    cOPC.UA_FFI_GET_TYPES_FROM_INDEX(uaType));
+                    cOPC.UA_GET_TYPES_FROM_INDEX(uaType));
               } else {
                 final variant0 = UAVariant();
                 variant0.setScalar(element, getUaTypes(element));
                 cOPC.UA_Variant_setScalar(
                     _ptr.cast<UA_Variant>().elementAt(i),
                     variant0.variant.cast(),
-                    cOPC.UA_FFI_GET_TYPES_FROM_INDEX(uaType));
+                    cOPC.UA_GET_TYPES_FROM_INDEX(uaType));
               }
             }
           }
@@ -86,13 +84,14 @@ class UaConvert {
       case UATypes.STRING:
         if (_ptr != null) {
           for (int i = 0; i < value.length; i++) {
-            _ptr.cast<UA_String>().elementAt(i).ref.data = str2Point(value[i]);
+            _ptr.cast<UA_String>().elementAt(i).ref.data =
+                utf8Convert(value[i]);
             _ptr.cast<UA_String>().elementAt(i).ref.length =
                 (value[i] as String).length;
           }
         } else {
           _ptr = cOPC.UA_String_new();
-          _ptr.cast<UA_String>().ref.data = str2Point(value);
+          _ptr.cast<UA_String>().ref.data = utf8Convert(value);
           _ptr.cast<UA_String>().ref.length = (value as String).length;
         }
 

@@ -5,6 +5,7 @@ import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'package:open62541/open62541.dart';
 import 'package:open62541/src/open62541_gen.dart';
+import 'package:open62541/src/opject/c.dart';
 
 Map<Pointer<UA_Server>,
         Map<UANodeId, dynamic Function(UANodeId nodeID, dynamic input)>>
@@ -49,20 +50,20 @@ void UAServerAddMethod(
   context.value = output.uaType;
   if (description != null) {
     helloAttr.ref.description = cOPC.UA_LOCALIZEDTEXT(
-        UAVariableAttributes.en_US.cast(), description.toNativeUtf8().cast());
+        UAVariableAttributes.en_US.cast(), description.toCString().cast());
   }
   if (displayName != null) {
     helloAttr.ref.displayName = cOPC.UA_LOCALIZEDTEXT(
-        UAVariableAttributes.en_US.cast(), displayName.toNativeUtf8().cast());
+        UAVariableAttributes.en_US.cast(), displayName.toCString().cast());
   }
   helloAttr.ref.executable = true;
   helloAttr.ref.userExecutable = true;
   cOPC.UA_Server_addMethodNode(
       server,
-      nodeId.nodeId,
+      nodeId.nodeIdNew,
       parentNodeId == null
           ? cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER)
-          : parentNodeId.nodeId,
+          : parentNodeId.nodeIdNew,
       cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
       browseName.ua_qualifiedName_new,
       helloAttr.ref,
@@ -73,7 +74,7 @@ void UAServerAddMethod(
       output.attr,
       context.cast(),
       Pointer.fromAddress(0));
-  cOPC.UA_Server_setMethodNodeAsync(server, nodeId.nodeId, true);
+  cOPC.UA_Server_setMethodNodeAsync(server, nodeId.nodeIdNew, true);
 }
 
 int _UAServerMethodCallback(

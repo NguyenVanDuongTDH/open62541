@@ -36,25 +36,17 @@ class UAServer {
         if (cOPC.UA_Server_getAsyncOperationNonBlocking(server.cast(), type,
                 request, context, Pointer.fromAddress(0)) ==
             true) {
-          // get nodeId && input
+          //
           final methodNodeId =
               UANodeId.fromNode(request.value.ref.callMethodRequest.methodId);
           final inputAgrument =
               UAVariant(request.value.ref.callMethodRequest.inputArguments);
-          // call dart method
-          UAVariant output = await UAServerMethodCall(
+
+          UAVariant res = await UAServerMethodCall(
               server.cast(), methodNodeId, inputAgrument.data);
-          // call c backup
-          final response = cOPC.UA_FFI_Server_call(server.cast(), request);
-          // copy output
-          cOPC.UA_Variant_copy(output.variant, response.ref.outputArguments);
-          response.ref.outputArgumentsSize = 1;
-          output.delete();
-          // return Result for client
-          cOPC.UA_FFI_Server_setAsyncOperationResult(
-              server.cast(), response, context.cast());
-          // free response
-          cOPC.UA_CallMethodResult_delete(response);
+          cOPC.UA_Server_call_1(
+              server.cast(), request, context.value, res.variant);
+          res.delete();
         }
         calloc.free(type);
         calloc.free(request);
@@ -92,11 +84,11 @@ class UAServer {
     String? displayName,
   }) {
     return UAServerTypeNodeId(server.cast(),
-        nodeId: nodeID.clone(),
+        nodeID: nodeID,
         qualifiedName: qualifiedName,
         description: description,
         displayName: description,
-        parentNodeId: parentNodeId?.clone());
+        parentNodeId: parentNodeId);
   }
 
   bool addObjectNodeId({
@@ -108,12 +100,12 @@ class UAServer {
     String? displayName,
   }) {
     return UAServerAddObjectNodeId(server.cast(),
-        nodeId: nodeID.clone(),
+        nodeID: nodeID,
         nodeIdTypeNodeid: nodeIdTypeNodeid,
         qualifiedName: qualifiedName,
         description: description,
         displayName: displayName,
-        parentNodeId: parentNodeId?.clone());
+        parentNodeId: parentNodeId);
   }
 
   bool addVariableNodeId({
@@ -128,18 +120,18 @@ class UAServer {
     return UAServerAddVariableNodeId(
       server.cast(),
       variant: uaVariant,
-      nodeid: nodeid.clone(),
+      nodeid: nodeid,
       qualifiedName: qualifiedName,
       dataChangeCallBack: dataChangeCallBack,
       description: description,
       displayName: displayName,
-      parentNodeId: parentNodeId?.clone(),
+      parentNodeId: parentNodeId,
     );
   }
 
   void listenNodeId(UANodeId nodeID,
       dynamic Function(UANodeId nodeId, dynamic value) callBack) {
-    UAServerValueChangeListen(server.cast(), nodeID.clone(), callBack);
+    UAServerValueChangeListen(server.cast(), nodeID, callBack);
   }
 
   void addMethod({
@@ -156,10 +148,10 @@ class UAServer {
         description: description,
         displayName: displayName,
         browseName: browseName,
-        nodeId: nodeId.clone(),
+        nodeId: nodeId,
         input: input,
         output: output,
         callBack: callBack,
-        parentNodeId: perentNodeId?.clone());
+        parentNodeId: perentNodeId);
   }
 }

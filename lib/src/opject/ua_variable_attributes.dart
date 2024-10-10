@@ -1,8 +1,8 @@
 import 'dart:ffi';
 
-import 'package:ffi/ffi.dart';
 import 'package:open62541/open62541.dart';
 import 'package:open62541/src/open62541_gen.dart';
+import 'package:open62541/src/opject/c.dart';
 
 class UAVariableAttributes {
   late final Pointer<UA_VariableAttributes> attr;
@@ -20,8 +20,10 @@ class UAVariableAttributes {
 
   void setVariant(UAVariant variant) {
     attr.ref.value = variant.variant.cast<UA_Variant>().ref;
-    attr.ref.dataType = cOPC.UA_FFI_GET_TYPEID_FROM_TYPES(
-        variant.variant.cast<UA_Variant>().ref.type);
+    attr.ref.dataType = cOPC.UA_GET_TYPES_TYPEID(
+        cOPC.UA_GET_TYPES_INTDEX(variant.variant.cast<UA_Variant>().ref.type));
+    // attr.ref.dataType = cOPC.UA_GET_TYPES_TYPEID( UATypes.INT64);
+    // print(" ${UATypes.INT64} == ${cOPC.UA_GET_TYPES_INTDEX(variant.variant.cast<UA_Variant>().ref.type)} ");
   }
 
   static int get READ => UA_ACCESSLEVELMASK_READ;
@@ -31,19 +33,19 @@ class UAVariableAttributes {
     // attr.ref.userAccessLevel = access;
   }
 
-  static final en_US = "en-US".toNativeUtf8();
+  static final en_US = "en-US".toCString();
 
   void setDescription(String? description) {
     if (description != null) {
       attr.ref.description = cOPC.UA_LOCALIZEDTEXT(
-          en_US.cast(), description.toNativeUtf8().cast());
+          en_US.cast(), CString.fromString(description).cast());
     }
   }
 
   void setDisplayName(String? displayName) {
     if (displayName != null) {
       attr.ref.displayName = cOPC.UA_LOCALIZEDTEXT(
-          en_US.cast(), displayName.toNativeUtf8().cast());
+          en_US.cast(), CString.fromString(displayName).cast());
     }
   }
 }

@@ -5,6 +5,7 @@ import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'package:open62541/open62541.dart';
 import 'package:open62541/src/open62541_gen.dart';
+import 'package:open62541/src/opject/c.dart';
 
 final Map<Pointer<UA_Client>,
     Map<String, Function(UANodeId nodeId, dynamic value)>> _callBack = {};
@@ -24,7 +25,7 @@ void UAClientListenNodeId(Pointer<UA_Client> client, UANodeId nodeId,
   UA_CreateSubscriptionRequest request =
       cOPC.UA_CreateSubscriptionRequest_default();
   Pointer<UA_CreateSubscriptionResponse> res =
-      cOPC.UA_FFI_Client_Subscriptions_create(
+      cOPC.UA_Client_Subscriptions_create_(
               client,
               request,
               Pointer.fromAddress(0),
@@ -32,9 +33,9 @@ void UAClientListenNodeId(Pointer<UA_Client> client, UANodeId nodeId,
               Pointer.fromAddress(0))
           .cast();
 
-  int response = cOPC.UA_FFI_Client_SubSubscriptions_Check(res.cast());
-  UA_NodeId target = nodeId.nodeId;
-  final cString = nodeId.toString().toNativeUtf8();
+  int response = cOPC.UA_Client_SubSubscriptions_Check(res.cast());
+  UA_NodeId target = nodeId.nodeIdNew;
+  final cString = nodeId.toString().toCString();
   UA_MonitoredItemCreateRequest monRequest =
       cOPC.UA_MonitoredItemCreateRequest_default(target);
   monRequest.requestedParameters.samplingInterval = 100.0;
@@ -55,7 +56,7 @@ void _UAClientDataChangeCallBack(
     int monId,
     Pointer<Void> monContext,
     Pointer<UA_DataValue> value) {
-  dynamic res = UAVariant(value.cast()).data;
+  dynamic res = UADataValue.toDart(value);
   String context = monContext.cast<Utf8>().toDartString().toString();
   _callBack[client]![context]!(UANodeId.parse(context), res);
 }

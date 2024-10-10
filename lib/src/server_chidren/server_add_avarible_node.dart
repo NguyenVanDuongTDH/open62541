@@ -1,8 +1,8 @@
 import 'dart:ffi';
 
-import 'package:ffi/ffi.dart';
 import 'package:open62541/open62541.dart';
 import 'package:open62541/src/open62541_gen.dart';
+import 'package:open62541/src/opject/c.dart';
 import 'package:open62541/src/server_chidren/server_add_listen.dart';
 
 bool UAServerAddVariableNodeId(
@@ -26,12 +26,12 @@ bool UAServerAddVariableNodeId(
 
   int retval = cOPC.UA_Server_addVariableNode(
     server,
-    nodeid.nodeId,
-    parentNodeId == null ? parent : parentNodeId.nodeId,
+    nodeid.nodeIdNew,
+    parentNodeId == null ? parent : parentNodeId.nodeIdNew,
     // parent,
     cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES),
     cOPC.UA_QUALIFIEDNAME(
-        qualifiedName.nsIndex, qualifiedName.name.toNativeUtf8().cast()),
+        qualifiedName.nsIndex, CString.fromString(qualifiedName.name).cast()),
     cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE),
     attr.attr.ref,
     Pointer.fromAddress(0),

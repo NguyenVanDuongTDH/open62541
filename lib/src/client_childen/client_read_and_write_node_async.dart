@@ -45,8 +45,8 @@ Future<dynamic> UAClientReadNodeIdAsync(
 }
 
 void _ClientReadNodeAsync(Pointer<UA_Client> client, Pointer<Void> a,
-    int requestId, int c, Pointer<UA_DataValue> value) {
-  dynamic res = UAVariant(value.cast()).data;
+    int requestId, int c, Pointer<UA_DataValue> data) {
+  dynamic res = UADataValue.toDart(data);
   if (_future[client]![requestId] != null) {
     _future[client]![requestId]!.complete(res);
     _future[client]!.remove(requestId);
