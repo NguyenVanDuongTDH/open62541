@@ -3,7 +3,6 @@ import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'package:open62541/open62541.dart';
 import 'package:open62541/src/open62541_gen.dart';
-import 'package:open62541/src/opject/c.dart';
 
 class UAVariableAttributes {
   late final Pointer<UA_VariableAttributes> attr;
@@ -21,7 +20,8 @@ class UAVariableAttributes {
 
   void setVariant(UAVariant variant) {
     attr.ref.value = variant.variant.cast<UA_Variant>().ref;
-    attr.ref.dataType = cOPC.UA_FFI_GET_TYPEID_FROM_TYPES(variant.variant.cast<UA_Variant>().ref.type);
+    attr.ref.dataType = cOPC.UA_FFI_GET_TYPEID_FROM_TYPES(
+        variant.variant.cast<UA_Variant>().ref.type);
   }
 
   static int get READ => UA_ACCESSLEVELMASK_READ;
