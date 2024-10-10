@@ -13,7 +13,7 @@ void main() {
 
   server.addMethod(
     browseName: UAQualifiedName(1, 'MethodId'),
-    nodeId: UANodeId.parse("ns=1;i=1997"),
+    nodeId: UANodeId(1,"hello world"),
     input: UAArgument(name: "Input", uaType: UATypes.STRING),
     output: UAArgument(name: "Output", uaType: UATypes.STRING),
     callBack: (uaNodeId, value) async {
