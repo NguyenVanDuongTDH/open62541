@@ -2,8 +2,8 @@
 
 import 'dart:convert';
 import 'dart:ffi';
-import 'package:ffi/ffi.dart';
 import 'dart:typed_data';
+import 'package:ffi/ffi.dart';
 import 'package:open62541/open62541.dart';
 import 'package:open62541/src/open62541_gen.dart';
 

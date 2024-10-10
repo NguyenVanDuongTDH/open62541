@@ -34,15 +34,10 @@ Future<dynamic> UAClientReadNodeIdAsync(
   requestId.value = -1;
   int retval = cOPC.UA_Client_readValueAttribute_async(client, nodeId.nodeId,
       _ClientReadNodeAsyncPtr, Pointer.fromAddress(0), requestId.cast());
-  nodeId.delete();
-
   if (retval == 0 && requestId.value >= 0) {
     final compile = Completer();
     _future[client]![requestId.value] = compile;
     cOPC.UA_UInt32_delete(requestId);
-    compile.future.then((value) {
-      nodeId.delete();
-    });
     return compile.future;
   } else {
     return null;

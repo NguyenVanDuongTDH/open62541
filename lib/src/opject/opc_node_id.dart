@@ -8,6 +8,7 @@ import 'package:open62541/src/open62541_gen.dart';
 import 'package:open62541/src/opject/ua_convert.dart';
 
 class UANodeId {
+  // UA_NodeId get nodeId => _getNodeId().ref;
   UA_NodeId get nodeId => _getNodeId().ref;
   Pointer<UA_NodeId> get pNodeId => _getNodeId();
   Pointer<UA_NodeId>? _pNodeId;
