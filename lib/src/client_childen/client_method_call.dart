@@ -33,10 +33,8 @@ Future<dynamic> Client_Method_call_async(
 
 void _UAClientMethodCallBack(Pointer<UA_Client> client, Pointer<Void> userData,
     int requestID, Pointer<UA_Variant> response) {
-print("OK");
-
-  // _callBack[client]![requestID]!.complete(UAVariant(response).data);
-  // _callBack[client]!.remove(requestID);
+  _callBack[client]![requestID]!.complete(UAVariant(response).data);
+  _callBack[client]!.remove(requestID);
 }
 
 final _UAClientMethodCallbackPtr = Pointer.fromFunction<

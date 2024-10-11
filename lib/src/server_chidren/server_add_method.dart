@@ -60,10 +60,10 @@ void UAServerAddMethod(
   helloAttr.ref.userExecutable = true;
   cOPC.UA_Server_addMethodNode(
       server,
-      nodeId.nodeIdNew,
+      nodeId.nodeId,
       parentNodeId == null
           ? cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER)
-          : parentNodeId.nodeIdNew,
+          : parentNodeId.nodeId,
       cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
       browseName.ua_qualifiedName_new,
       helloAttr.ref,
@@ -74,7 +74,7 @@ void UAServerAddMethod(
       output.attr,
       context.cast(),
       Pointer.fromAddress(0));
-  cOPC.UA_Server_setMethodNodeAsync(server, nodeId.nodeIdNew, true);
+  cOPC.UA_Server_setMethodNodeAsync(server, nodeId.nodeId, true);
 }
 
 int _UAServerMethodCallback(

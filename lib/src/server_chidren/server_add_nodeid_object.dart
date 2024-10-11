@@ -30,8 +30,8 @@ bool UAServerAddObjectNodeId(Pointer<UA_Server> server,
 
   int ret = cOPC.UA_Server_addObjectNode(
       server,
-      nodeID.nodeIdNew,
-      parentNodeId == null ? parent : parentNodeId.nodeIdNew,
+      nodeID.nodeId,
+      parentNodeId == null ? parent : parentNodeId.nodeId,
       cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
       cOPC.UA_QUALIFIEDNAME(
           qualifiedName.nsIndex, qualifiedName.name.toCString().cast()),
