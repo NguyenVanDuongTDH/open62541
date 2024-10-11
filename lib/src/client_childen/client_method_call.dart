@@ -22,6 +22,7 @@ Future<dynamic> Client_Method_call_async(
       _UAClientMethodCallbackPtr,
       Pointer.fromAddress(0),
       reqId);
+    methodId.delete();
   if (rev == 0) {
     _callBack[client] ??= {};
     _callBack[client]![reqId.value] = Completer();

@@ -66,6 +66,6 @@ class UAClient {
     UANodeId nodeId,
     void Function(UANodeId, dynamic) callBack,
   ) {
-    UAClientListenNodeId(client.cast(), nodeId, callBack);
+    UAClientListenNodeId(client.cast(), nodeId.clone(), callBack);
   }
 }

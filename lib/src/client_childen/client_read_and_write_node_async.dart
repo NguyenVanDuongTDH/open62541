@@ -24,6 +24,7 @@ Future<bool> UAClientWriteNodeIdAsync(
     }
   }
   cOPC.UA_UInt32_delete(reqId);
+  nodeId.delete();
   variant.delete();
   return false;
 }
@@ -38,6 +39,7 @@ Future<dynamic> UAClientReadNodeIdAsync(
     final compile = Completer();
     _future[client]![requestId.value] = compile;
     cOPC.UA_UInt32_delete(requestId);
+    nodeId.delete();
     return compile.future;
   } else {
     return null;
