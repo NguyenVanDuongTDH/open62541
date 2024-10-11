@@ -29,13 +29,17 @@ class UANodeId {
         _pNodeId!.ref = cOPC.UA_NODEID_NUMERIC(namespaceIndex, identifier);
       } else if (identifier is String) {
         _pNodeId = cOPC.UA_NodeId_new();
-        _pNodeId!.ref = cOPC.UA_NODEID_STRING(namespaceIndex, identifier.toString().toNativeUtf8().cast());
+        var nativeUtf8 = identifier.toString().toNativeUtf8();
+        _pNodeId!.ref =
+            cOPC.UA_NODEID_STRING_ALLOC(namespaceIndex, nativeUtf8.cast());
+        calloc.free(nativeUtf8);
       } else if (identifier is Uint8List) {
         _pNodeId = cOPC.UA_NodeId_new();
         final bytes = calloc.allocate<Uint8>(identifier.length);
         bytes.asTypedList(identifier.length).setAll(0, identifier);
-        _pNodeId!.ref = cOPC.UA_NODEID_BYTESTRING(
-            namespaceIndex, bytes.cast());
+        _pNodeId!.ref =
+            cOPC.UA_NODEID_BYTESTRING_ALLOC(namespaceIndex, bytes.cast());
+        calloc.free(bytes);
       } else {
         throw "UANodeId NOT TYPE $identifier ${identifier.runtimeType}";
       }
@@ -54,8 +58,10 @@ class UANodeId {
       case UA_NodeIdType.UA_NODEIDTYPE_STRING:
         return UANodeId(
             id.namespaceIndex,
-            utf8.decode(id.identifier.string.data
-                .asTypedList(id.identifier.string.length)).toString());
+            utf8
+                .decode(id.identifier.string.data
+                    .asTypedList(id.identifier.string.length))
+                .toString());
       case UA_NodeIdType.UA_NODEIDTYPE_BYTESTRING:
         return UANodeId(
             id.namespaceIndex,
@@ -70,12 +76,12 @@ class UANodeId {
     final pId = cOPC.UA_NodeId_new();
     final uaStr = nodeIdStr.uaString();
     cOPC.UA_NodeId_parse(pId, uaStr.variant.ref.data.cast<UA_String>().ref);
-   
+
     try {
       return UANodeId.fromNode(pId.ref);
     } finally {
       cOPC.UA_NodeId_delete(pId);
-       uaStr.delete();
+      uaStr.delete();
     }
   }
 
@@ -110,6 +116,7 @@ class UANodeId {
   void delete() {
     if (_pNodeId != null) {
       cOPC.UA_NodeId_delete(_pNodeId!);
+      _pNodeId = null;
     }
   }
 }

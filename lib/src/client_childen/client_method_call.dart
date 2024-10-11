@@ -22,13 +22,14 @@ Future<dynamic> Client_Method_call_async(
       _UAClientMethodCallbackPtr,
       Pointer.fromAddress(0),
       reqId);
-    methodId.delete();
   if (rev == 0) {
     _callBack[client] ??= {};
-    _callBack[client]![reqId.value] = Completer();
-    return _callBack[client]![reqId.value]!.future;
-  } else {
-    return 0;
+    var completer = Completer();
+    _callBack[client]![reqId.value] = completer;
+    final res = await completer.future;
+    // print(res);
+    // methodId.delete();
+    return res;
   }
 }
 
