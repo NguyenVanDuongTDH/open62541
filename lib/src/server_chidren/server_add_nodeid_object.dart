@@ -1,10 +1,9 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'dart:ffi';
-
+import 'package:ffi/ffi.dart';
 import 'package:open62541/open62541.dart';
 import 'package:open62541/src/open62541_gen.dart';
-import 'package:open62541/src/opject/c.dart';
 
 bool UAServerAddObjectNodeId(Pointer<UA_Server> server,
     {required UANodeId nodeID,
@@ -20,12 +19,12 @@ bool UAServerAddObjectNodeId(Pointer<UA_Server> server,
   if (description != null) {
     attr.ref.description = cOPC.UA_LOCALIZEDTEXT(
         UAVariableAttributes.en_US.cast(),
-        CString.fromString(description).cast());
+        description.toNativeUtf8().cast());
   }
   if (displayName != null) {
     attr.ref.displayName = cOPC.UA_LOCALIZEDTEXT(
         UAVariableAttributes.en_US.cast(),
-        CString.fromString(displayName).cast());
+        displayName.toNativeUtf8().cast());
   }
 
   int ret = cOPC.UA_Server_addObjectNode(
@@ -34,7 +33,7 @@ bool UAServerAddObjectNodeId(Pointer<UA_Server> server,
       parentNodeId == null ? parent : parentNodeId.nodeId,
       cOPC.UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
       cOPC.UA_QUALIFIEDNAME(
-          qualifiedName.nsIndex, qualifiedName.name.toCString().cast()),
+          qualifiedName.nsIndex, qualifiedName.name.toNativeUtf8().cast()),
       nodeIdTypeNodeid.nodeId,
       attr.ref,
       Pointer.fromAddress(0),

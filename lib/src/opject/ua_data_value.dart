@@ -11,6 +11,6 @@ final class _UA_DataValue extends ffi.Struct {
 
 class UADataValue {
   static dynamic toDart(ffi.Pointer<UA_DataValue> ptr) {
-    return UAVariant.variant2Dart(ptr.cast<_UA_DataValue>().ref.value);
+    return UAVariant(ptr.cast());
   }
 }

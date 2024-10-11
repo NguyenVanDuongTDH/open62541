@@ -1,12 +1,9 @@
-// ignore_for_file: non_constant_identifier_names
-
 import 'dart:ffi';
 import 'dart:io';
 
 import 'package:ffi/ffi.dart';
 import 'package:open62541/open62541.dart';
 import 'package:open62541/src/open62541_gen.dart';
-import 'package:open62541/src/opject/c.dart';
 
 Pointer<Void> UAClientCreate() {
   final client = cOPC.UA_Client_new();
@@ -15,9 +12,8 @@ Pointer<Void> UAClientCreate() {
 }
 
 bool UAClientConnect(Pointer<UA_Client> client, String endpointUrl) {
-  final EndpointUrl = endpointUrl.toCString();
+  final EndpointUrl = endpointUrl.toNativeUtf8();
   int retval = cOPC.UA_Client_connect(client, EndpointUrl.cast());
-  EndpointUrl.free();
   return retval == 0;
 }
 

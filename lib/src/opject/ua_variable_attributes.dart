@@ -1,8 +1,8 @@
 import 'dart:ffi';
 
+import 'package:ffi/ffi.dart';
 import 'package:open62541/open62541.dart';
 import 'package:open62541/src/open62541_gen.dart';
-import 'package:open62541/src/opject/c.dart';
 
 class UAVariableAttributes {
   late final Pointer<UA_VariableAttributes> attr;
@@ -33,19 +33,19 @@ class UAVariableAttributes {
     // attr.ref.userAccessLevel = access;
   }
 
-  static final en_US = "en-US".toCString();
+  static final en_US = "en-US".toNativeUtf8();
 
   void setDescription(String? description) {
     if (description != null) {
       attr.ref.description = cOPC.UA_LOCALIZEDTEXT(
-          en_US.cast(), CString.fromString(description).cast());
+          en_US.cast(), description.toNativeUtf8().cast());
     }
   }
 
   void setDisplayName(String? displayName) {
     if (displayName != null) {
       attr.ref.displayName = cOPC.UA_LOCALIZEDTEXT(
-          en_US.cast(), CString.fromString(displayName).cast());
+          en_US.cast(), displayName.toNativeUtf8().cast());
     }
   }
 }

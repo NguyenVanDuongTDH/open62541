@@ -1,11 +1,9 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'dart:ffi';
-
 import 'package:ffi/ffi.dart';
 import 'package:open62541/open62541.dart';
 import 'package:open62541/src/open62541_gen.dart';
-import 'package:open62541/src/opject/c.dart';
 
 final Map<Pointer<UA_Client>,
     Map<String, Function(UANodeId nodeId, dynamic value)>> _callBack = {};
@@ -35,7 +33,7 @@ void UAClientListenNodeId(Pointer<UA_Client> client, UANodeId nodeId,
 
   int response = cOPC.UA_Client_SubSubscriptions_Check(res.cast());
   UA_NodeId target = nodeId.nodeId;
-  final cString = nodeId.toString().toCString();
+  final cString = nodeId.toString().toNativeUtf8();
   UA_MonitoredItemCreateRequest monRequest =
       cOPC.UA_MonitoredItemCreateRequest_default(target);
   monRequest.requestedParameters.samplingInterval = 100.0;
