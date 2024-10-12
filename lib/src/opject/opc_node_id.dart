@@ -29,14 +29,15 @@ class UANodeId {
       } else if (identifier is String) {
         _pNodeId = cOPC.UA_NodeId_new();
         var nativeUtf8 = identifier.toString().toNativeUtf8();
-        _pNodeId!.ref = cOPC.UA_NODEID_STRING_ALLOC(namespaceIndex, nativeUtf8.cast());
+        _pNodeId!.ref =
+            cOPC.UA_NODEID_STRING_ALLOC(namespaceIndex, nativeUtf8.cast());
         calloc.free(nativeUtf8);
       } else if (identifier is Uint8List) {
         _pNodeId = cOPC.UA_NodeId_new();
         final bytes = calloc.allocate<Uint8>(identifier.length);
         bytes.asTypedList(identifier.length).setAll(0, identifier);
-        _pNodeId!.ref = cOPC.UA_NODEID_BYTESTRING_ALLOC(
-            namespaceIndex, bytes.cast());
+        _pNodeId!.ref =
+            cOPC.UA_NODEID_BYTESTRING_ALLOC(namespaceIndex, bytes.cast());
         calloc.free(bytes);
       } else {
         throw "UANodeId NOT TYPE $identifier ${identifier.runtimeType}";
@@ -56,8 +57,10 @@ class UANodeId {
       case UA_NodeIdType.UA_NODEIDTYPE_STRING:
         return UANodeId(
             id.namespaceIndex,
-            utf8.decode(id.identifier.string.data
-                .asTypedList(id.identifier.string.length)).toString());
+            utf8
+                .decode(id.identifier.string.data
+                    .asTypedList(id.identifier.string.length))
+                .toString());
       case UA_NodeIdType.UA_NODEIDTYPE_BYTESTRING:
         return UANodeId(
             id.namespaceIndex,
@@ -72,13 +75,10 @@ class UANodeId {
     final pId = cOPC.UA_NodeId_new();
     final uaStr = nodeIdStr.uaString();
     cOPC.UA_NodeId_parse(pId, uaStr.variant.ref.data.cast<UA_String>().ref);
-   
-    try {
-      return UANodeId.fromNode(pId.ref);
-    } finally {
-      cOPC.UA_NodeId_delete(pId);
-       uaStr.delete();
-    }
+    final res = UANodeId.fromNode(pId.ref);
+    cOPC.UA_NodeId_delete(pId);
+    uaStr.delete();
+    return res;
   }
 
   static String ptr2String(Pointer<UA_NodeId> id) {
@@ -93,10 +93,7 @@ class UANodeId {
   }
 
   @override
-  String toString() {
-    final res = ptr2String(pNodeId);
-    return res;
-  }
+  String toString() => ptr2String(pNodeId);
 
   @override
   bool operator ==(Object other) {
