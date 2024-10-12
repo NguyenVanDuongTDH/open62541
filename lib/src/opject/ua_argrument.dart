@@ -38,7 +38,7 @@ class UAArgument {
 
   void setDataType(int uaType) {
     _uaType = uaType;
-    attr.ref.dataType = cOPC.UA_GET_TYPES_TYPEID(uaType);
+    attr.ref.dataType = UATypes.from(uaType).typeId;
   }
 
   void setValueRank(int uaValueRank) {

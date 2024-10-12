@@ -10,7 +10,7 @@ class UaConvert {
   static Pointer<Uint8> utf8Convert(value) {
     final units = utf8.encode(value);
     final result = cOPC.UA_Array_new(
-            value.length + 1, cOPC.UA_GET_TYPES_FROM_INDEX(UATypes.BYTE))
+            value.length + 1, UATypes.from(UATypes.BYTE).type)
         .cast<Uint8>();
     final nativeString = result.asTypedList(units.length + 1);
     nativeString.setAll(0, units);
@@ -23,7 +23,7 @@ class UaConvert {
     Pointer? _ptr;
     if (value is List) {
       _ptr =
-          cOPC.UA_Array_new(value.length, cOPC.UA_GET_TYPES_FROM_INDEX(uaType));
+          cOPC.UA_Array_new(value.length, UATypes.from(uaType).type );
     }
 
     switch (uaType) {
@@ -35,20 +35,20 @@ class UaConvert {
               final variant = UAVariant();
               variant.setScalar(element, UATypes.VARIANT);
               cOPC.UA_Variant_setScalar(_ptr.cast<UA_Variant>().elementAt(i),
-                  variant.variant.cast(), cOPC.UA_GET_TYPES_FROM_INDEX(uaType));
+                  variant.variant.cast(), UATypes.from(uaType).type);
             } else {
               if (element is UAVariant) {
                 cOPC.UA_Variant_setScalar(
                     _ptr.cast<UA_Variant>().elementAt(i),
                     element.variant.cast(),
-                    cOPC.UA_GET_TYPES_FROM_INDEX(uaType));
+                    UATypes.from(uaType).type);
               } else {
                 final variant0 = UAVariant();
                 variant0.setScalar(element, getUaTypes(element));
                 cOPC.UA_Variant_setScalar(
                     _ptr.cast<UA_Variant>().elementAt(i),
                     variant0.variant.cast(),
-                    cOPC.UA_GET_TYPES_FROM_INDEX(uaType));
+                    UATypes.from(uaType).type);
               }
             }
           }
