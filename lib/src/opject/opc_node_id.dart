@@ -28,13 +28,16 @@ class UANodeId {
         _pNodeId!.ref = cOPC.UA_NODEID_NUMERIC(namespaceIndex, identifier);
       } else if (identifier is String) {
         _pNodeId = cOPC.UA_NodeId_new();
-        _pNodeId!.ref = cOPC.UA_NODEID_STRING(namespaceIndex, identifier.toString().toNativeUtf8().cast());
+        var nativeUtf8 = identifier.toString().toNativeUtf8();
+        _pNodeId!.ref = cOPC.UA_NODEID_STRING_ALLOC(namespaceIndex, nativeUtf8.cast());
+        calloc.free(nativeUtf8);
       } else if (identifier is Uint8List) {
         _pNodeId = cOPC.UA_NodeId_new();
         final bytes = calloc.allocate<Uint8>(identifier.length);
         bytes.asTypedList(identifier.length).setAll(0, identifier);
-        _pNodeId!.ref = cOPC.UA_NODEID_BYTESTRING(
+        _pNodeId!.ref = cOPC.UA_NODEID_BYTESTRING_ALLOC(
             namespaceIndex, bytes.cast());
+        calloc.free(bytes);
       } else {
         throw "UANodeId NOT TYPE $identifier ${identifier.runtimeType}";
       }
@@ -109,6 +112,7 @@ class UANodeId {
   void delete() {
     if (_pNodeId != null) {
       cOPC.UA_NodeId_delete(_pNodeId!);
+      _pNodeId = null;
     }
   }
 }

@@ -10,18 +10,27 @@ Map<Pointer<UA_Client>, Map<int, Completer>> _future = {};
 
 Future<bool> UAClientWriteNodeIdAsync(
     Pointer<UA_Client> client, UANodeId nodeId, UAVariant variant) async {
-  final compile = Completer<bool>();
   Pointer<UA_UInt32> reqId = cOPC.UA_UInt32_new();
   cOPC.UA_UInt32_init(reqId);
   reqId.value = -1;
   int res = cOPC.UA_Client_writeValueAttribute_async(client, nodeId.nodeId,
       variant.variant, _ClientWriteCallbackPtr, Pointer.fromAddress(0), reqId);
   if (res == 0) {
-    if (reqId.value >= 0) {
-      _future[client] ??= {};
-      _future[client]![reqId.value] = compile;
-      return compile.future;
-    }
+    final compile = Completer<bool>();
+    final req = reqId.value;
+
+    _future[client] ??= {};
+    _future[client]![req] = compile;
+    compile.future.then((value) {
+      _future[client]?.remove(req);
+    },);
+    compile.future.timeout(const Duration(milliseconds: 3000), onTimeout: () {
+      compile.completeError(Exception("Timeout Error"));
+      _future[client]?.remove(req);
+      return false;
+    },);
+    return compile.future;
+
   }
   cOPC.UA_UInt32_delete(reqId);
   nodeId.delete();
@@ -35,23 +44,36 @@ Future<dynamic> UAClientReadNodeIdAsync(
   requestId.value = -1;
   int retval = cOPC.UA_Client_readValueAttribute_async(client, nodeId.nodeId,
       _ClientReadNodeAsyncPtr, Pointer.fromAddress(0), requestId.cast());
-  if (retval == 0 && requestId.value >= 0) {
+  if (retval == 0) {
+    int req = requestId.value;
     final compile = Completer();
-    _future[client]![requestId.value] = compile;
-    cOPC.UA_UInt32_delete(requestId);
-    nodeId.delete();
+    _future[client] ??= {};
+    _future[client]![req] = compile;
+    compile.future.then((value) {
+      _future[client]?.remove(req);
+    },);
+    compile.future.timeout(const Duration(milliseconds: 3000), onTimeout: () {
+      compile.completeError(Exception("Timeout Error"));
+      _future[client]?.remove(req);
+      return false;
+    },);
     return compile.future;
-  } else {
-    return null;
   }
+  nodeId.delete();
+  cOPC.UA_UInt32_delete(requestId);
 }
 
 void _ClientReadNodeAsync(Pointer<UA_Client> client, Pointer<Void> a,
     int requestId, int c, Pointer<UA_DataValue> data) {
-  dynamic res = UADataValue.toDart(data);
-  if (_future[client]![requestId] != null) {
-    _future[client]![requestId]!.complete(res);
-    _future[client]!.remove(requestId);
+  if (_future[client] != null) {
+    if (_future[client]![requestId] != null) {
+      _future[client]![requestId]!.complete(UAVariant(data.cast()).data);
+      _future[client]!.remove(requestId);
+    } else {
+      print("ERROR: _future[client]![requestId]");
+    }
+  } else {
+    print("ERROR: _future[client]");
   }
 }
 
