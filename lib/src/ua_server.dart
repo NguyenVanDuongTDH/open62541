@@ -33,6 +33,7 @@ class UAServer {
         Pointer<Int32> type = calloc.allocate(1);
         Pointer<Pointer<UA_AsyncOperationRequest>> request = calloc.allocate(1);
         Pointer<Pointer<Void>> context = calloc.allocate(1);
+        //
         if (cOPC.UA_Server_getAsyncOperationNonBlocking(server.cast(), type,
                 request, context, Pointer.fromAddress(0)) ==
             true) {
@@ -42,8 +43,17 @@ class UAServer {
           final input =
               UAVariant(request.value.ref.callMethodRequest.inputArguments);
           //
-          UAVariant res = await UAServerMethodCall(server.cast(), methodId, input.data);
-          cOPC.UA_Server_call_1(server.cast(), request, context.value, res.variant);
+          UAVariant res = await UAServerDartMethodCall(server.cast(), methodId, input.data);
+
+          final  response = cOPC.UA_FFI_Server_call(server.cast(),request);
+          
+          response.ref.outputArgumentsSize = 1;
+          UAVariant(response.ref.outputArguments).copyFrom(res);
+
+
+
+          cOPC.UA_Server_setAsyncOperationResult(server.cast(),response.cast(),context.value);
+          cOPC.UA_CallMethodResult_clear(response);
           res.delete();
         }
         calloc.free(type);

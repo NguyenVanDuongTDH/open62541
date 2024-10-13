@@ -33051,6 +33051,29 @@ class NativeLibrary {
       ffi.Pointer<UA_CallMethodResult> Function(ffi.Pointer<UA_Server>,
           ffi.Pointer<ffi.Pointer<UA_AsyncOperationRequest>>)>();
 
+  void UA_FFI_Server_setAsyncOperationResult(
+    ffi.Pointer<UA_Server> server,
+    ffi.Pointer<UA_CallMethodResult> response,
+    ffi.Pointer<ffi.Void> context,
+  ) {
+    return _UA_FFI_Server_setAsyncOperationResult(
+      server,
+      response,
+      context,
+    );
+  }
+
+  late final _UA_FFI_Server_setAsyncOperationResultPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Pointer<UA_Server>,
+              ffi.Pointer<UA_CallMethodResult>,
+              ffi.Pointer<ffi.Void>)>>('UA_FFI_Server_setAsyncOperationResult');
+  late final _UA_FFI_Server_setAsyncOperationResult =
+      _UA_FFI_Server_setAsyncOperationResultPtr.asFunction<
+          void Function(ffi.Pointer<UA_Server>,
+              ffi.Pointer<UA_CallMethodResult>, ffi.Pointer<ffi.Void>)>();
+
   void UA_Server_call_1(
     ffi.Pointer<UA_Server> server,
     ffi.Pointer<ffi.Pointer<UA_AsyncOperationRequest>> request,
@@ -49277,6 +49300,8 @@ const int IPPROTO_PIM = 103;
 
 const int IPPROTO_COMP = 108;
 
+const int IPPROTO_L2TP = 115;
+
 const int IPPROTO_SCTP = 132;
 
 const int IPPROTO_UDPLITE = 136;
@@ -50069,6 +50094,8 @@ const int SEGV_MTEAERR = 8;
 
 const int SEGV_MTESERR = 9;
 
+const int SEGV_CPERR = 10;
+
 const int BUS_ADRALN = 1;
 
 const int BUS_ADRERR = 2;
@@ -50299,6 +50326,8 @@ const int __GLIBC_USE_DEPRECATED_GETS = 0;
 
 const int __GLIBC_USE_DEPRECATED_SCANF = 0;
 
+const int __GLIBC_USE_C2X_STRTOL = 1;
+
 const int _STDC_PREDEF_H = 1;
 
 const int __STDC_IEC_559__ = 1;
@@ -50315,7 +50344,7 @@ const int __GNU_LIBRARY__ = 6;
 
 const int __GLIBC__ = 2;
 
-const int __GLIBC_MINOR__ = 35;
+const int __GLIBC_MINOR__ = 39;
 
 const int _SYS_CDEFS_H = 1;
 
@@ -50370,6 +50399,8 @@ const int __WCHAR_MIN = -2147483648;
 const int _BITS_STDINT_INTN_H = 1;
 
 const int _BITS_STDINT_UINTN_H = 1;
+
+const int _BITS_STDINT_LEAST_H = 1;
 
 const int INT8_MIN = -128;
 
@@ -50483,11 +50514,11 @@ const int _BITS_TYPES___LOCALE_T_H = 1;
 
 const int _STRINGS_H = 1;
 
+const int __bool_true_false_are_defined = 1;
+
 const int true1 = 1;
 
 const int false1 = 0;
-
-const int __bool_true_false_are_defined = 1;
 
 const int _INTTYPES_H = 1;
 
@@ -51449,6 +51480,12 @@ const int SOL_TLS = 282;
 
 const int SOL_XDP = 283;
 
+const int SOL_MPTCP = 284;
+
+const int SOL_MCTP = 285;
+
+const int SOL_SMC = 286;
+
 const int SOMAXCONN = 4096;
 
 const int _BITS_SOCKADDR_H = 1;
@@ -51673,6 +51710,16 @@ const int SO_NETNS_COOKIE = 71;
 
 const int SO_BUF_LOCK = 72;
 
+const int SO_RESERVE_MEM = 73;
+
+const int SO_TXREHASH = 74;
+
+const int SO_RCVMARK = 75;
+
+const int SO_PASSPIDFD = 76;
+
+const int SO_PEERPIDFD = 77;
+
 const int SO_TIMESTAMP = 29;
 
 const int SO_TIMESTAMPNS = 35;
@@ -51810,6 +51857,10 @@ const int IP_PMTUDISC_PROBE = 3;
 const int IP_PMTUDISC_INTERFACE = 4;
 
 const int IP_PMTUDISC_OMIT = 5;
+
+const int IP_LOCAL_PORT_RANGE = 51;
+
+const int IP_PROTOCOL = 52;
 
 const int SOL_IP = 0;
 
@@ -51998,6 +52049,8 @@ const int IPPROTO_ENCAP1 = 98;
 const int IPPROTO_PIM1 = 103;
 
 const int IPPROTO_COMP1 = 108;
+
+const int IPPROTO_L2TP1 = 115;
 
 const int IPPROTO_SCTP1 = 132;
 
@@ -53600,16 +53653,6 @@ const int POSIX_FADV_DONTNEED = 4;
 
 const int POSIX_FADV_NOREUSE = 5;
 
-const int AT_FDCWD = -100;
-
-const int AT_SYMLINK_NOFOLLOW = 256;
-
-const int AT_REMOVEDIR = 512;
-
-const int AT_SYMLINK_FOLLOW = 1024;
-
-const int AT_EACCESS = 512;
-
 const int _BITS_STAT_H = 1;
 
 const int _BITS_STRUCT_STAT_H = 1;
@@ -53691,6 +53734,16 @@ const int S_IWOTH = 2;
 const int S_IXOTH = 1;
 
 const int S_IRWXO = 7;
+
+const int AT_FDCWD = -100;
+
+const int AT_SYMLINK_NOFOLLOW = 256;
+
+const int AT_REMOVEDIR = 512;
+
+const int AT_SYMLINK_FOLLOW = 1024;
+
+const int AT_EACCESS = 512;
 
 const int _SYS_PARAM_H = 1;
 
@@ -54078,6 +54131,8 @@ const int SEGV_MTEAERR1 = 8;
 
 const int SEGV_MTESERR1 = 9;
 
+const int SEGV_CPERR1 = 10;
+
 const int BUS_ADRALN1 = 1;
 
 const int BUS_ADRERR1 = 2;
@@ -54370,6 +54425,8 @@ const int TCP_MD5SIG_MAXKEYLEN = 80;
 
 const int TCP_MD5SIG_FLAG_PREFIX = 1;
 
+const int TCP_MD5SIG_FLAG_IFINDEX = 2;
+
 const int TCP_COOKIE_MIN = 8;
 
 const int TCP_COOKIE_MAX = 16;
@@ -54478,8 +54535,6 @@ const int _ALLOCA_H = 1;
 
 const int _STDIO_H = 1;
 
-const int __GNUC_VA_LIST = 1;
-
 const int _____fpos_t_defined = 1;
 
 const int ____mbstate_t_defined = 1;
@@ -54498,6 +54553,8 @@ const int _IO_ERR_SEEN = 32;
 
 const int _IO_USER_LOCK = 32768;
 
+const int __cookie_io_functions_t_defined = 1;
+
 const int _IOFBF = 0;
 
 const int _IOLBF = 1;
@@ -54510,11 +54567,11 @@ const int EOF = -1;
 
 const String P_tmpdir = '/tmp';
 
-const int _BITS_STDIO_LIM_H = 1;
-
 const int L_tmpnam = 20;
 
 const int TMP_MAX = 238328;
+
+const int _BITS_STDIO_LIM_H = 1;
 
 const int FILENAME_MAX = 4096;
 

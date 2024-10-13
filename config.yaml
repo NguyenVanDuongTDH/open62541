@@ -1,9 +1,9 @@
 output: 'lib/src/open62541_gen.dart'
 headers:
   entry-points:
-    - 'open62541_1_3/open62541.h'
-    - 'open62541_1_3/open62541.c'
-    - 'open62541_1_3/custom.h'
+    - 'cpp/open62541.h'
+    - 'cpp/open62541.c'
+    - 'cpp/custom.h'
 
 objc-interfaces:
   exclude:

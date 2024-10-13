@@ -18,7 +18,7 @@ void UAServerRemoveMethodCallBack(Pointer<UA_Server> server) {
   _callBack.remove(server);
 }
 
-Future<dynamic> UAServerMethodCall(
+Future<dynamic> UAServerDartMethodCall(
     Pointer<UA_Server> server, UANodeId noidId, dynamic value) async {
   if (_callBack[server] != null) {
     if (_callBack[server]![noidId] != null) {
