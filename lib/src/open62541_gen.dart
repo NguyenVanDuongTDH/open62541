@@ -33074,34 +33074,6 @@ class NativeLibrary {
           void Function(ffi.Pointer<UA_Server>,
               ffi.Pointer<UA_CallMethodResult>, ffi.Pointer<ffi.Void>)>();
 
-  void UA_Server_call_1(
-    ffi.Pointer<UA_Server> server,
-    ffi.Pointer<ffi.Pointer<UA_AsyncOperationRequest>> request,
-    ffi.Pointer<ffi.Void> context,
-    ffi.Pointer<UA_Variant> out,
-  ) {
-    return _UA_Server_call_1(
-      server,
-      request,
-      context,
-      out,
-    );
-  }
-
-  late final _UA_Server_call_1Ptr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<UA_Server>,
-              ffi.Pointer<ffi.Pointer<UA_AsyncOperationRequest>>,
-              ffi.Pointer<ffi.Void>,
-              ffi.Pointer<UA_Variant>)>>('UA_Server_call_1');
-  late final _UA_Server_call_1 = _UA_Server_call_1Ptr.asFunction<
-      void Function(
-          ffi.Pointer<UA_Server>,
-          ffi.Pointer<ffi.Pointer<UA_AsyncOperationRequest>>,
-          ffi.Pointer<ffi.Void>,
-          ffi.Pointer<UA_Variant>)>();
-
   int UA_CLIENT_WriteResponse_STATUS(
     ffi.Pointer<UA_WriteResponse> res,
   ) {
